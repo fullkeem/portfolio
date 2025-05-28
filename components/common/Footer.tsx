@@ -1,18 +1,7 @@
 import Link from "next/link";
+import { footerNavigation } from "@/config/navigation";
 
-const footerLinks = {
-  main: [
-    { name: "About", href: "/about" },
-    { name: "Portfolio", href: "/portfolio" },
-    { name: "Blog", href: "/blog" },
-    { name: "Contact", href: "/contact" },
-  ],
-  social: [
-    { name: "GitHub", href: "https://github.com" },
-    { name: "LinkedIn", href: "https://linkedin.com" },
-    { name: "Email", href: "mailto:your@email.com" },
-  ],
-};
+const footerLinks = footerNavigation;
 
 export function Footer() {
   return (
