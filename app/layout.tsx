@@ -24,8 +24,8 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
   ),
   title: {
-    default: "Frontend Developer | 포트폴리오",
-    template: "%s | Frontend Developer",
+    default: "Fullkeem.log",
+    template: "%s | Fullkeem.log",
   },
   description:
     "프론트엔드 개발자 포트폴리오. 랜딩 페이지 제작 전문, React, Next.js, TypeScript",
@@ -37,27 +37,27 @@ export const metadata: Metadata = {
     "React",
     "Next.js",
   ],
-  authors: [{ name: "Your Name" }],
-  creator: "Your Name",
+  authors: [{ name: "fullkeem" }],
+  creator: "fullkeem",
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    url: "https://your-domain.com",
-    siteName: "Frontend Developer Portfolio",
-    title: "Frontend Developer | 포트폴리오",
+    url: "https://fullkeem.log",
+    siteName: "Fullkeem.log",
+    title: "Fullkeem.log",
     description: "프론트엔드 개발자 포트폴리오. 랜딩 페이지 제작 전문",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Frontend Developer Portfolio",
+        alt: "Fullkeem.log",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Frontend Developer | 포트폴리오",
+    title: "Fullkeem.log",
     description: "프론트엔드 개발자 포트폴리오. 랜딩 페이지 제작 전문",
     images: ["/og-image.png"],
   },

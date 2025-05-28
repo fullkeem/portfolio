@@ -36,7 +36,7 @@ export function Header() {
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="text-xl font-bold">
-            Portfolio
+            Fullkeem
           </Link>
 
           {/* Desktop Navigation */}
