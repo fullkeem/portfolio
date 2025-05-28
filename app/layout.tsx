@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
-import { QueryProvider } from "@/components/query-provider";
-import { LenisProvider } from "@/components/lenis-provider";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Header } from "@/components/common/Header";
+import { Footer } from "@/components/common/Footer";
+import { QueryProvider } from "@/components/QueryProvider";
+import { LenisProvider } from "@/components/LenisProvider";
 import "./globals.css";
 
 const pretendard = localFont({
