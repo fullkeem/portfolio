@@ -52,11 +52,30 @@ const config: Config = {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(0)" },
         },
+        "text-reveal": {
+          "0%": { 
+            opacity: "0",
+            transform: "translate3d(0, 100%, 0) rotateY(-20deg)"
+          },
+          "100%": { 
+            opacity: "1",
+            transform: "translate3d(0, 0, 0) rotateY(0deg)"
+          },
+        },
+        "slide-up": {
+          "0%": { opacity: "0", transform: "translateY(30px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "fade-in": "fade-in 0.5s ease-out",
         "fade-up": "fade-up 0.5s ease-out",
         "slide-in": "slide-in 0.5s ease-out",
+        "text-reveal": "text-reveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) 0.5s",
+        "slide-up": "slide-up 0.5s ease-out forwards",
+      },
+      transitionTimingFunction: {
+        "out-flex": "cubic-bezier(0.05, 0.6, 0.4, 0.9)",
       },
     },
   },
