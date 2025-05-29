@@ -29,11 +29,11 @@
 #### Day 5: 홈페이지 구조
 - [x] Hero Section 구현
   - [x] 기본 레이아웃
-  - [ ] GSAP 텍스트 애니메이션
-  - [ ] 배경 그라데이션 효과
+  - [x] GSAP 텍스트 애니메이션
+  - [x] 배경 그라데이션 효과
 - [x] About Section 구현
   - [x] 기본 구조
-  - [ ] 기술 스택 시각화
+  - [x] 기술 스택 시각화
 - [x] Portfolio Section 구현 (임시 데이터)
 - [x] Blog Section 구현 (임시 데이터)
 - [x] Contact Section 구현
@@ -48,7 +48,7 @@
 - [x] Blog Database 생성
   - [x] 필요한 속성 추가
   - [x] Integration 연결
-- [x] lib/notion.ts 구현
+- [x] lib/notion.ts 구현 (API routes로 구현됨)
   - [x] 기본 클라이언트 설정
   - [x] getPortfolios 함수
   - [x] getBlogPosts 함수
@@ -57,14 +57,14 @@
   - [ ] 이미지 처리
 
 #### Day 8-9: 포트폴리오 기능
-- [ ] Portfolio 페이지 구현
-  - [ ] 서버 컴포넌트로 데이터 페칭
+- [x] Portfolio 페이지 구현
+  - [x] 서버 컴포넌트로 데이터 페칭
   - [ ] 포트폴리오 그리드 레이아웃
   - [ ] 로딩 상태 처리
-- [ ] PortfolioCard 컴포넌트
-  - [ ] 이미지 최적화
-  - [ ] 호버 효과
-  - [ ] 기술 스택 태그
+- [x] PortfolioCard 컴포넌트
+  - [x] 이미지 최적화
+  - [x] 호버 효과
+  - [x] 기술 스택 태그
 - [ ] 필터링 기능
   - [x] FilterStore (Zustand) 구현
   - [ ] 기술별 필터 UI
