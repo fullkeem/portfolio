@@ -4,37 +4,34 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Link from "next/link";
 import Image from "next/image";
-
-// 임시 데이터 - 나중에 Notion API로 대체
-const portfolios = [
-  {
-    id: "1",
-    title: "E-commerce Landing Page",
-    description: "모던한 이커머스 랜딩 페이지",
-    thumbnail: "/images/portfolio1.jpg",
-    technologies: ["Next.js", "Tailwind CSS", "Framer Motion"],
-  },
-  {
-    id: "2",
-    title: "SaaS Product Website",
-    description: "SaaS 제품 소개 웹사이트",
-    thumbnail: "/images/portfolio2.jpg",
-    technologies: ["React", "TypeScript", "GSAP"],
-  },
-  {
-    id: "3",
-    title: "Portfolio Website",
-    description: "개인 포트폴리오 웹사이트",
-    thumbnail: "/images/portfolio3.jpg",
-    technologies: ["Next.js", "Tailwind CSS", "Notion API"],
-  },
-];
+import { useEffect, useState } from "react";
+import { Portfolio } from "@/types";
+import { PortfolioCardSkeleton } from "@/components/common/loading/Skeleton";
 
 export function PortfolioSection() {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
+  
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPortfolios = async () => {
+      try {
+        const response = await fetch('/api/portfolios');
+        const data = await response.json();
+        setPortfolios(data.filter((p: Portfolio) => p.featured).slice(0, 3));
+      } catch (error) {
+        console.error('Failed to fetch portfolios:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPortfolios();
+  }, []);
 
   return (
     <section id="portfolio" className="py-20 md:py-32 bg-secondary/20">
@@ -53,51 +50,66 @@ export function PortfolioSection() {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {portfolios.map((portfolio, index) => (
-            <motion.div
-              key={portfolio.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Link href={`/portfolio/${portfolio.id}`}>
-                <motion.article
-                  className="group relative overflow-hidden rounded-lg bg-background border cursor-pointer"
-                  whileHover={{ y: -5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="aspect-video relative overflow-hidden bg-muted">
-                    {/* 임시 배경 - 실제 이미지로 대체 예정 */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-4xl font-bold text-foreground/10">
-                        {portfolio.title.charAt(0)}
-                      </span>
+          {loading ? (
+            // 로딩 스켈레톤
+            [...Array(3)].map((_, i) => (
+              <PortfolioCardSkeleton key={i} />
+            ))
+          ) : (
+            portfolios.map((portfolio, index) => (
+              <motion.div
+                key={portfolio.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Link href={`/portfolio/${portfolio.id}`}>
+                  <motion.article
+                    className="group relative overflow-hidden rounded-lg bg-background border cursor-pointer"
+                    whileHover={{ y: -5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="aspect-video relative overflow-hidden bg-muted">
+                      {portfolio.thumbnail ? (
+                        <Image
+                          src={portfolio.thumbnail}
+                          alt={portfolio.title}
+                          fill
+                          className="object-cover transition-transform group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
+                      )}
                     </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                      {portfolio.title}
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                      {portfolio.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {portfolio.technologies.map((tech) => (
-                        <span
-                          key={tech}
-                          className="text-xs px-2 py-1 bg-secondary rounded"
-                        >
-                          {tech}
-                        </span>
-                      ))}
+                    
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                        {portfolio.title}
+                      </h3>
+                      <p className="text-muted-foreground mb-4">
+                        {portfolio.description}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {portfolio.technologies.slice(0, 3).map((tech) => (
+                          <span
+                            key={tech}
+                            className="text-xs px-2 py-1 bg-secondary rounded"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                        {portfolio.technologies.length > 3 && (
+                          <span className="text-xs px-2 py-1 text-muted-foreground">
+                            +{portfolio.technologies.length - 3}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </motion.article>
-              </Link>
-            </motion.div>
-          ))}
+                  </motion.article>
+                </Link>
+              </motion.div>
+            ))
+          )}
         </div>
 
         <motion.div

@@ -55,8 +55,8 @@ export async function getPortfolios(): Promise<Portfolio[]> {
           direction: "descending",
         },
         {
-          property: "Created",
-          direction: "descending",
+          property: "Order",
+          direction: "ascending",
         },
       ],
     });
@@ -173,7 +173,7 @@ function parsePortfolioPage(page: PageObjectResponse): Portfolio {
     technologies: properties.Technologies?.multi_select?.map((tech: any) => tech.name) || [],
     liveUrl: properties.LiveURL?.url || undefined,
     githubUrl: properties.GitHubURL?.url || undefined,
-    createdAt: properties.Created?.created_time || page.created_time,
+    createdAt: page.created_time,
     featured: properties.Featured?.checkbox || false,
   };
 }
