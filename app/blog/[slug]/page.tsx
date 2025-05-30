@@ -359,7 +359,7 @@ export default function BlogDetailPage() {
                     >
                       <Link
                         href={`#${item.id}`}
-                        className="rounded text-sm text-muted-foreground transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                        className="rounded text-sm text-foreground/80 transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:text-foreground/90 dark:hover:text-primary"
                         aria-label={`${item.level}단계 제목: ${item.title}로 이동`}
                       >
                         {item.title}
@@ -376,7 +376,7 @@ export default function BlogDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="prose prose-lg max-w-none prose-headings:font-bold prose-a:text-primary prose-pre:bg-muted prose-img:rounded-lg"
+              className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-foreground prose-p:text-foreground/90 prose-a:text-primary prose-blockquote:border-primary prose-blockquote:text-foreground/80 prose-strong:text-foreground prose-pre:bg-muted prose-li:text-foreground/90 prose-img:rounded-lg dark:prose-headings:text-foreground dark:prose-p:text-foreground/95 dark:prose-blockquote:text-foreground/85 dark:prose-strong:text-foreground dark:prose-li:text-foreground/95"
               role="main"
               aria-label="블로그 포스트 본문"
               tabIndex={-1}

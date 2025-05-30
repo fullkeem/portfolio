@@ -73,7 +73,7 @@ function renderRichText(richTexts: RichTextItemResponse[]) {
     let element = <Fragment>{content}</Fragment>;
 
     if (bold) {
-      element = <strong>{element}</strong>;
+      element = <strong className="text-foreground">{element}</strong>;
     }
     if (italic) {
       element = <em>{element}</em>;
@@ -86,7 +86,10 @@ function renderRichText(richTexts: RichTextItemResponse[]) {
     }
     if (code) {
       element = (
-        <code className="rounded bg-secondary px-1 py-0.5 text-sm" role="code">
+        <code
+          className="rounded bg-secondary px-1 py-0.5 text-sm text-foreground dark:bg-secondary/80"
+          role="code"
+        >
           {element}
         </code>
       );
@@ -122,7 +125,11 @@ function ParagraphBlock({ block }: { block: NotionBlock }) {
     );
   }
 
-  return <p className="mb-4 leading-relaxed">{renderRichText(paragraph.rich_text)}</p>;
+  return (
+    <p className="mb-4 leading-relaxed text-foreground/90 dark:text-foreground/95">
+      {renderRichText(paragraph.rich_text)}
+    </p>
+  );
 }
 
 function Heading1Block({ block, index }: { block: NotionBlock; index: number }) {
@@ -132,7 +139,7 @@ function Heading1Block({ block, index }: { block: NotionBlock; index: number }) 
   return (
     <h2
       id={`heading-${index}`}
-      className="mb-4 mt-8 text-3xl font-bold"
+      className="mb-4 mt-8 text-3xl font-bold text-foreground"
       role="heading"
       aria-level={2}
       tabIndex={-1}
@@ -149,7 +156,7 @@ function Heading2Block({ block, index }: { block: NotionBlock; index: number }) 
   return (
     <h3
       id={`heading-${index}`}
-      className="mb-3 mt-6 text-2xl font-semibold"
+      className="mb-3 mt-6 text-2xl font-semibold text-foreground"
       role="heading"
       aria-level={3}
       tabIndex={-1}
@@ -166,7 +173,7 @@ function Heading3Block({ block, index }: { block: NotionBlock; index: number }) 
   return (
     <h4
       id={`heading-${index}`}
-      className="mb-2 mt-4 text-xl font-semibold"
+      className="mb-2 mt-4 text-xl font-semibold text-foreground"
       role="heading"
       aria-level={4}
       tabIndex={-1}
@@ -181,7 +188,10 @@ function BulletedListBlock({ block }: { block: NotionBlock }) {
   const { bulleted_list_item } = block;
 
   return (
-    <ul className="mb-2 ml-4 list-inside list-disc" role="list">
+    <ul
+      className="mb-2 ml-4 list-inside list-disc text-foreground/90 dark:text-foreground/95"
+      role="list"
+    >
       <li role="listitem">{renderRichText(bulleted_list_item.rich_text)}</li>
     </ul>
   );
@@ -192,7 +202,10 @@ function NumberedListBlock({ block }: { block: NotionBlock }) {
   const { numbered_list_item } = block;
 
   return (
-    <ol className="mb-2 ml-4 list-inside list-decimal" role="list">
+    <ol
+      className="mb-2 ml-4 list-inside list-decimal text-foreground/90 dark:text-foreground/95"
+      role="list"
+    >
       <li role="listitem">{renderRichText(numbered_list_item.rich_text)}</li>
     </ol>
   );
@@ -203,7 +216,11 @@ function QuoteBlock({ block }: { block: NotionBlock }) {
   const { quote } = block;
 
   return (
-    <blockquote className="my-4 border-l-4 border-primary pl-4 italic" role="blockquote" cite="">
+    <blockquote
+      className="my-4 border-l-4 border-primary pl-4 italic text-foreground/80 dark:text-foreground/85"
+      role="blockquote"
+      cite=""
+    >
       {renderRichText(quote.rich_text)}
     </blockquote>
   );
@@ -258,7 +275,7 @@ function ImageBlock({ block }: { block: NotionBlock }) {
       </div>
       {caption && (
         <figcaption
-          className="mt-2 text-center text-sm text-muted-foreground"
+          className="mt-2 text-center text-sm text-foreground/70 dark:text-foreground/80"
           id={`image-caption-${block.id}`}
         >
           {caption}
@@ -275,7 +292,7 @@ function CalloutBlock({ block }: { block: NotionBlock }) {
 
   return (
     <aside
-      className="my-4 flex gap-3 rounded-lg border bg-secondary/50 p-4"
+      className="my-4 flex gap-3 rounded-lg border bg-secondary/50 p-4 text-foreground/90 dark:text-foreground/95"
       role="note"
       aria-label="중요 정보 알림"
     >
@@ -294,13 +311,17 @@ function ToggleBlock({ block }: { block: NotionBlock }) {
   return (
     <details className="my-4 rounded-lg border p-4" role="group" aria-label="접을 수 있는 콘텐츠">
       <summary
-        className="cursor-pointer rounded font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        className="cursor-pointer rounded font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         role="button"
         aria-expanded="false"
       >
         {renderRichText(toggle.rich_text)}
       </summary>
-      <div className="ml-4 mt-2" role="region" aria-label="토글 내용">
+      <div
+        className="ml-4 mt-2 text-foreground/80 dark:text-foreground/85"
+        role="region"
+        aria-label="토글 내용"
+      >
         {/* 토글 내부의 자식 블록들은 별도로 가져와야 함 */}
         <p className="text-muted-foreground">
           [Toggle content - requires fetching children blocks]
