@@ -8,13 +8,9 @@ export interface BlogPost {
   publishedAt: string;
   updatedAt: string;
   coverImage?: string;
-  featured: boolean;
-  published: boolean;
-  viewCount: number;
-  readingTime: number;
 }
 
-export type BlogCategory = 
+export type BlogCategory =
   | '기술 블로그'
   | '튜토리얼'
   | '제작 과정'
@@ -25,4 +21,12 @@ export interface BlogFilterState {
   category: BlogCategory | null;
   tags: string[];
   searchQuery: string;
+}
+
+// 추가 유틸리티 타입들
+export interface BlogPostWithMeta extends BlogPost {
+  readingTime: number;
+  featured?: boolean;
+  published?: boolean;
+  viewCount?: number;
 }
