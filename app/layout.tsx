@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     default: "Fullkeem.log",
     template: "%s | Fullkeem.log",
   },
+  icons: {
+    icon: "/favicon.ico",
+  },
   description:
     "프론트엔드 개발자 포트폴리오. 랜딩 페이지 제작 전문, React, Next.js, TypeScript",
   keywords: [
