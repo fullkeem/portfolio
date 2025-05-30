@@ -1,12 +1,12 @@
-import React, { Fragment } from "react";
-import type { 
+import React, { Fragment } from 'react';
+import type {
   BlockObjectResponse,
-  RichTextItemResponse 
-} from "@notionhq/client/build/src/api-endpoints";
-import Image from "next/image";
-import Link from "next/link";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+  RichTextItemResponse,
+} from '@notionhq/client/build/src/api-endpoints';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 type NotionBlock = BlockObjectResponse;
 
@@ -16,41 +16,41 @@ interface NotionBlocksProps {
 
 export function NotionBlocks({ blocks }: NotionBlocksProps) {
   return (
-    <>
-      {blocks.map((block) => (
-        <NotionBlock key={block.id} block={block} />
+    <div role="document" aria-label="블로그 포스트 내용">
+      {blocks.map((block, index) => (
+        <NotionBlock key={block.id} block={block} index={index} />
       ))}
-    </>
+    </div>
   );
 }
 
-function NotionBlock({ block }: { block: NotionBlock }) {
+function NotionBlock({ block, index }: { block: NotionBlock; index: number }) {
   const { type } = block;
 
   switch (type) {
-    case "paragraph":
+    case 'paragraph':
       return <ParagraphBlock block={block} />;
-    case "heading_1":
-      return <Heading1Block block={block} />;
-    case "heading_2":
-      return <Heading2Block block={block} />;
-    case "heading_3":
-      return <Heading3Block block={block} />;
-    case "bulleted_list_item":
+    case 'heading_1':
+      return <Heading1Block block={block} index={index} />;
+    case 'heading_2':
+      return <Heading2Block block={block} index={index} />;
+    case 'heading_3':
+      return <Heading3Block block={block} index={index} />;
+    case 'bulleted_list_item':
       return <BulletedListBlock block={block} />;
-    case "numbered_list_item":
+    case 'numbered_list_item':
       return <NumberedListBlock block={block} />;
-    case "quote":
+    case 'quote':
       return <QuoteBlock block={block} />;
-    case "code":
+    case 'code':
       return <CodeBlock block={block} />;
-    case "image":
+    case 'image':
       return <ImageBlock block={block} />;
-    case "divider":
-      return <hr className="my-8 border-border" />;
-    case "callout":
+    case 'divider':
+      return <hr className="my-8 border-border" role="separator" aria-label="섹션 구분선" />;
+    case 'callout':
       return <CalloutBlock block={block} />;
-    case "toggle":
+    case 'toggle':
       return <ToggleBlock block={block} />;
     default:
       return null;
@@ -60,6 +60,11 @@ function NotionBlock({ block }: { block: NotionBlock }) {
 // 텍스트 렌더링 헬퍼 함수
 function renderRichText(richTexts: RichTextItemResponse[]) {
   return richTexts.map((text, index) => {
+    // RichTextItemResponse 타입 안전성을 위한 체크
+    if (text.type !== 'text') {
+      return <Fragment key={index}>{text.plain_text}</Fragment>;
+    }
+
     const {
       annotations: { bold, italic, strikethrough, underline, code },
       text: { content, link },
@@ -81,7 +86,7 @@ function renderRichText(richTexts: RichTextItemResponse[]) {
     }
     if (code) {
       element = (
-        <code className="px-1 py-0.5 rounded bg-secondary text-sm">
+        <code className="rounded bg-secondary px-1 py-0.5 text-sm" role="code">
           {element}
         </code>
       );
@@ -90,9 +95,10 @@ function renderRichText(richTexts: RichTextItemResponse[]) {
       element = (
         <Link
           href={link.url}
-          className="text-primary underline hover:no-underline"
+          className="rounded text-primary underline hover:no-underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`외부 링크: ${link.url}`}
         >
           {element}
         </Link>
@@ -105,128 +111,156 @@ function renderRichText(richTexts: RichTextItemResponse[]) {
 
 // 각 블록 타입별 컴포넌트들
 function ParagraphBlock({ block }: { block: NotionBlock }) {
-  if (block.type !== "paragraph") return null;
+  if (block.type !== 'paragraph') return null;
   const { paragraph } = block;
-  
+
   if (!paragraph.rich_text.length) {
-    return <p className="mb-4">&nbsp;</p>;
+    return (
+      <p className="mb-4" aria-hidden="true">
+        &nbsp;
+      </p>
+    );
   }
 
-  return (
-    <p className="mb-4 leading-relaxed">
-      {renderRichText(paragraph.rich_text)}
-    </p>
-  );
+  return <p className="mb-4 leading-relaxed">{renderRichText(paragraph.rich_text)}</p>;
 }
 
-function Heading1Block({ block }: { block: NotionBlock }) {
-  if (block.type !== "heading_1") return null;
+function Heading1Block({ block, index }: { block: NotionBlock; index: number }) {
+  if (block.type !== 'heading_1') return null;
   const { heading_1 } = block;
 
   return (
-    <h1 className="text-3xl font-bold mt-8 mb-4">
+    <h2
+      id={`heading-${index}`}
+      className="mb-4 mt-8 text-3xl font-bold"
+      role="heading"
+      aria-level={2}
+      tabIndex={-1}
+    >
       {renderRichText(heading_1.rich_text)}
-    </h1>
-  );
-}
-
-function Heading2Block({ block }: { block: NotionBlock }) {
-  if (block.type !== "heading_2") return null;
-  const { heading_2 } = block;
-
-  return (
-    <h2 className="text-2xl font-semibold mt-6 mb-3">
-      {renderRichText(heading_2.rich_text)}
     </h2>
   );
 }
 
-function Heading3Block({ block }: { block: NotionBlock }) {
-  if (block.type !== "heading_3") return null;
-  const { heading_3 } = block;
+function Heading2Block({ block, index }: { block: NotionBlock; index: number }) {
+  if (block.type !== 'heading_2') return null;
+  const { heading_2 } = block;
 
   return (
-    <h3 className="text-xl font-semibold mt-4 mb-2">
-      {renderRichText(heading_3.rich_text)}
+    <h3
+      id={`heading-${index}`}
+      className="mb-3 mt-6 text-2xl font-semibold"
+      role="heading"
+      aria-level={3}
+      tabIndex={-1}
+    >
+      {renderRichText(heading_2.rich_text)}
     </h3>
   );
 }
 
+function Heading3Block({ block, index }: { block: NotionBlock; index: number }) {
+  if (block.type !== 'heading_3') return null;
+  const { heading_3 } = block;
+
+  return (
+    <h4
+      id={`heading-${index}`}
+      className="mb-2 mt-4 text-xl font-semibold"
+      role="heading"
+      aria-level={4}
+      tabIndex={-1}
+    >
+      {renderRichText(heading_3.rich_text)}
+    </h4>
+  );
+}
+
 function BulletedListBlock({ block }: { block: NotionBlock }) {
-  if (block.type !== "bulleted_list_item") return null;
+  if (block.type !== 'bulleted_list_item') return null;
   const { bulleted_list_item } = block;
 
   return (
-    <ul className="list-disc list-inside mb-2 ml-4">
-      <li>{renderRichText(bulleted_list_item.rich_text)}</li>
+    <ul className="mb-2 ml-4 list-inside list-disc" role="list">
+      <li role="listitem">{renderRichText(bulleted_list_item.rich_text)}</li>
     </ul>
   );
 }
 
 function NumberedListBlock({ block }: { block: NotionBlock }) {
-  if (block.type !== "numbered_list_item") return null;
+  if (block.type !== 'numbered_list_item') return null;
   const { numbered_list_item } = block;
 
   return (
-    <ol className="list-decimal list-inside mb-2 ml-4">
-      <li>{renderRichText(numbered_list_item.rich_text)}</li>
+    <ol className="mb-2 ml-4 list-inside list-decimal" role="list">
+      <li role="listitem">{renderRichText(numbered_list_item.rich_text)}</li>
     </ol>
   );
 }
 
 function QuoteBlock({ block }: { block: NotionBlock }) {
-  if (block.type !== "quote") return null;
+  if (block.type !== 'quote') return null;
   const { quote } = block;
 
   return (
-    <blockquote className="border-l-4 border-primary pl-4 my-4 italic">
+    <blockquote className="my-4 border-l-4 border-primary pl-4 italic" role="blockquote" cite="">
       {renderRichText(quote.rich_text)}
     </blockquote>
   );
 }
 
 function CodeBlock({ block }: { block: NotionBlock }) {
-  if (block.type !== "code") return null;
+  if (block.type !== 'code') return null;
   const { code } = block;
   const language = code.language.toLowerCase();
-  const codeString = code.rich_text.map((text) => text.plain_text).join("");
+  const codeString = code.rich_text.map((text) => text.plain_text).join('');
 
   return (
-    <div className="my-4 rounded-lg overflow-hidden">
+    <figure
+      className="my-4 overflow-hidden rounded-lg"
+      role="img"
+      aria-label={`${language} 코드 블록`}
+    >
       <SyntaxHighlighter
         language={language}
         style={oneDark}
         customStyle={{
           margin: 0,
-          padding: "1rem",
-          fontSize: "0.875rem",
+          padding: '1rem',
+          fontSize: '0.875rem',
         }}
+        aria-label={`${language} 프로그래밍 언어로 작성된 코드`}
+        role="code"
       >
         {codeString}
       </SyntaxHighlighter>
-    </div>
+    </figure>
   );
 }
 
 function ImageBlock({ block }: { block: NotionBlock }) {
-  if (block.type !== "image") return null;
+  if (block.type !== 'image') return null;
   const { image } = block;
-  
-  const src = image.type === "external" ? image.external.url : image.file.url;
-  const caption = image.caption.length ? image.caption[0].plain_text : "";
+
+  const src = image.type === 'external' ? image.external.url : image.file.url;
+  const caption = image.caption.length ? image.caption[0].plain_text : '';
 
   return (
-    <figure className="my-6">
+    <figure className="my-6" role="img">
       <div className="relative aspect-video">
         <Image
           src={src}
-          alt={caption || "Image"}
+          alt={caption || '블로그 포스트 이미지'}
           fill
-          className="object-contain rounded-lg"
+          className="rounded-lg object-contain"
+          loading="lazy"
         />
       </div>
       {caption && (
-        <figcaption className="text-center text-sm text-muted-foreground mt-2">
+        <figcaption
+          className="mt-2 text-center text-sm text-muted-foreground"
+          id={`image-caption-${block.id}`}
+        >
           {caption}
         </figcaption>
       )}
@@ -235,28 +269,38 @@ function ImageBlock({ block }: { block: NotionBlock }) {
 }
 
 function CalloutBlock({ block }: { block: NotionBlock }) {
-  if (block.type !== "callout") return null;
+  if (block.type !== 'callout') return null;
   const { callout } = block;
-  const emoji = callout.icon?.type === "emoji" ? callout.icon.emoji : "💡";
+  const emoji = callout.icon?.type === 'emoji' ? callout.icon.emoji : '💡';
 
   return (
-    <div className="flex gap-3 p-4 my-4 rounded-lg bg-secondary/50 border">
-      <span className="text-2xl">{emoji}</span>
+    <aside
+      className="my-4 flex gap-3 rounded-lg border bg-secondary/50 p-4"
+      role="note"
+      aria-label="중요 정보 알림"
+    >
+      <span className="text-2xl" role="img" aria-label="알림 아이콘">
+        {emoji}
+      </span>
       <div className="flex-1">{renderRichText(callout.rich_text)}</div>
-    </div>
+    </aside>
   );
 }
 
 function ToggleBlock({ block }: { block: NotionBlock }) {
-  if (block.type !== "toggle") return null;
+  if (block.type !== 'toggle') return null;
   const { toggle } = block;
 
   return (
-    <details className="my-4 p-4 rounded-lg border">
-      <summary className="cursor-pointer font-medium">
+    <details className="my-4 rounded-lg border p-4" role="group" aria-label="접을 수 있는 콘텐츠">
+      <summary
+        className="cursor-pointer rounded font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        role="button"
+        aria-expanded="false"
+      >
         {renderRichText(toggle.rich_text)}
       </summary>
-      <div className="mt-2 ml-4">
+      <div className="ml-4 mt-2" role="region" aria-label="토글 내용">
         {/* 토글 내부의 자식 블록들은 별도로 가져와야 함 */}
         <p className="text-muted-foreground">
           [Toggle content - requires fetching children blocks]
