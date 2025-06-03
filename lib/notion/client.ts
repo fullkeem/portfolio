@@ -1,8 +1,6 @@
 import { Client } from "@notionhq/client";
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
-import type { 
-  NotionPortfolioPage, 
-  NotionBlogPage,
+import type {
   NotionPortfolioProperties,
   NotionBlogProperties
 } from "./types";
@@ -164,6 +162,7 @@ export async function getPageContent(pageId: string) {
     // 블록에 하위 블록이 있는 경우 재귀적으로 가져오기
     const blocksWithChildren = await Promise.all(
       blocks.results.map(async (block) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const b = block as any;
         if (b.has_children && !b[b.type]?.children) {
           const children = await getPageContent(b.id);
@@ -182,7 +181,7 @@ export async function getPageContent(pageId: string) {
 
 // 파싱 함수들
 function parsePortfolioPage(page: PageObjectResponse): Portfolio {
-  const properties = page.properties as NotionPortfolioProperties;
+  const properties = page.properties as unknown as NotionPortfolioProperties;
 
   return {
     id: page.id,
@@ -198,7 +197,7 @@ function parsePortfolioPage(page: PageObjectResponse): Portfolio {
 }
 
 function parseBlogPage(page: PageObjectResponse): BlogPost {
-  const properties = page.properties as NotionBlogProperties;
+  const properties = page.properties as unknown as NotionBlogProperties;
 
   return {
     id: page.id,

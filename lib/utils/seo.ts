@@ -71,7 +71,7 @@ export function generateMetadata({
 /**
  * JSON-LD 구조화된 데이터 생성
  */
-export function generateJsonLd(type: 'website' | 'article' | 'person', data?: any) {
+export function generateJsonLd(type: 'website' | 'article' | 'person', data?: Record<string, unknown>) {
   const baseData = {
     '@context': 'https://schema.org',
   };
@@ -89,14 +89,14 @@ export function generateJsonLd(type: 'website' | 'article' | 'person', data?: an
           name: siteConfig.creator,
         },
       };
-    
+
     case 'article':
       return {
         ...baseData,
         '@type': 'BlogPosting',
         ...data,
       };
-    
+
     case 'person':
       return {
         ...baseData,
@@ -105,7 +105,7 @@ export function generateJsonLd(type: 'website' | 'article' | 'person', data?: an
         url: siteConfig.url,
         ...data,
       };
-    
+
     default:
       return baseData;
   }

@@ -1,8 +1,7 @@
 // Notion 관련 타입 정의
-import type { 
+import type {
   PageObjectResponse,
-  RichTextItemResponse,
-  TextRichTextItemResponse
+  RichTextItemResponse
 } from "@notionhq/client/build/src/api-endpoints";
 
 // Rich Text 타입

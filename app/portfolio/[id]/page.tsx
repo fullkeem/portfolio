@@ -7,14 +7,15 @@ import { NotionBlocks } from '@/lib/notion/blocks';
 import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { formatDate } from '@/lib/utils';
 
-export default async function PortfolioDetailPage({ params }: { params: { id: string } }) {
-  const portfolio = await getPortfolioById(params.id);
+export default async function PortfolioDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const portfolio = await getPortfolioById(resolvedParams.id);
 
   if (!portfolio) {
     notFound();
   }
 
-  const pageContent = (await getPageContent(params.id)) as BlockObjectResponse[];
+  const pageContent = (await getPageContent(resolvedParams.id)) as BlockObjectResponse[];
 
   return (
     <div className="min-h-screen py-20 md:py-32">
@@ -125,8 +126,9 @@ export async function generateStaticParams() {
 }
 
 // 메타데이터 생성
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const portfolio = await getPortfolioById(params.id);
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const portfolio = await getPortfolioById(resolvedParams.id);
 
   if (!portfolio) {
     return {
