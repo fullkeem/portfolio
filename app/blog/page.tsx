@@ -78,15 +78,6 @@ export default function BlogPage() {
     });
   }, [blogPosts, selectedCategory, selectedTags, blogSearchQuery]);
 
-  // 모든 태그 추출
-  const allTags = useMemo(() => {
-    const tagSet = new Set<string>();
-    blogPosts.forEach((post) => {
-      post.tags.forEach((tag) => tagSet.add(tag));
-    });
-    return Array.from(tagSet).sort();
-  }, [blogPosts]);
-
   const hasActiveFilters =
     (selectedCategory && selectedCategory !== '전체') ||
     selectedTags.length > 0 ||

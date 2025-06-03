@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,9 +9,10 @@ import { ArrowLeft, Calendar, Clock, Tag, Share2 } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { NotionBlocks } from '@/lib/notion/blocks';
 import { formatDate, calculateReadingTime } from '@/lib/utils';
+import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 interface BlogPostWithContent extends BlogPost {
-  content: any[];
+  content: BlockObjectResponse[];
 }
 
 // SEO를 위한 메타데이터 생성 (server component가 아니므로 여기서는 사용하지 않음)
@@ -19,7 +20,6 @@ interface BlogPostWithContent extends BlogPost {
 
 export default function BlogDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const [blogPost, setBlogPost] = useState<BlogPostWithContent | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,8 +67,8 @@ export default function BlogDetailPage() {
             .slice(0, 3);
           setRelatedPosts(related);
         }
-      } catch (error) {
-        console.error('Error fetching blog post:', error);
+      } catch (err) {
+        console.error('Error fetching blog post:', err);
         setError('블로그 포스트를 불러오는 중 오류가 발생했습니다.');
       } finally {
         setLoading(false);
@@ -81,13 +81,18 @@ export default function BlogDetailPage() {
   }, [slug]);
 
   // 목차 생성 함수
-  const generateTableOfContents = (content: any[]) => {
+  const generateTableOfContents = (content: BlockObjectResponse[]) => {
     const toc: { id: string; title: string; level: number }[] = [];
-    content.forEach((block: any, index: number) => {
+    content.forEach((block: BlockObjectResponse, index: number) => {
       if (block.type === 'heading_1' || block.type === 'heading_2' || block.type === 'heading_3') {
         const level = parseInt(block.type.split('_')[1]);
+        const headingBlock = block as BlockObjectResponse & {
+          [key: string]: {
+            rich_text?: Array<{ plain_text: string }>;
+          };
+        };
         const title =
-          block[block.type]?.rich_text?.map((text: any) => text.plain_text).join('') || '';
+          headingBlock[block.type]?.rich_text?.map((text) => text.plain_text).join('') || '';
         if (title) {
           toc.push({
             id: `heading-${index}`,

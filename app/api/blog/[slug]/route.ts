@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getBlogPostBySlug, getPageContent } from '@/lib/notion/client';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
 
     // 블로그 포스트 메타데이터 가져오기
     const blogPost = await getBlogPostBySlug(slug);
