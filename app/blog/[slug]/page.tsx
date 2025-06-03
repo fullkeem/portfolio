@@ -5,14 +5,22 @@ import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, Clock, Tag, Share2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Tag, Share2, ExternalLink } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { NotionBlocks } from '@/lib/notion/blocks';
 import { formatDate, calculateReadingTime } from '@/lib/utils';
+import TableOfContents from '@/components/blog/TableOfContents';
+import RelatedPosts from '@/components/blog/RelatedPosts';
 import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 interface BlogPostWithContent extends BlogPost {
   content: BlockObjectResponse[];
+}
+
+interface TOCItem {
+  id: string;
+  title: string;
+  level: number;
 }
 
 // SEO를 위한 메타데이터 생성 (server component가 아니므로 여기서는 사용하지 않음)
@@ -24,16 +32,23 @@ export default function BlogDetailPage() {
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tableOfContents, setTableOfContents] = useState<
-    { id: string; title: string; level: number }[]
-  >([]);
+  const [tableOfContents, setTableOfContents] = useState<TOCItem[]>([]);
+  const [shareSupported, setShareSupported] = useState(false);
 
   const slug = params.slug as string;
+
+  // 공유 API 지원 확인
+  useEffect(() => {
+    setShareSupported('share' in navigator);
+  }, []);
 
   // 블로그 포스트와 관련 포스트 가져오기
   useEffect(() => {
     const fetchBlogPost = async () => {
       try {
+        setLoading(true);
+        setError(null);
+
         // 블로그 포스트 상세 정보 가져오기
         const postResponse = await fetch(`/api/blog/${slug}`);
         if (!postResponse.ok) {
@@ -81,8 +96,8 @@ export default function BlogDetailPage() {
   }, [slug]);
 
   // 목차 생성 함수
-  const generateTableOfContents = (content: BlockObjectResponse[]) => {
-    const toc: { id: string; title: string; level: number }[] = [];
+  const generateTableOfContents = (content: BlockObjectResponse[]): TOCItem[] => {
+    const toc: TOCItem[] = [];
     content.forEach((block: BlockObjectResponse, index: number) => {
       if (block.type === 'heading_1' || block.type === 'heading_2' || block.type === 'heading_3') {
         const level = parseInt(block.type.split('_')[1]);
@@ -107,7 +122,9 @@ export default function BlogDetailPage() {
 
   // 공유 기능
   const handleShare = async () => {
-    if (navigator.share && blogPost) {
+    if (!blogPost) return;
+
+    if (shareSupported) {
       try {
         await navigator.share({
           title: blogPost.title,
@@ -115,12 +132,18 @@ export default function BlogDetailPage() {
           url: window.location.href,
         });
       } catch (error) {
+        // 사용자가 공유를 취소한 경우
         console.log('Share cancelled');
       }
     } else {
       // 클립보드에 URL 복사
-      navigator.clipboard.writeText(window.location.href);
-      // TODO: 토스트 메시지 표시
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        // TODO: 토스트 메시지 표시
+        alert('링크가 클립보드에 복사되었습니다!');
+      } catch (error) {
+        console.error('Failed to copy to clipboard:', error);
+      }
     }
   };
 
@@ -145,7 +168,12 @@ export default function BlogDetailPage() {
             </Link>
 
             {/* 로딩 스켈레톤 */}
-            <section aria-label="로딩 중" className="animate-pulse">
+            <motion.section
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              aria-label="로딩 중"
+              className="animate-pulse"
+            >
               <div className="mb-8 h-6 w-20 rounded bg-muted" />
               <div className="mb-4 h-12 w-3/4 rounded bg-muted" />
               <div className="mb-8 flex gap-4">
@@ -159,7 +187,7 @@ export default function BlogDetailPage() {
                   <div key={i} className="h-4 w-full rounded bg-muted" />
                 ))}
               </div>
-            </section>
+            </motion.section>
           </div>
         </div>
       </main>
@@ -170,20 +198,27 @@ export default function BlogDetailPage() {
     return (
       <main className="min-h-screen py-20 md:py-32" role="main" aria-label="에러 페이지">
         <div className="container mx-auto px-4">
-          <section className="mx-auto max-w-4xl text-center" role="alert" aria-live="polite">
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mx-auto max-w-4xl text-center"
+            role="alert"
+            aria-live="polite"
+          >
+            <div className="mb-8 text-6xl">😔</div>
             <h1 className="mb-4 text-4xl font-bold">404</h1>
             <p className="mb-8 text-lg text-muted-foreground">
               {error || '블로그 포스트를 찾을 수 없습니다.'}
             </p>
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-primary-foreground transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               aria-label="블로그 목록 페이지로 이동"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               블로그 목록으로 돌아가기
             </Link>
-          </section>
+          </motion.section>
         </div>
       </main>
     );
@@ -202,244 +237,131 @@ export default function BlogDetailPage() {
             본문으로 바로가기
           </Link>
 
-          {/* 뒤로 가기 네비게이션 */}
-          <nav role="navigation" aria-label="브레드크럼">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="mb-8"
+          {/* 뒤로가기 버튼 */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mb-8"
+          >
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
+              aria-label="블로그 목록으로 돌아가기"
             >
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 rounded text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                aria-label="블로그 목록으로 돌아가기"
+              <ArrowLeft className="h-4 w-4" />
+              <span>블로그 목록</span>
+            </Link>
+          </motion.div>
+
+          <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
+            {/* 메인 콘텐츠 */}
+            <article>
+              {/* 헤더 */}
+              <motion.header
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="mb-8"
               >
-                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-                블로그 목록
-              </Link>
-            </motion.div>
-          </nav>
-
-          {/* 블로그 포스트 아티클 */}
-          <article role="article" aria-labelledby="post-title">
-            {/* 헤더 섹션 */}
-            <motion.header
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="mb-8"
-              role="banner"
-            >
-              {/* 카테고리 */}
-              <div className="mb-4">
-                <span
-                  className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary"
-                  role="badge"
-                  aria-label={`카테고리: ${blogPost.category}`}
-                >
-                  {blogPost.category}
-                </span>
-              </div>
-
-              {/* 제목 */}
-              <h1 id="post-title" className="mb-4 text-4xl font-bold leading-tight md:text-5xl">
-                {blogPost.title}
-              </h1>
-
-              {/* 메타 정보 */}
-              <div
-                className="mb-6 flex flex-wrap items-center gap-4 text-muted-foreground"
-                role="contentinfo"
-              >
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" aria-hidden="true" />
-                  <time
-                    dateTime={blogPost.publishedAt}
-                    aria-label={`발행일: ${formatDate(blogPost.publishedAt)}`}
-                  >
-                    {formatDate(blogPost.publishedAt)}
-                  </time>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" aria-hidden="true" />
-                  <span
-                    aria-label={`예상 읽기 시간: ${calculateReadingTime(
-                      blogPost.excerpt +
-                        (blogPost.content || [])
-                          .map((block: any) => block.plain_text || '')
-                          .join(' ')
-                    )}분`}
-                  >
-                    {calculateReadingTime(
-                      blogPost.excerpt +
-                        (blogPost.content || [])
-                          .map((block: any) => block.plain_text || '')
-                          .join(' ')
-                    )}
-                    분 읽기
+                {/* 메타 정보 */}
+                <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                  <span className="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary">
+                    {blogPost.category}
                   </span>
+                  <span>•</span>
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4" />
+                    <time dateTime={blogPost.publishedAt}>{formatDate(blogPost.publishedAt)}</time>
+                  </div>
+                  <span>•</span>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    <span>{calculateReadingTime(blogPost.excerpt)}분 읽기</span>
+                  </div>
+                  {/* 공유 버튼 */}
+                  <button
+                    onClick={handleShare}
+                    className="ml-auto flex items-center gap-1 rounded-md px-3 py-1 transition-colors hover:bg-secondary"
+                    aria-label="포스트 공유하기"
+                  >
+                    <Share2 className="h-4 w-4" />
+                    <span className="hidden sm:inline">공유</span>
+                  </button>
                 </div>
-                <button
-                  onClick={handleShare}
-                  className="flex items-center gap-1 rounded hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                  aria-label="포스트 공유하기"
-                >
-                  <Share2 className="h-4 w-4" aria-hidden="true" />
-                  공유하기
-                </button>
-              </div>
 
-              {/* 태그 */}
-              {blogPost.tags.length > 0 && (
-                <div
-                  className="mb-6 flex flex-wrap items-center gap-2"
-                  role="group"
-                  aria-label="태그 목록"
+                {/* 제목 */}
+                <h1 className="mb-4 text-3xl font-bold leading-tight md:text-4xl">
+                  {blogPost.title}
+                </h1>
+
+                {/* 요약 */}
+                <p className="mb-6 text-lg leading-relaxed text-muted-foreground">
+                  {blogPost.excerpt}
+                </p>
+
+                {/* 태그 */}
+                {blogPost.tags.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Tag className="h-4 w-4 text-muted-foreground" />
+                    {blogPost.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="rounded bg-secondary px-2 py-1 text-sm text-muted-foreground"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </motion.header>
+
+              {/* 커버 이미지 */}
+              {blogPost.coverImage && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="mb-8"
                 >
-                  <Tag className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                  {blogPost.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-md bg-secondary px-2 py-1 text-xs text-muted-foreground"
-                      role="badge"
-                      aria-label={`태그: ${tag}`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                  <div className="relative aspect-video overflow-hidden rounded-lg">
+                    <Image
+                      src={blogPost.coverImage}
+                      alt={`${blogPost.title} 커버 이미지`}
+                      fill
+                      className="object-cover"
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                    />
+                  </div>
+                </motion.div>
               )}
 
-              {/* 요약 */}
-              <p className="text-lg leading-relaxed text-muted-foreground" role="doc-subtitle">
-                {blogPost.excerpt}
-              </p>
-            </motion.header>
-
-            {/* 커버 이미지 */}
-            {blogPost.coverImage && (
-              <motion.figure
+              {/* 콘텐츠 */}
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="mb-12"
-                role="img"
-                aria-labelledby="cover-image-caption"
+                transition={{ duration: 0.5, delay: 0.3 }}
+                id="main-content"
+                tabIndex={-1}
+                className="prose prose-gray max-w-none dark:prose-invert prose-headings:scroll-mt-24"
               >
-                <div className="relative aspect-video overflow-hidden rounded-lg">
-                  <Image
-                    src={blogPost.coverImage}
-                    alt={`${blogPost.title} 커버 이미지`}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-                <figcaption id="cover-image-caption" className="sr-only">
-                  {blogPost.title} 포스트의 커버 이미지
-                </figcaption>
-              </motion.figure>
-            )}
+                <NotionBlocks blocks={blogPost.content} />
+              </motion.div>
+            </article>
 
-            {/* 목차 */}
-            {tableOfContents.length > 0 && (
-              <motion.nav
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.25 }}
-                className="mb-8 rounded-lg border bg-secondary/30 p-6"
-                role="navigation"
-                aria-labelledby="toc-heading"
-              >
-                <h2 id="toc-heading" className="mb-4 text-lg font-semibold">
-                  목차
-                </h2>
-                <ol className="space-y-2" role="list">
-                  {tableOfContents.map((item) => (
-                    <li
-                      key={item.id}
-                      style={{ marginLeft: `${(item.level - 1) * 16}px` }}
-                      role="listitem"
-                    >
-                      <Link
-                        href={`#${item.id}`}
-                        className="rounded text-sm text-foreground/80 transition-colors hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:text-foreground/90 dark:hover:text-primary"
-                        aria-label={`${item.level}단계 제목: ${item.title}로 이동`}
-                      >
-                        {item.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ol>
-              </motion.nav>
-            )}
-
-            {/* 본문 내용 */}
-            <motion.section
-              id="main-content"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-foreground prose-p:text-foreground/90 prose-a:text-primary prose-blockquote:border-primary prose-blockquote:text-foreground/80 prose-strong:text-foreground prose-pre:bg-muted prose-li:text-foreground/90 prose-img:rounded-lg dark:prose-headings:text-foreground dark:prose-p:text-foreground/95 dark:prose-blockquote:text-foreground/85 dark:prose-strong:text-foreground dark:prose-li:text-foreground/95"
-              role="main"
-              aria-label="블로그 포스트 본문"
-              tabIndex={-1}
-            >
-              <NotionBlocks blocks={blogPost.content} />
-            </motion.section>
-          </article>
+            {/* 사이드바 */}
+            <aside className="lg:sticky lg:top-24 lg:h-fit">
+              <TableOfContents items={tableOfContents} />
+            </aside>
+          </div>
 
           {/* 관련 포스트 */}
-          {relatedPosts.length > 0 && (
-            <motion.aside
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="mt-16 border-t pt-12"
-              role="complementary"
-              aria-labelledby="related-posts-heading"
-            >
-              <h2 id="related-posts-heading" className="mb-8 text-2xl font-bold">
-                관련 포스트
-              </h2>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" role="list">
-                {relatedPosts.map((post) => (
-                  <article key={post.id} className="group" role="listitem">
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="block rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                      aria-label={`${post.title} 포스트 읽기`}
-                    >
-                      <div className="overflow-hidden rounded-lg border bg-background transition-all hover:bg-secondary/50">
-                        {post.coverImage && (
-                          <figure className="relative aspect-video overflow-hidden">
-                            <Image
-                              src={post.coverImage}
-                              alt={`${post.title} 썸네일`}
-                              fill
-                              className="object-cover transition-transform group-hover:scale-105"
-                            />
-                          </figure>
-                        )}
-                        <div className="p-4">
-                          <div className="mb-2 text-xs text-primary" role="badge">
-                            {post.category}
-                          </div>
-                          <h3 className="mb-2 line-clamp-2 font-semibold transition-colors group-hover:text-primary">
-                            {post.title}
-                          </h3>
-                          <p className="line-clamp-2 text-sm text-muted-foreground">
-                            {post.excerpt}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  </article>
-                ))}
-              </div>
-            </motion.aside>
-          )}
+          <RelatedPosts
+            posts={relatedPosts}
+            currentPostSlug={blogPost.slug}
+            className="mt-16 border-t pt-16"
+          />
         </div>
       </div>
     </main>

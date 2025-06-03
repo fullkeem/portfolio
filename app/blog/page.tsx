@@ -2,45 +2,35 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Search, X, Calendar, Clock, Tag } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { useFilterStore } from '@/store/filterStore';
-import { useDebounce } from '@/hooks/useDebounce';
-import { formatDate, calculateReadingTime } from '@/lib/utils';
+import BlogCard from '@/components/blog/BlogCard';
+import BlogFilters from '@/components/blog/BlogFilters';
+import BlogPagination from '@/components/blog/BlogPagination';
 
-const categories = ['전체', '기술 블로그', '튜토리얼', '제작 과정', '개발 일지', '생각정리'];
+const POSTS_PER_PAGE = 9;
 
 export default function BlogPage() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const {
-    selectedCategory,
-    selectedTags,
-    blogSearchQuery,
-    setSelectedCategory,
-    setBlogSearchQuery,
-    clearBlogFilters,
-  } = useFilterStore();
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const [localSearchQuery, setLocalSearchQuery] = useState(blogSearchQuery);
-  const debouncedSearchQuery = useDebounce(localSearchQuery, 300);
-
-  // 디바운스된 검색어를 스토어에 업데이트
-  useEffect(() => {
-    setBlogSearchQuery(debouncedSearchQuery);
-  }, [debouncedSearchQuery, setBlogSearchQuery]);
+  const { selectedCategory, selectedTags, blogSearchQuery } = useFilterStore();
 
   // 블로그 포스트 데이터 가져오기
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
+        setLoading(true);
         const response = await fetch('/api/blog');
+        if (!response.ok) {
+          throw new Error('Failed to fetch blog posts');
+        }
         const data = await response.json();
         setBlogPosts(data);
       } catch (error) {
         console.error('Failed to fetch blog posts:', error);
+        setBlogPosts([]);
       } finally {
         setLoading(false);
       }
@@ -78,10 +68,28 @@ export default function BlogPage() {
     });
   }, [blogPosts, selectedCategory, selectedTags, blogSearchQuery]);
 
-  const hasActiveFilters =
-    (selectedCategory && selectedCategory !== '전체') ||
-    selectedTags.length > 0 ||
-    blogSearchQuery.length > 0;
+  // 페이지네이션 관련 계산
+  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const currentPosts = filteredPosts.slice(startIndex, endIndex);
+
+  // 모든 태그 추출
+  const availableTags = useMemo(() => {
+    const allTags = blogPosts.flatMap((post) => post.tags);
+    return [...new Set(allTags)].sort();
+  }, [blogPosts]);
+
+  // 필터가 변경되면 첫 페이지로 이동
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedTags, blogSearchQuery]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // 페이지 변경 시 상단으로 스크롤
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="min-h-screen py-20 md:py-32">
@@ -100,198 +108,96 @@ export default function BlogPage() {
         </motion.div>
 
         {/* 필터 섹션 */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-12"
-        >
-          <div className="mx-auto flex max-w-4xl flex-col gap-6">
-            {/* 검색 바 */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="블로그 글 검색..."
-                value={localSearchQuery}
-                onChange={(e) => setLocalSearchQuery(e.target.value)}
-                className="w-full rounded-lg border bg-background py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              {localSearchQuery && (
-                <button
-                  onClick={() => setLocalSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-
-            {/* 카테고리 필터 */}
-            <div>
-              <h3 className="mb-3 text-sm font-medium">카테고리</h3>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => {
-                  const isSelected =
-                    selectedCategory === category || (category === '전체' && !selectedCategory);
-                  return (
-                    <button
-                      key={category}
-                      onClick={() => setSelectedCategory(category === '전체' ? null : category)}
-                      className={`rounded-full px-4 py-2 text-sm transition-all ${
-                        isSelected
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-secondary hover:bg-secondary/80'
-                      }`}
-                    >
-                      {category}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* 필터 초기화 */}
-            {hasActiveFilters && (
-              <button
-                onClick={clearBlogFilters}
-                className="flex items-center gap-1 self-start text-sm text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-3 w-3" />
-                필터 초기화
-              </button>
-            )}
-          </div>
-        </motion.div>
+        <BlogFilters availableTags={availableTags} />
 
         {/* 블로그 포스트 그리드 */}
         <div className="mx-auto max-w-6xl">
           {loading ? (
             // 로딩 스켈레톤
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="animate-pulse rounded-lg border bg-background p-6">
-                  <div className="mb-4 aspect-video rounded-lg bg-muted" />
-                  <div className="mb-4">
-                    <div className="inline-block h-4 w-20 rounded bg-muted" />
-                    <span className="mx-2 text-xs text-muted-foreground">•</span>
-                    <div className="inline-block h-4 w-24 rounded bg-muted" />
-                  </div>
-                  <div className="mb-2 h-7 w-full rounded bg-muted" />
-                  <div className="mb-1 h-4 w-full rounded bg-muted" />
-                  <div className="h-4 w-3/4 rounded bg-muted" />
-                </div>
-              ))}
-            </div>
-          ) : filteredPosts.length > 0 ? (
-            <motion.div
-              className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1,
-                  },
-                },
-              }}
-            >
-              {filteredPosts.map((post) => (
-                <motion.article
-                  key={post.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                  className="group"
-                >
-                  <Link href={`/blog/${post.slug}`}>
-                    <div className="flex h-full flex-col overflow-hidden rounded-lg border bg-background transition-all hover:bg-secondary/50">
-                      {/* 커버 이미지 */}
-                      {post.coverImage && (
-                        <div className="relative aspect-video overflow-hidden">
-                          <Image
-                            src={post.coverImage}
-                            alt={post.title}
-                            fill
-                            className="object-cover transition-transform group-hover:scale-105"
-                          />
-                        </div>
-                      )}
-
-                      <div className="flex-1 p-6">
-                        {/* 메타 정보 */}
-                        <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
-                          <span className="font-medium text-primary">{post.category}</span>
-                          <span>•</span>
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            <time>{formatDate(post.publishedAt)}</time>
-                          </div>
-                          <span>•</span>
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            <span>{calculateReadingTime(post.excerpt)}분</span>
-                          </div>
-                        </div>
-
-                        {/* 제목 */}
-                        <h3 className="mb-2 line-clamp-2 text-xl font-semibold transition-colors group-hover:text-primary">
-                          {post.title}
-                        </h3>
-
-                        {/* 요약 */}
-                        <p className="mb-4 line-clamp-3 text-muted-foreground">{post.excerpt}</p>
-
-                        {/* 태그 */}
-                        {post.tags.length > 0 && (
-                          <div className="flex flex-wrap items-center gap-1">
-                            <Tag className="h-3 w-3 text-muted-foreground" />
-                            {post.tags.slice(0, 3).map((tag) => (
-                              <span key={tag} className="text-xs text-muted-foreground">
-                                {tag}
-                              </span>
-                            ))}
-                            {post.tags.length > 3 && (
-                              <span className="text-xs text-muted-foreground">
-                                +{post.tags.length - 3}
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                </motion.article>
-              ))}
-            </motion.div>
-          ) : (
-            // 결과 없음
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="py-12 text-center"
+              className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
             >
-              <p className="text-lg text-muted-foreground">
-                검색 결과가 없습니다. 다른 필터를 시도해보세요.
+              {[...Array(POSTS_PER_PAGE)].map((_, i) => (
+                <div key={i} className="animate-pulse rounded-lg border bg-background p-6">
+                  <div className="mb-4 aspect-video rounded-lg bg-muted" />
+                  <div className="mb-4 space-y-2">
+                    <div className="h-4 w-20 rounded bg-muted" />
+                    <div className="h-6 w-full rounded bg-muted" />
+                    <div className="h-4 w-3/4 rounded bg-muted" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="h-3 w-full rounded bg-muted" />
+                    <div className="h-3 w-full rounded bg-muted" />
+                    <div className="h-3 w-2/3 rounded bg-muted" />
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          ) : filteredPosts.length > 0 ? (
+            <>
+              {/* 결과 요약 */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-8 text-center text-sm text-muted-foreground"
+              >
+                총 {filteredPosts.length}개의 포스트
+                {totalPages > 1 && (
+                  <span>
+                    {' '}
+                    • 페이지 {currentPage} / {totalPages}
+                  </span>
+                )}
+              </motion.div>
+
+              {/* 포스트 그리드 */}
+              <motion.div
+                key={currentPage} // 페이지 변경 시 재애니메이션
+                className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.1,
+                    },
+                  },
+                }}
+              >
+                {currentPosts.map((post, index) => (
+                  <BlogCard key={post.id} post={post} index={index} />
+                ))}
+              </motion.div>
+
+              {/* 페이지네이션 */}
+              <BlogPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                className="mt-12"
+              />
+            </>
+          ) : (
+            // 검색 결과 없음
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="py-16 text-center"
+            >
+              <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-muted/50">
+                <span className="text-2xl">📝</span>
+              </div>
+              <h3 className="mb-2 text-xl font-semibold">포스트를 찾을 수 없습니다</h3>
+              <p className="text-muted-foreground">
+                검색 조건을 확인하거나 다른 키워드로 검색해보세요.
               </p>
             </motion.div>
           )}
         </div>
-
-        {/* 결과 개수 표시 */}
-        {!loading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="mt-8 text-center text-sm text-muted-foreground"
-          >
-            총 {filteredPosts.length}개의 포스트
-          </motion.div>
-        )}
       </div>
     </div>
   );
