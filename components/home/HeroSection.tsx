@@ -2,14 +2,13 @@
 
 import { useRef } from 'react';
 import { gsap } from 'gsap';
-import { TextPlugin } from 'gsap/TextPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion } from 'framer-motion';
 import { MagneticButton } from '@/components/common/MagneticButton';
 import { useGSAP } from '@gsap/react';
 
 // GSAP 플러그인 등록
-gsap.registerPlugin(useGSAP, TextPlugin, ScrollTrigger);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export function HeroSection() {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -49,16 +48,26 @@ export function HeroSection() {
         '-=0.5'
       );
 
-      // Typing effect for subtitle
-      tl.to(
-        subtitleRef.current,
-        {
-          text: '랜딩 페이지 제작 전문 프론트엔드 개발자',
-          duration: 2,
-          ease: 'none',
-        },
-        '-=0.3'
-      );
+      // Typing effect for subtitle - 더 안전한 방식으로 변경
+      if (subtitleRef.current) {
+        // 텍스트를 미리 설정하고 opacity로 나타내기
+        subtitleRef.current.textContent = '랜딩 페이지 제작 전문 프론트엔드 개발자';
+
+        tl.fromTo(
+          subtitleRef.current,
+          {
+            opacity: 0,
+            scale: 0.9,
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            ease: 'power2.out',
+          },
+          '-=0.3'
+        );
+      }
 
       // Background parallax effect - null 체크 추가
       if (backgroundRef.current) {

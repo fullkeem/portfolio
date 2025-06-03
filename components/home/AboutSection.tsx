@@ -59,20 +59,25 @@ export function AboutSection() {
         );
       }
 
-      // Section background reveal
+      // Section reveal animation (색상 대신 opacity + scale 사용)
       gsap.fromTo(
         sectionRef.current,
         {
-          background: 'transparent',
+          opacity: 0.8,
+          scale: 0.98,
+          y: 20,
         },
         {
-          background:
-            'linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--secondary))/0.3 100%)',
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 1.2,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top center',
-            end: 'bottom center',
-            scrub: true,
+            start: 'top 85%',
+            end: 'top 60%',
+            scrub: 0.8,
           },
         }
       );
@@ -115,7 +120,11 @@ export function AboutSection() {
   };
 
   return (
-    <section id="about" ref={sectionRef} className="py-20 transition-all duration-1000 md:py-32">
+    <section
+      id="about"
+      ref={sectionRef}
+      className="bg-gradient-to-br from-secondary/10 via-transparent to-secondary/5 py-20 transition-all duration-1000 md:py-32"
+    >
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
