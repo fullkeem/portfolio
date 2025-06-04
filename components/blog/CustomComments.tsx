@@ -19,8 +19,6 @@ import { isSupabaseConfigured } from '@/lib/supabase/client';
 
 interface CustomCommentsProps {
   slug: string;
-  title: string;
-  theme: string | undefined;
 }
 
 interface CommentItemProps {

@@ -4,18 +4,8 @@ import { useEffect, useRef, useState, Suspense } from 'react';
 import { useTheme } from 'next-themes';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Github, Mail, Users } from 'lucide-react';
-import dynamic from 'next/dynamic';
-
-// 동적 임포트로 성능 최적화
-const GiscusComments = dynamic(() => import('./GiscusComments'), {
-  loading: () => <CommentsSkeleton />,
-  ssr: false,
-});
-
-const CustomComments = dynamic(() => import('./CustomComments'), {
-  loading: () => <CommentsSkeleton />,
-  ssr: false,
-});
+import GiscusComments from './GiscusComments';
+import CustomComments from './CustomComments';
 
 interface CommentsProps {
   slug: string;
@@ -266,7 +256,7 @@ export default function Comments({ slug, title, className = '' }: CommentsProps)
               transition={{ duration: 0.3 }}
             >
               <Suspense fallback={<CommentsSkeleton />}>
-                <CustomComments slug={slug} title={title} theme={currentTheme} />
+                <CustomComments slug={slug} />
               </Suspense>
             </motion.div>
           )}
