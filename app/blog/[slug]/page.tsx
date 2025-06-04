@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, Clock, Tag, Share2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Tag, Share2 } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { NotionBlocks } from '@/lib/notion/blocks';
 import { formatDate, calculateReadingTime } from '@/lib/utils';
@@ -132,7 +132,7 @@ export default function BlogDetailPage() {
           text: blogPost.excerpt,
           url: window.location.href,
         });
-      } catch (error) {
+      } catch {
         // 사용자가 공유를 취소한 경우
         console.log('Share cancelled');
       }
@@ -142,8 +142,8 @@ export default function BlogDetailPage() {
         await navigator.clipboard.writeText(window.location.href);
         // TODO: 토스트 메시지 표시
         alert('링크가 클립보드에 복사되었습니다!');
-      } catch (error) {
-        console.error('Failed to copy to clipboard:', error);
+      } catch (err) {
+        console.error('Failed to copy to clipboard:', err);
       }
     }
   };
