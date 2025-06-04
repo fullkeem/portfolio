@@ -159,6 +159,42 @@
 - [x] 다크모드 연동
 - [x] 반응형 레이아웃
 
+#### Day 14+: 하이브리드 댓글 시스템 ✅ COMPLETED
+
+- [x] **Supabase 댓글 시스템 구축**
+  - [x] Supabase 프로젝트 설정 및 환경변수 구성
+  - [x] PostgreSQL 데이터베이스 스키마 설계 및 적용
+  - [x] Row Level Security (RLS) 정책 구현
+  - [x] 인덱스 및 트리거 최적화
+- [x] **데이터베이스 테이블 구조**
+  - [x] comments 테이블 (댓글 기본 정보, 승인 워크플로우)
+  - [x] comment_likes 테이블 (IP 기반 좋아요 시스템)
+  - [x] comment_reports 테이블 (스팸 신고 기능)
+- [x] **Stored Procedures 구현**
+  - [x] create_comment (자동 승인 기능 포함)
+  - [x] toggle_comment_like (중복 방지)
+  - [x] approve_comment (관리자용)
+  - [x] delete_comment (소프트 삭제)
+- [x] **API 엔드포인트 구축**
+  - [x] GET /api/comments (댓글 목록 조회)
+  - [x] POST /api/comments (댓글 작성)
+  - [x] POST /api/comments/[id]/like (좋아요 토글)
+  - [x] GET /api/comments/custom-stats (통계 조회)
+- [x] **프론트엔드 컴포넌트**
+  - [x] Comments 하이브리드 선택 UI
+  - [x] CustomComments 이메일 기반 댓글
+  - [x] GiscusComments GitHub 계정 댓글
+  - [x] 실시간 UI 업데이트 및 로딩 상태
+- [x] **테스트 및 검증**
+  - [x] Supabase MCP 도구로 데이터베이스 검증
+  - [x] API 엔드포인트 기능 테스트
+  - [x] 테스트 페이지 생성 (/test-comments)
+  - [x] 댓글 작성/조회/좋아요 기능 검증
+- [x] **문제 해결 및 최적화**
+  - [x] 댓글 자동 승인 기능 구현
+  - [x] IP 기반 중복 좋아요 방지
+  - [x] 스키마 파일 문서화 및 관리 방안 수립
+
 #### Day 15: Contact 페이지 📋 PENDING
 
 - [ ] Contact 페이지 레이아웃
@@ -279,7 +315,11 @@
 
 ### ✅ 새로 완성된 컴포넌트들:
 
-- **Comments**: Giscus 기반 댓글 시스템 (GitHub Discussions 연동)
+- **Comments**: 하이브리드 댓글 시스템 (Giscus + Supabase)
+
+  - GitHub 사용자: Giscus (GitHub Discussions)
+  - 일반 사용자: Custom (Supabase + 이메일 인증)
+  - 시스템 선택 UI, 통계 표시, 자동 테마 연동
 
 - **BlogCard**: 커버 이미지, 메타 정보, 태그 표시
 - **BlogFilters**: 검색, 카테고리, 태그 필터링 (디바운스 적용)
@@ -349,7 +389,7 @@
 - [x] 다크모드 전체 페이지 지원
 - [x] 애니메이션 기본 구현
 - [ ] Contact 페이지 완료
-- [x] 댓글 시스템 구현 (Giscus)
+- [x] 댓글 시스템 구현 (하이브리드: Giscus + Supabase)
 - [ ] Lighthouse 점수 90점 이상
 - [ ] 실제 포트폴리오 항목 3개 이상
 - [ ] 블로그 포스트 1개 이상
