@@ -26,6 +26,19 @@ const nextConfig: NextConfig = {
     optimizeCss: true,
     scrollRestoration: true,
   },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "frame-src 'self' giscus.app *.github.com; script-src 'self' 'unsafe-eval' 'unsafe-inline' giscus.app *.github.com;",
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {

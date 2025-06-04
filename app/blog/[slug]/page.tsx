@@ -11,6 +11,7 @@ import { NotionBlocks } from '@/lib/notion/blocks';
 import { formatDate, calculateReadingTime } from '@/lib/utils';
 import TableOfContents from '@/components/blog/TableOfContents';
 import RelatedPosts from '@/components/blog/RelatedPosts';
+import Comments from '@/components/blog/Comments';
 import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 interface BlogPostWithContent extends BlogPost {
@@ -362,6 +363,9 @@ export default function BlogDetailPage() {
             currentPostSlug={blogPost.slug}
             className="mt-16 border-t pt-16"
           />
+
+          {/* 댓글 */}
+          <Comments slug={blogPost.slug} title={blogPost.title} className="mt-16 border-t pt-16" />
         </div>
       </div>
     </main>
