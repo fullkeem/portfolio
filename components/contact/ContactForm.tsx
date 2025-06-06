@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 import {
   contactFormSchema,
@@ -255,25 +256,17 @@ export function ContactForm() {
             {submissionState !== 'idle' && <div className="mb-6">{renderSubmissionFeedback()}</div>}
 
             {/* 제출 버튼 */}
-            <motion.button
+            <Button
+              animated={false}
               type="submit"
+              loading={submissionState === 'loading'}
               disabled={isSubmitting || submissionState === 'loading'}
-              whileHover={{ scale: submissionState === 'idle' ? 1.02 : 1 }}
-              whileTap={{ scale: submissionState === 'idle' ? 0.98 : 1 }}
-              className="flex w-full items-center justify-center gap-3 rounded-lg bg-primary px-8 py-4 font-medium text-primary-foreground transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
+              icon={submissionState === 'loading' ? undefined : <Send className="h-5 w-5" />}
+              className="w-full px-8 py-4"
+              size="lg"
             >
-              {submissionState === 'loading' ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  전송 중...
-                </>
-              ) : (
-                <>
-                  <Send className="h-5 w-5" />
-                  메시지 보내기
-                </>
-              )}
-            </motion.button>
+              {submissionState === 'loading' ? '전송 중...' : '메시지 보내기'}
+            </Button>
 
             <div className="text-center">
               <p className="text-sm text-muted-foreground">
