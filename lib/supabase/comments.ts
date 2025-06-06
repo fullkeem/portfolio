@@ -83,7 +83,8 @@ export class CommentService {
   // 댓글 작성
   async createComment(
     commentData: CommentFormData & { post_slug: string },
-    req: Request
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _req: Request
   ): Promise<string> {
     this.ensureConnection();
 
@@ -208,7 +209,7 @@ export class CommentService {
   }
 
   // 관리자용: 신고된 댓글 목록
-  async getReportedComments(): Promise<any[]> {
+  async getReportedComments(): Promise<unknown[]> {
     this.ensureConnection();
 
     const { data, error } = await supabase!
@@ -236,7 +237,7 @@ export class CommentService {
   // 실시간 댓글 구독 (WebSocket)
   subscribeToComments(
     postSlug: string,
-    callback: (payload: any) => void
+    callback: (payload: unknown) => void
   ): () => void {
     this.ensureConnection();
 
