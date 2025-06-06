@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { Portfolio } from '@/types';
 import { PortfolioCardSkeleton } from '@/components/common/loading/Skeleton';
 import { TiltCard } from '@/components/common/MagneticButton';
+import { PortfolioImage } from '@/components/ui/OptimizedImage';
 
 export function PortfolioSection() {
   const [ref, inView] = useInView({
@@ -64,13 +65,14 @@ export function PortfolioSection() {
                       className="group relative h-full cursor-pointer overflow-hidden rounded-lg border bg-background"
                       tiltStrength={12}
                     >
-                      <div className="relative aspect-video overflow-hidden bg-muted">
+                      <div className="relative min-h-[200px] w-full overflow-hidden bg-muted [aspect-ratio:16/9]">
                         {portfolio.thumbnail ? (
-                          <Image
+                          <PortfolioImage
                             src={portfolio.thumbnail}
                             alt={portfolio.title}
                             fill
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            showLoadingSpinner={true}
                           />
                         ) : (
                           <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />

@@ -1,8 +1,34 @@
+import type { Metadata } from 'next';
+import { AboutHero } from '@/components/about/AboutHero';
+import { AboutProblemSolution } from '@/components/about/AboutProblemSolution';
+import { AboutCredibility } from '@/components/about/AboutCredibility';
+import { AboutJourney } from '@/components/about/AboutJourney';
+import { AboutPhilosophy } from '@/components/about/AboutPhilosophy';
+import { AboutTestimonials } from '@/components/about/AboutTestimonials';
+
+export const metadata: Metadata = {
+  title: 'About',
+  description:
+    '크몽에서 만나는 신뢰할 수 있는 프론트엔드 개발자 fullkeem. 고객 중심의 소통과 완성도 높은 웹사이트 제작을 약속합니다.',
+  openGraph: {
+    title: 'About | fullkeem',
+    description: '크몽에서 만나는 신뢰할 수 있는 프론트엔드 개발자',
+  },
+  twitter: {
+    title: 'About | fullkeem',
+    description: '크몽에서 만나는 신뢰할 수 있는 프론트엔드 개발자',
+  },
+};
+
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-32">
-      <h1 className="text-4xl font-bold mb-8">About</h1>
-      <p className="text-muted-foreground">About 페이지는 개발 중입니다.</p>
+    <div className="min-h-screen">
+      <AboutHero />
+      <AboutProblemSolution />
+      <AboutCredibility />
+      <AboutJourney />
+      <AboutPhilosophy />
+      <AboutTestimonials />
     </div>
   );
 }

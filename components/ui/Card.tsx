@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils/cn';
+import { OptimizedImage } from './OptimizedImage';
 
 interface MetaItem {
   icon: ReactNode;
@@ -83,13 +84,15 @@ export function Card({
 
       {/* 이미지 */}
       {image && (
-        <div className="relative aspect-video overflow-hidden bg-muted">
-          <Image
+        <div className="relative min-h-[200px] w-full overflow-hidden bg-muted [aspect-ratio:16/9]">
+          <OptimizedImage
             src={image}
             alt={imageAlt}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            imageType="blog"
+            showLoadingSpinner={true}
           />
           {/* 호버시 오버레이 */}
           {href && (

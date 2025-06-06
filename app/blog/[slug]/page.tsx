@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BlogImage } from '@/components/ui/OptimizedImage';
 import { ArrowLeft, Calendar, Clock, Tag, Share2 } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { NotionBlocks } from '@/lib/notion/blocks';
@@ -325,16 +326,16 @@ export default function BlogDetailPage() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="mb-8"
                 >
-                  <div className="relative aspect-video overflow-hidden rounded-lg">
-                    <Image
-                      src={blogPost.coverImage}
-                      alt={`${blogPost.title} 커버 이미지`}
-                      fill
-                      className="object-cover"
-                      priority
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                    />
-                  </div>
+                  <BlogImage
+                    src={blogPost.coverImage}
+                    alt={`${blogPost.title} 커버 이미지`}
+                    fill
+                    className="rounded-lg object-cover"
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                    containerClassName="relative w-full overflow-hidden rounded-lg [aspect-ratio:16/9] min-h-[300px]"
+                    showLoadingSpinner={true}
+                  />
                 </motion.div>
               )}
 

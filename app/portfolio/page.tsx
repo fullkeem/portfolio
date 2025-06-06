@@ -1,12 +1,30 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { Portfolio } from '@/types';
-import { PortfolioCard } from '@/components/portfolio/PortfolioCard';
-import { PortfolioFilter } from '@/components/portfolio/PortfolioFilter';
 import { PortfolioCardSkeleton } from '@/components/common/loading/Skeleton';
 import { useFilterStore } from '@/store/filterStore';
+
+// Dynamic imports로 코드 스플리팅
+const PortfolioCard = dynamic(
+  () =>
+    import('@/components/portfolio/PortfolioCard').then((mod) => ({ default: mod.PortfolioCard })),
+  {
+    loading: () => <PortfolioCardSkeleton />,
+  }
+);
+
+const PortfolioFilter = dynamic(
+  () =>
+    import('@/components/portfolio/PortfolioFilter').then((mod) => ({
+      default: mod.PortfolioFilter,
+    })),
+  {
+    loading: () => <div className="mb-8 h-20 animate-pulse rounded-lg bg-secondary/50" />,
+  }
+);
 
 export default function PortfolioPage() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
@@ -85,7 +103,9 @@ export default function PortfolioPage() {
         </motion.div>
 
         {/* 필터 섹션 */}
-        <PortfolioFilter technologies={allTechnologies} />
+        <Suspense fallback={<div className="mb-8 h-20 animate-pulse rounded-lg bg-secondary/50" />}>
+          <PortfolioFilter technologies={allTechnologies} />
+        </Suspense>
 
         {/* 포트폴리오 그리드 */}
         <div className="mt-12">

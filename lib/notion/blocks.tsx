@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { BlogImage } from '@/components/ui/OptimizedImage';
 
 type NotionBlock = BlockObjectResponse;
 
@@ -264,15 +265,15 @@ function ImageBlock({ block }: { block: NotionBlock }) {
 
   return (
     <figure className="my-6" role="img">
-      <div className="relative aspect-video">
-        <Image
-          src={src}
-          alt={caption || '블로그 포스트 이미지'}
-          fill
-          className="rounded-lg object-contain"
-          loading="lazy"
-        />
-      </div>
+      <BlogImage
+        src={src}
+        alt={caption || '블로그 포스트 이미지'}
+        fill
+        className="rounded-lg object-contain"
+        loading="lazy"
+        containerClassName="relative w-full [aspect-ratio:16/9] min-h-[250px]"
+        showLoadingSpinner={true}
+      />
       {caption && (
         <figcaption
           className="mt-2 text-center text-sm text-foreground/70 dark:text-foreground/80"

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Calendar, Clock } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { formatDate, calculateReadingTime } from '@/lib/utils';
+import { BlogImage } from '@/components/ui/OptimizedImage';
 
 interface RelatedPostsProps {
   posts: BlogPost[];
@@ -51,15 +52,15 @@ export default function RelatedPosts({
                 <div className="h-full overflow-hidden rounded-lg border bg-background transition-all hover:bg-secondary/50 hover:shadow-lg">
                   {/* 커버 이미지 */}
                   {post.coverImage && (
-                    <div className="relative aspect-video overflow-hidden">
-                      <Image
-                        src={post.coverImage}
-                        alt={`${post.title} 커버 이미지`}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                    </div>
+                    <BlogImage
+                      src={post.coverImage}
+                      alt={`${post.title} 커버 이미지`}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      containerClassName="relative w-full overflow-hidden [aspect-ratio:16/9] min-h-[200px]"
+                      showLoadingSpinner={true}
+                    />
                   )}
 
                   <div className="p-4">

@@ -1,12 +1,32 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { BlogPost } from '@/types';
 import { useFilterStore } from '@/store/filterStore';
-import BlogCard from '@/components/blog/BlogCard';
-import BlogFilters from '@/components/blog/BlogFilters';
-import BlogPagination from '@/components/blog/BlogPagination';
+
+// Dynamic imports로 코드 스플리팅
+const BlogCard = dynamic(() => import('@/components/blog/BlogCard'), {
+  loading: () => (
+    <div className="animate-pulse rounded-lg border bg-background p-6">
+      <div className="mb-4 aspect-video rounded-lg bg-muted" />
+      <div className="mb-4 space-y-2">
+        <div className="h-4 w-20 rounded bg-muted" />
+        <div className="h-6 w-full rounded bg-muted" />
+        <div className="h-4 w-3/4 rounded bg-muted" />
+      </div>
+    </div>
+  ),
+});
+
+const BlogFilters = dynamic(() => import('@/components/blog/BlogFilters'), {
+  loading: () => <div className="mb-8 h-24 animate-pulse rounded-lg bg-secondary/50" />,
+});
+
+const BlogPagination = dynamic(() => import('@/components/blog/BlogPagination'), {
+  loading: () => <div className="mt-12 h-12 animate-pulse rounded-lg bg-secondary/50" />,
+});
 
 const POSTS_PER_PAGE = 9;
 
@@ -108,7 +128,9 @@ export default function BlogPage() {
         </motion.div>
 
         {/* 필터 섹션 */}
-        <BlogFilters availableTags={availableTags} />
+        <Suspense fallback={<div className="mb-8 h-24 animate-pulse rounded-lg bg-secondary/50" />}>
+          <BlogFilters availableTags={availableTags} />
+        </Suspense>
 
         {/* 블로그 포스트 그리드 */}
         <div className="mx-auto max-w-6xl">
@@ -174,12 +196,16 @@ export default function BlogPage() {
               </motion.div>
 
               {/* 페이지네이션 */}
-              <BlogPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-                className="mt-12"
-              />
+              <Suspense
+                fallback={<div className="mt-12 h-12 animate-pulse rounded-lg bg-secondary/50" />}
+              >
+                <BlogPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChangeAction={handlePageChange}
+                  className="mt-12"
+                />
+              </Suspense>
             </>
           ) : (
             // 검색 결과 없음
