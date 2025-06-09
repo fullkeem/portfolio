@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Calendar, Clock } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { formatDate, calculateReadingTime } from '@/lib/utils';
+import { optimizeUnsplashUrl, imagePresets } from '@/lib/utils/image';
 
 interface RelatedPostsProps {
   posts: BlogPost[];
@@ -53,12 +54,21 @@ export default function RelatedPosts({
                   {post.coverImage && (
                     <div className="relative aspect-video overflow-hidden">
                       <Image
-                        src={post.coverImage}
+                        src={
+                          post.coverImage.includes('unsplash.com')
+                            ? optimizeUnsplashUrl(
+                                post.coverImage,
+                                imagePresets.relatedPost.unsplashParams
+                              )
+                            : post.coverImage
+                        }
                         alt={`${post.title} 커버 이미지`}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        sizes={imagePresets.relatedPost.sizes}
+                        quality={imagePresets.relatedPost.quality}
                         priority={index === 0}
+                        loading={index === 0 ? 'eager' : 'lazy'}
                       />
                     </div>
                   )}

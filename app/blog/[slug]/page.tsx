@@ -12,6 +12,7 @@ import { formatDate, calculateReadingTime } from '@/lib/utils';
 import TableOfContents from '@/components/blog/TableOfContents';
 import RelatedPosts from '@/components/blog/RelatedPosts';
 import Comments from '@/components/blog/Comments';
+import { optimizeUnsplashUrl, imagePresets } from '@/lib/utils/image';
 import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 interface BlogPostWithContent extends BlogPost {
@@ -327,12 +328,21 @@ export default function BlogDetailPage() {
                 >
                   <div className="relative aspect-video overflow-hidden rounded-lg">
                     <Image
-                      src={blogPost.coverImage}
+                      src={
+                        blogPost.coverImage.includes('unsplash.com')
+                          ? optimizeUnsplashUrl(
+                              blogPost.coverImage,
+                              imagePresets.blogCover.unsplashParams
+                            )
+                          : blogPost.coverImage
+                      }
                       alt={`${blogPost.title} 커버 이미지`}
                       fill
                       className="object-cover"
                       priority
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                      sizes={imagePresets.blogCover.sizes}
+                      quality={imagePresets.blogCover.quality}
+                      loading="eager"
                     />
                   </div>
                 </motion.div>

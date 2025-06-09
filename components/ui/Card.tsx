@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils/cn';
+import { optimizeUnsplashUrl, imagePresets } from '@/lib/utils/image';
 
 interface MetaItem {
   icon: ReactNode;
@@ -89,12 +90,18 @@ export function Card({
       {image && (
         <div className="relative aspect-video overflow-hidden bg-muted">
           <Image
-            src={image}
+            src={
+              image.includes('unsplash.com')
+                ? optimizeUnsplashUrl(image, imagePresets.blogCard.unsplashParams)
+                : image
+            }
             alt={imageAlt}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes={imagePresets.blogCard.sizes}
+            quality={imagePresets.blogCard.quality}
             priority={priority}
+            loading={priority ? 'eager' : 'lazy'}
           />
           {/* 호버시 오버레이 */}
           {href && (
@@ -105,7 +112,7 @@ export function Card({
         </div>
       )}
 
-      <div className="flex flex-1 flex-col p-6">
+      <div className={`flex flex-1 flex-col p-6 ${!image ? 'justify-center' : ''}`}>
         {/* 메타 정보 */}
         {(metadata.length > 0 || category) && (
           <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
@@ -129,7 +136,8 @@ export function Card({
         <h3
           className={cn(
             'mb-2 font-semibold transition-colors',
-            href ? 'line-clamp-2 text-xl group-hover:text-primary' : 'line-clamp-1 text-xl'
+            href ? 'line-clamp-2 group-hover:text-primary' : 'line-clamp-1',
+            image ? 'text-xl' : 'text-2xl'
           )}
         >
           {title}
@@ -138,8 +146,14 @@ export function Card({
         {/* 설명 */}
         <p
           className={cn(
-            'mb-4 leading-relaxed text-muted-foreground',
-            tags.length > 0 ? 'line-clamp-2 flex-1' : 'line-clamp-3 flex-1'
+            'mb-4 flex-1 leading-relaxed text-muted-foreground',
+            tags.length > 0
+              ? image
+                ? 'line-clamp-2'
+                : 'line-clamp-3'
+              : image
+                ? 'line-clamp-3'
+                : 'line-clamp-4'
           )}
         >
           {description}
