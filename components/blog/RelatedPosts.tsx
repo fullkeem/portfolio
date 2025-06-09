@@ -68,8 +68,8 @@ export default function RelatedPosts({
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         sizes={imagePresets.relatedPost.sizes}
                         quality={imagePresets.relatedPost.quality}
-                        priority={index === 0}
-                        loading={index === 0 ? 'eager' : 'lazy'}
+                        priority={false} // 관련 포스트는 모두 지연 로딩
+                        loading="lazy" // 모든 관련 포스트 이미지 지연 로딩
                       />
                     </div>
                   )}

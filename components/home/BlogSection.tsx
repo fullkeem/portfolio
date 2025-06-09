@@ -109,10 +109,10 @@ export function BlogSection() {
                               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                               sizes={imagePresets.blogCard.sizes}
                               quality={getOptimalQuality(imagePresets.blogCard.quality, false)}
-                              loading={loadingStrategy.loading}
+                              loading="lazy" // BlogSection은 모든 이미지 지연 로딩
                               // @ts-ignore - Next.js 15 새로운 속성
-                              fetchPriority={loadingStrategy.fetchPriority}
-                              decoding={loadingStrategy.decoding}
+                              fetchPriority="low" // 낮은 우선순위로 설정
+                              decoding="async"
                             />
                           ) : (
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />

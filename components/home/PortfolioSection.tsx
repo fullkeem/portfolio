@@ -134,10 +134,10 @@ export function PortfolioSection() {
                                 index === 0 ? 95 : imagePresets.portfolioCard.quality,
                                 index === 0
                               )}
-                              loading={loadingStrategy.loading}
+                              loading={index === 0 ? 'eager' : 'lazy'} // 첫 번째만 즉시 로딩
                               priority={index === 0} // 첫 번째 이미지는 priority 명시
                               // @ts-ignore - Next.js 15 새로운 속성
-                              fetchPriority={loadingStrategy.fetchPriority}
+                              fetchPriority={index === 0 ? 'high' : 'low'} // 첫 번째만 높은 우선순위
                               decoding={loadingStrategy.decoding}
                             />
                           ) : (

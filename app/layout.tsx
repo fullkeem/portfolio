@@ -3,7 +3,6 @@ import localFont from 'next/font/local';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
-import { QueryProvider } from '@/components/QueryProvider';
 import { LenisProvider } from '@/components/LenisProvider';
 import { PageTransition } from '@/components/common/PageTransition';
 import './globals.css';
@@ -83,17 +82,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>
-            <LenisProvider>
-              <div className="relative flex min-h-screen flex-col">
-                <Header />
-                <PageTransition>
-                  <main className="flex-1">{children}</main>
-                </PageTransition>
-                <Footer />
-              </div>
-            </LenisProvider>
-          </QueryProvider>
+          <LenisProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <Header />
+              <PageTransition>
+                <main className="flex-1">{children}</main>
+              </PageTransition>
+              <Footer />
+            </div>
+          </LenisProvider>
         </ThemeProvider>
       </body>
     </html>

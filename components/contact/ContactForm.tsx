@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import emailjs from '@emailjs/browser';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
@@ -33,6 +32,9 @@ export function ContactForm() {
     setSubmissionState('loading');
 
     try {
+      // EmailJS 동적 로드 (Contact 페이지에서만 필요시 로드)
+      const emailjs = await import('@emailjs/browser').then((mod) => mod.default);
+
       // EmailJS 환경변수 확인
       const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
       const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
