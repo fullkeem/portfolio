@@ -56,15 +56,16 @@ export default function RelatedPosts({
                       <Image
                         src={
                           post.coverImage.includes('unsplash.com')
-                            ? optimizeUnsplashUrl(
-                                post.coverImage,
-                                imagePresets.relatedPost.unsplashParams
-                              )
-                            : post.coverImage
+                            ? optimizeUnsplashUrl(post.coverImage.trim(), 300, 200, {
+                                quality: imagePresets.relatedPost.quality,
+                                format: 'auto',
+                              })
+                            : post.coverImage.trim()
                         }
                         alt={`${post.title} 커버 이미지`}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        width={300} // 명시적 크기 추가
+                        height={200}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         sizes={imagePresets.relatedPost.sizes}
                         quality={imagePresets.relatedPost.quality}
                         priority={index === 0}

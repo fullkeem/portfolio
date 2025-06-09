@@ -177,7 +177,7 @@ export default function BlogPage() {
               <BlogPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={handlePageChange}
+                onPageChangeAction={handlePageChange}
                 className="mt-12"
               />
             </>

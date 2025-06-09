@@ -43,18 +43,18 @@ export function PortfolioSection() {
     fetchPortfolios();
   }, []);
 
-  // LCP 이미지 preload를 위한 첫 번째 포트폴리오 이미지
+  // LCP 이미지 preload를 위한 첫 번째 포트폴리오 이미지 (더 큰 크기로 최적화)
   const firstPortfolio = portfolios[0];
   const firstImageSrc = firstPortfolio?.thumbnail
-    ? optimizeUnsplashUrl(getImageOrFallback(firstPortfolio.thumbnail, 'development'), 400, 300, {
-        quality: getOptimalQuality(imagePresets.portfolioCard.quality, true),
-        format: 'auto',
+    ? optimizeUnsplashUrl(getImageOrFallback(firstPortfolio.thumbnail, 'development'), 600, 400, {
+        quality: getOptimalQuality(95, true), // LCP 이미지는 높은 품질로
+        format: 'webp', // WebP 강제 사용
       })
     : null;
 
   return (
     <section id="portfolio" className="bg-secondary/20 py-20 md:py-32">
-      {/* LCP 이미지 preload */}
+      {/* LCP 이미지 preload - 더 높은 우선순위 */}
       {firstImageSrc && (
         <ImagePreloader src={firstImageSrc} isLCP={true} isAboveFold={true} index={0} />
       )}
@@ -76,20 +76,23 @@ export function PortfolioSection() {
             ? // 로딩 스켈레톤
               [...Array(3)].map((_, i) => <PortfolioCardSkeleton key={i} />)
             : portfolios.map((portfolio, index) => {
-                // 이미지 최적화 설정
+                // 이미지 최적화 설정 (첫 번째 이미지는 더 큰 크기와 높은 품질)
                 const imageSrc = portfolio.thumbnail
                   ? optimizeUnsplashUrl(
                       getImageOrFallback(portfolio.thumbnail, 'development'),
-                      400,
-                      300,
+                      index === 0 ? 600 : 400, // 첫 번째 이미지는 더 큰 크기
+                      index === 0 ? 400 : 300,
                       {
-                        quality: getOptimalQuality(imagePresets.portfolioCard.quality, index === 0),
-                        format: 'auto',
+                        quality: getOptimalQuality(
+                          index === 0 ? 95 : imagePresets.portfolioCard.quality,
+                          index === 0
+                        ),
+                        format: index === 0 ? 'webp' : 'auto', // 첫 번째는 WebP 강제
                       }
                     )
                   : null;
 
-                // 로딩 전략 결정
+                // 로딩 전략 결정 (첫 번째 이미지는 최고 우선순위)
                 const loadingStrategy = getImageLoadingStrategy(
                   index === 0, // 첫 번째 이미지가 LCP
                   true, // above fold
@@ -116,17 +119,23 @@ export function PortfolioSection() {
                         <div className="relative aspect-video overflow-hidden bg-muted">
                           {imageSrc ? (
                             <Image
-                              src={imageSrc}
+                              src={imageSrc?.trim() || ''}
                               alt={imageMetadata.alt}
                               title={imageMetadata.title}
-                              fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
-                              sizes={imagePresets.portfolioCard.sizes}
+                              width={index === 0 ? 600 : 400} // 명시적 크기 추가
+                              height={index === 0 ? 400 : 300}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              sizes={
+                                index === 0
+                                  ? '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                                  : imagePresets.portfolioCard.sizes
+                              }
                               quality={getOptimalQuality(
-                                imagePresets.portfolioCard.quality,
+                                index === 0 ? 95 : imagePresets.portfolioCard.quality,
                                 index === 0
                               )}
                               loading={loadingStrategy.loading}
+                              priority={index === 0} // 첫 번째 이미지는 priority 명시
                               // @ts-ignore - Next.js 15 새로운 속성
                               fetchPriority={loadingStrategy.fetchPriority}
                               decoding={loadingStrategy.decoding}

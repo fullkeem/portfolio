@@ -92,12 +92,16 @@ export function Card({
           <Image
             src={
               image.includes('unsplash.com')
-                ? optimizeUnsplashUrl(image, imagePresets.blogCard.unsplashParams)
-                : image
+                ? optimizeUnsplashUrl(image.trim(), 400, 300, {
+                    quality: imagePresets.blogCard.quality,
+                    format: 'auto',
+                  })
+                : image.trim()
             }
             alt={imageAlt}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            width={400} // 명시적 크기 추가
+            height={300}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             sizes={imagePresets.blogCard.sizes}
             quality={imagePresets.blogCard.quality}
             priority={priority}

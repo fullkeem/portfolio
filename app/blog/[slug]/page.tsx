@@ -330,15 +330,16 @@ export default function BlogDetailPage() {
                     <Image
                       src={
                         blogPost.coverImage.includes('unsplash.com')
-                          ? optimizeUnsplashUrl(
-                              blogPost.coverImage,
-                              imagePresets.blogCover.unsplashParams
-                            )
-                          : blogPost.coverImage
+                          ? optimizeUnsplashUrl(blogPost.coverImage.trim(), 800, 450, {
+                              quality: imagePresets.blogCover.quality,
+                              format: 'webp',
+                            })
+                          : blogPost.coverImage.trim()
                       }
                       alt={`${blogPost.title} 커버 이미지`}
-                      fill
-                      className="object-cover"
+                      width={800} // 명시적 크기 추가
+                      height={450}
+                      className="h-full w-full object-cover"
                       priority
                       sizes={imagePresets.blogCover.sizes}
                       quality={imagePresets.blogCover.quality}

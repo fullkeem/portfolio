@@ -71,8 +71,11 @@ export function optimizeUnsplashUrl(
   } = {}
 ): string {
   if (!url || !url.includes('unsplash.com')) {
-    return url;
+    return url.trim(); // 공백 제거
   }
+
+  // URL 앞뒤 공백 제거
+  url = url.trim();
 
   const { quality = 80, format = 'auto', fit = 'crop' } = options;
 
@@ -264,5 +267,8 @@ export function getImageOrFallback(
   image: string | undefined,
   category: string = 'tech'
 ): string {
-  return image || getDefaultImageByCategory(category);
+  if (image && image.trim()) {
+    return image.trim(); // 공백 제거
+  }
+  return getDefaultImageByCategory(category);
 } 

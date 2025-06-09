@@ -25,11 +25,7 @@ export default function BlogCard({ post, index = 0 }: BlogCardProps) {
   ];
 
   // 이미지 URL 결정 (설정에 따라 대체 이미지 사용 가능)
-  const imageUrl = getImageOrFallback(
-    post.coverImage,
-    post.category,
-    imageConfig.useFallbackImages
-  );
+  const imageUrl = getImageOrFallback(post.coverImage, post.category);
 
   return (
     <Card

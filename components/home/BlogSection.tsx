@@ -101,11 +101,12 @@ export function BlogSection() {
                         <div className="relative aspect-video overflow-hidden bg-muted">
                           {imageSrc ? (
                             <Image
-                              src={imageSrc}
+                              src={imageSrc?.trim() || ''}
                               alt={imageMetadata.alt}
                               title={imageMetadata.title}
-                              fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                              width={400} // 명시적 크기 추가
+                              height={300}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                               sizes={imagePresets.blogCard.sizes}
                               quality={getOptimalQuality(imagePresets.blogCard.quality, false)}
                               loading={loadingStrategy.loading}
