@@ -1,5 +1,10 @@
 import type { NextConfig } from "next";
 
+// 번들 분석기 설정
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
@@ -26,9 +31,13 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [320, 420, 768, 1024, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60 * 60 * 24 * 7,
+    minimumCacheTTL: 60 * 60 * 24 * 30, // 30일로 증가
     dangerouslyAllowSVG: false,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // 추가 최적화 옵션
+    loader: 'default',
+    disableStaticImages: false,
+    unoptimized: false,
   },
   experimental: {
 
@@ -104,4 +113,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);
