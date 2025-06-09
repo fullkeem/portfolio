@@ -33,6 +33,7 @@ export default function BlogCard({ post, index = 0 }: BlogCardProps) {
       metadata={metadata}
       tags={post.tags}
       index={index}
+      priority={index < 2}
       animation={{
         initial: { opacity: 0, y: 20 },
         animate: { opacity: 1, y: 0 },

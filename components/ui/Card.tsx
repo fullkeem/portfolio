@@ -38,6 +38,9 @@ interface CardProps {
   // 액션 버튼들
   actions?: ActionButton[];
 
+  // 이미지 우선순위
+  priority?: boolean;
+
   // 애니메이션 설정
   animation?: {
     initial?: Variants | any;
@@ -60,6 +63,7 @@ export function Card({
   className = '',
   index = 0,
   actions = [],
+  priority = false,
   animation = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -90,6 +94,7 @@ export function Card({
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={priority}
           />
           {/* 호버시 오버레이 */}
           {href && (

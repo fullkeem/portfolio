@@ -111,7 +111,7 @@ export default function PortfolioPage() {
                 },
               }}
             >
-              {filteredPortfolios.map((portfolio) => (
+              {filteredPortfolios.map((portfolio, index) => (
                 <motion.div
                   key={portfolio.id}
                   variants={{
@@ -119,7 +119,7 @@ export default function PortfolioPage() {
                     visible: { opacity: 1, y: 0 },
                   }}
                 >
-                  <PortfolioCard portfolio={portfolio} />
+                  <PortfolioCard portfolio={portfolio} index={index} />
                 </motion.div>
               ))}
             </motion.div>

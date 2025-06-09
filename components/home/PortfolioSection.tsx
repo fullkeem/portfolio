@@ -71,6 +71,8 @@ export function PortfolioSection() {
                             alt={portfolio.title}
                             fill
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            priority={index < 2}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           />
                         ) : (
                           <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />

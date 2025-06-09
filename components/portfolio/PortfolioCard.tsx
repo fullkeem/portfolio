@@ -7,9 +7,10 @@ import { Card } from '@/components/ui/Card';
 
 interface PortfolioCardProps {
   portfolio: Portfolio;
+  index?: number;
 }
 
-export function PortfolioCard({ portfolio }: PortfolioCardProps) {
+export function PortfolioCard({ portfolio, index = 0 }: PortfolioCardProps) {
   const handleExternalLink = useCallback((url: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -44,6 +45,8 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
       tags={portfolio.technologies}
       featured={portfolio.featured}
       actions={actions}
+      index={index}
+      priority={index < 2}
       animation={{
         whileHover: { y: -5 },
         transition: { duration: 0.2 },
