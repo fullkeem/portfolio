@@ -4,10 +4,11 @@ import { isSupabaseConfigured } from '@/lib/supabase/client';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const commentId = params.id;
+    const { id } = await params;
+    const commentId = id;
 
     if (!commentId) {
       return NextResponse.json(

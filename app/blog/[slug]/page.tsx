@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BlogImage } from '@/components/ui/OptimizedImage';
 import { ArrowLeft, Calendar, Clock, Tag, Share2 } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { NotionBlocks } from '@/lib/notion/blocks';

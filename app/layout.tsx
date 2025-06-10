@@ -5,6 +5,7 @@ import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
 import { LenisProvider } from '@/components/LenisProvider';
 import { PageTransition } from '@/components/common/PageTransition';
+import { JsonLd } from '@/components/seo/JsonLd';
 import './globals.css';
 
 const pretendard = localFont({
@@ -75,6 +76,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        <JsonLd type="website" />
+        <JsonLd type="person" />
+      </head>
       <body className={`${pretendard.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"

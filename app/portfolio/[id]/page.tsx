@@ -6,6 +6,7 @@ import { getPortfolioById, getPageContent } from '@/lib/notion/client';
 import { NotionBlocks } from '@/lib/notion/blocks';
 import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { formatDate } from '@/lib/utils';
+import { PortfolioImage } from '@/components/ui/OptimizedImage';
 
 export default async function PortfolioDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -71,16 +72,16 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
 
         {/* 썸네일 이미지 */}
         {portfolio.thumbnail && (
-          <div className="relative mb-12 aspect-video overflow-hidden rounded-lg">
-            <Image
-              src={portfolio.thumbnail}
-              alt={portfolio.title}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-            />
-          </div>
+          <PortfolioImage
+            src={portfolio.thumbnail}
+            alt={portfolio.title}
+            fill
+            className="object-cover"
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            containerClassName="relative mb-12 w-full overflow-hidden rounded-lg [aspect-ratio:16/9] min-h-[300px]"
+            showLoadingSpinner={true}
+          />
         )}
 
         {/* 기술 스택 */}
