@@ -1,5 +1,10 @@
 import { Client } from "@notionhq/client";
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type {
+  NotionPortfolioProperties,
+  NotionBlogProperties
+} from "./types";
+import { getPlainTextFromRichText, getFileUrl } from "./types";
 
 if (!process.env.NOTION_TOKEN) {
   throw new Error("Missing NOTION_TOKEN environment variable");
@@ -55,8 +60,8 @@ export async function getPortfolios(): Promise<Portfolio[]> {
           direction: "descending",
         },
         {
-          property: "Created",
-          direction: "descending",
+          property: "Order",
+          direction: "ascending",
         },
       ],
     });
@@ -154,7 +159,20 @@ export async function getPageContent(pageId: string) {
       page_size: 100,
     });
 
-    return blocks.results;
+    // 블록에 하위 블록이 있는 경우 재귀적으로 가져오기
+    const blocksWithChildren = await Promise.all(
+      blocks.results.map(async (block) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b = block as any;
+        if (b.has_children && !b[b.type]?.children) {
+          const children = await getPageContent(b.id);
+          b[b.type] = { ...b[b.type], children };
+        }
+        return b;
+      })
+    );
+
+    return blocksWithChildren;
   } catch (error) {
     console.error("Error fetching page content:", error);
     return [];
@@ -163,33 +181,33 @@ export async function getPageContent(pageId: string) {
 
 // 파싱 함수들
 function parsePortfolioPage(page: PageObjectResponse): Portfolio {
-  const properties = page.properties as any;
+  const properties = page.properties as unknown as NotionPortfolioProperties;
 
   return {
     id: page.id,
-    title: properties.Title?.title?.[0]?.plain_text || "",
-    description: properties.Description?.rich_text?.[0]?.plain_text || "",
-    thumbnail: properties.Thumbnail?.files?.[0]?.file?.url || properties.Thumbnail?.files?.[0]?.external?.url || "",
-    technologies: properties.Technologies?.multi_select?.map((tech: any) => tech.name) || [],
+    title: properties.Title?.title ? getPlainTextFromRichText(properties.Title.title) : "",
+    description: properties.Description?.rich_text ? getPlainTextFromRichText(properties.Description.rich_text) : "",
+    thumbnail: properties.Thumbnail?.files?.[0] ? getFileUrl(properties.Thumbnail.files[0]) : "",
+    technologies: properties.Technologies?.multi_select?.map((tech) => tech.name) || [],
     liveUrl: properties.LiveURL?.url || undefined,
     githubUrl: properties.GitHubURL?.url || undefined,
-    createdAt: properties.Created?.created_time || page.created_time,
+    createdAt: page.created_time,
     featured: properties.Featured?.checkbox || false,
   };
 }
 
 function parseBlogPage(page: PageObjectResponse): BlogPost {
-  const properties = page.properties as any;
+  const properties = page.properties as unknown as NotionBlogProperties;
 
   return {
     id: page.id,
-    title: properties.Title?.title?.[0]?.plain_text || "",
-    slug: properties.Slug?.rich_text?.[0]?.plain_text || "",
-    excerpt: properties.Excerpt?.rich_text?.[0]?.plain_text || "",
+    title: properties.Title?.title ? getPlainTextFromRichText(properties.Title.title) : "",
+    slug: properties.Slug?.rich_text ? getPlainTextFromRichText(properties.Slug.rich_text) : "",
+    excerpt: properties.Excerpt?.rich_text ? getPlainTextFromRichText(properties.Excerpt.rich_text) : "",
     category: properties.Category?.select?.name || "Uncategorized",
-    tags: properties.Tags?.multi_select?.map((tag: any) => tag.name) || [],
+    tags: properties.Tags?.multi_select?.map((tag) => tag.name) || [],
     publishedAt: properties.PublishedAt?.date?.start || page.created_time,
     updatedAt: page.last_edited_time,
-    coverImage: properties.CoverImage?.files?.[0]?.file?.url || properties.CoverImage?.files?.[0]?.external?.url || undefined,
+    coverImage: properties.CoverImage?.files?.[0] ? getFileUrl(properties.CoverImage.files[0]) : undefined,
   };
 }

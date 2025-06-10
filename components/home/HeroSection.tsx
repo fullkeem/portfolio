@@ -1,55 +1,58 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { TextPlugin } from "gsap/TextPlugin";
-import { motion } from "framer-motion";
+import { useRef } from 'react';
+import { gsap } from 'gsap';
+import { motion } from 'framer-motion';
+import { MagneticButton } from '@/components/common/MagneticButton';
+import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(TextPlugin);
+// GSAP 플러그인 등록 (ScrollTrigger 제거)
+gsap.registerPlugin(useGSAP);
 
 export function HeroSection() {
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
+  useGSAP(
+    () => {
+      // 필수 ref들만 체크
+      if (!titleRef.current) {
+        return;
+      }
+
+      // Initial animations only (no scroll-linked effects)
+      const tl = gsap.timeline();
+
       // Title animation
-      gsap.from(titleRef.current, {
+      tl.from(titleRef.current, {
         y: 100,
         opacity: 0,
         duration: 1,
-        ease: "power4.out",
+        ease: 'power4.out',
       });
 
-      // Subtitle animation
-      gsap.from(subtitleRef.current, {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.3,
-        ease: "power4.out",
-      });
-
-      // Typing effect for subtitle
-      gsap.to(subtitleRef.current, {
-        text: "랜딩 페이지 제작 전문 프론트엔드 개발자",
-        duration: 2,
-        delay: 1,
-        ease: "none",
-      });
-    });
-
-    return () => ctx.revert();
-  }, []);
+      // cleanup 함수 반환
+      return () => {
+        tl.kill();
+      };
+    },
+    {
+      scope: containerRef,
+      revertOnUpdate: true,
+    }
+  );
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
-      
+    <section
+      ref={containerRef}
+      className="hero-section relative flex min-h-screen items-center justify-center overflow-hidden"
+    >
+      {/* Background gradient with CSS parallax */}
+      <div className="hero-background absolute inset-0 scale-110 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
+
       {/* Animated background shapes */}
       <motion.div
-        className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl"
+        className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-primary/10 blur-3xl"
         animate={{
           x: [0, 100, 0],
           y: [0, -100, 0],
@@ -57,11 +60,11 @@ export function HeroSection() {
         transition={{
           duration: 20,
           repeat: Infinity,
-          ease: "linear",
+          ease: 'linear',
         }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl"
+        className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-accent/10 blur-3xl"
         animate={{
           x: [0, -100, 0],
           y: [0, 100, 0],
@@ -69,55 +72,61 @@ export function HeroSection() {
         transition={{
           duration: 25,
           repeat: Infinity,
-          ease: "linear",
+          ease: 'linear',
         }}
       />
 
-      <div className="container mx-auto px-4 py-32 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="container relative z-10 mx-auto px-4 py-32">
+        <div className="hero-content mx-auto max-w-4xl text-center">
           <h1
             ref={titleRef}
-            className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70"
+            className="mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-5xl font-bold text-transparent md:text-7xl"
           >
             Frontend Developer
           </h1>
-          <p
-            ref={subtitleRef}
-            className="text-xl md:text-2xl text-muted-foreground mb-8 h-8"
+          <motion.p
+            initial={{ y: 50, opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 0.8, ease: 'easeOut' }}
+            className="mb-8 text-xl text-muted-foreground md:text-2xl"
           >
-            {/* Text will be animated here */}
-          </p>
-          
+            랜딩 페이지 제작 전문 프론트엔드 개발자
+          </motion.p>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2, duration: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col justify-center gap-4 sm:flex-row"
           >
-            <a
+            <MagneticButton
               href="#portfolio"
-              className="inline-flex items-center justify-center px-8 py-3 text-base font-medium rounded-md text-primary-foreground bg-primary hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-3 text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              magneticStrength={0.4}
+              scaleOnHover={1.1}
             >
               포트폴리오 보기
-            </a>
-            <a
+            </MagneticButton>
+            <MagneticButton
               href="/contact"
-              className="inline-flex items-center justify-center px-8 py-3 text-base font-medium rounded-md text-foreground bg-secondary hover:bg-secondary/80 transition-colors"
+              className="inline-flex items-center justify-center rounded-md bg-secondary px-8 py-3 text-base font-medium text-foreground transition-colors hover:bg-secondary/80"
+              magneticStrength={0.4}
+              scaleOnHover={1.1}
             >
               프로젝트 문의
-            </a>
+            </MagneticButton>
           </motion.div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator with CSS-only animation */}
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        className="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 transform"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 1.5, repeat: Infinity }}
       >
         <svg
-          className="w-6 h-6 text-muted-foreground"
+          className="h-6 w-6 text-muted-foreground"
           fill="none"
           strokeLinecap="round"
           strokeLinejoin="round"
