@@ -12,7 +12,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const skills = {
   frontend: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'GSAP'],
-  tools: ['Git', 'Figma', 'VS Code', 'Vercel', 'Notion'],
+  tools: ['Git', 'Figma', 'VS Code', 'Vercel', 'Supabase', 'Cursor', 'Notion'],
   learning: ['Three.js', 'WebGL', 'React Native'],
 };
 
