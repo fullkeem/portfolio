@@ -293,16 +293,6 @@ curl -X POST "http://localhost:3000/api/comments" \
   -H "Content-Type: application/json" \
   -d '{"post_slug":"test","author_name":"테스터","author_email":"test@example.com","content":"테스트 댓글"}'
 ```
-
-### **Lighthouse 점수**
-
-- 🎯 **Performance**: 95+
-- ♿ **Accessibility**: 100
-- 🔍 **SEO**: 100
-- ⚡ **Best Practices**: 95+
-
----
-
 ## 🚀 배포
 
 ### **Vercel 배포**
@@ -354,16 +344,6 @@ GET /api/comments/custom-stats?slug=post-slug
 
 ---
 
-## 🤝 기여하기
-
-1. **Fork** 저장소
-2. **Feature branch** 생성 (`git checkout -b feature/amazing-feature`)
-3. **Commit** 변경사항 (`git commit -m 'Add amazing feature'`)
-4. **Push** to branch (`git push origin feature/amazing-feature`)
-5. **Pull Request** 생성
-
----
-
 ## 📞 연락처
 
 - **이메일**: cm730712@gmail.com
@@ -375,18 +355,6 @@ GET /api/comments/custom-stats?slug=post-slug
 ## 📄 라이선스
 
 MIT License - 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
-
----
-
-## 🙏 감사의 말
-
-이 프로젝트는 다음 오픈소스 프로젝트들의 도움을 받았습니다:
-
-- [Next.js](https://nextjs.org/) - React 프레임워크
-- [Supabase](https://supabase.com/) - 백엔드 서비스
-- [Notion API](https://developers.notion.com/) - 콘텐츠 관리
-- [Tailwind CSS](https://tailwindcss.com/) - CSS 프레임워크
-- [GSAP](https://greensock.com/gsap/) - 애니메이션 라이브러리
 
 ---
 
