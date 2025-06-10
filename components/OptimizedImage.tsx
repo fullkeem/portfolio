@@ -29,9 +29,7 @@ export function OptimizedImage({
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      {isLoading && (
-        <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-800" />
-      )}
+      {isLoading && <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-800" />}
       <Image
         src={src}
         alt={alt}
@@ -41,10 +39,7 @@ export function OptimizedImage({
         priority={priority}
         sizes={sizes}
         loading={priority ? 'eager' : 'lazy'}
-        className={`
-          duration-700 ease-in-out
-          ${isLoading ? 'scale-110 blur-2xl grayscale' : 'scale-100 blur-0 grayscale-0'}
-        `}
+        className={`duration-700 ease-in-out ${isLoading ? 'scale-110 blur-2xl grayscale' : 'scale-100 blur-0 grayscale-0'} `}
         onLoad={() => setIsLoading(false)}
         placeholder="blur"
         blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ..."
