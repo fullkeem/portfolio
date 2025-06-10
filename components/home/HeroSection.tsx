@@ -80,14 +80,13 @@ export function HeroSection() {
       <div className="container relative z-10 mx-auto px-4 py-32">
         {/* 그리드 레이아웃으로 변경: 왼쪽 텍스트 + 오른쪽 아바타 */}
         <div className="hero-content mx-auto max-w-7xl">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center min-h-[60vh]">
-            
+          <div className="grid min-h-[60vh] items-center gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
             {/* 왼쪽: 텍스트 콘텐츠 */}
-            <div className="text-center lg:text-left order-2 lg:order-1 space-y-6 lg:space-y-8">
+            <div className="order-2 space-y-6 text-center lg:order-1 lg:space-y-8 lg:text-left">
               <div className="space-y-4 lg:space-y-6">
                 <h1
                   ref={titleRef}
-                  className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-transparent leading-tight"
+                  className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-3xl font-bold leading-tight text-transparent sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl"
                 >
                   Frontend Developer
                 </h1>
@@ -95,7 +94,7 @@ export function HeroSection() {
                   initial={{ y: 50, opacity: 0, scale: 0.9 }}
                   animate={{ y: 0, opacity: 1, scale: 1 }}
                   transition={{ delay: 0.6, duration: 0.8, ease: 'easeOut' }}
-                  className="text-base sm:text-lg lg:text-xl xl:text-2xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+                  className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg lg:mx-0 lg:text-xl xl:text-2xl"
                 >
                   랜딩 페이지 제작 전문 프론트엔드 개발자
                 </motion.p>
@@ -105,11 +104,11 @@ export function HeroSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 2.2, duration: 0.6 }}
-                className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 lg:gap-4"
+                className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start lg:gap-4"
               >
                 <MagneticButton
                   href="#portfolio"
-                  className="inline-flex items-center justify-center rounded-md bg-primary px-6 lg:px-8 py-2.5 lg:py-3 text-sm lg:text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                  className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 lg:px-8 lg:py-3 lg:text-base"
                   magneticStrength={0.4}
                   scaleOnHover={1.1}
                 >
@@ -117,7 +116,7 @@ export function HeroSection() {
                 </MagneticButton>
                 <MagneticButton
                   href="/contact"
-                  className="inline-flex items-center justify-center rounded-md bg-secondary px-6 lg:px-8 py-2.5 lg:py-3 text-sm lg:text-base font-medium text-foreground transition-colors hover:bg-secondary/80"
+                  className="inline-flex items-center justify-center rounded-md bg-secondary px-6 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary/80 lg:px-8 lg:py-3 lg:text-base"
                   magneticStrength={0.4}
                   scaleOnHover={1.1}
                 >
@@ -125,22 +124,22 @@ export function HeroSection() {
                 </MagneticButton>
               </motion.div>
             </div>
-            
+
             {/* 오른쪽: 3D 아바타 */}
-            <motion.div 
-              className="order-1 lg:order-2 flex justify-center lg:justify-end"
+            <motion.div
+              className="order-1 flex justify-center lg:order-2 lg:justify-center"
               initial={{ opacity: 0, scale: 0.8, x: 30 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
-              transition={{ 
-                delay: 1.4, 
-                duration: 1.2, 
-                ease: 'easeOut' 
+              transition={{
+                delay: 1.4,
+                duration: 1.2,
+                ease: 'easeOut',
               }}
             >
               <div className="relative">
                 {/* 아바타 주변 장식 요소 */}
                 <motion.div
-                  className="absolute -inset-8 bg-gradient-to-r from-primary/5 to-accent/5 rounded-full blur-2xl -z-10"
+                  className="absolute -inset-8 -z-10 rounded-full bg-gradient-to-r from-primary/5 to-accent/5 blur-2xl"
                   animate={{
                     scale: [1, 1.1, 1],
                     opacity: [0.3, 0.5, 0.3],
@@ -148,14 +147,17 @@ export function HeroSection() {
                   transition={{
                     duration: 4,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: 'easeInOut',
                   }}
                 />
-                
+
                 <Avatar3D 
-                  size="xl" 
-                  animationSpeed="normal"
-                  className="relative z-10 drop-shadow-2xl"
+                size="xl" 
+                animationSpeed="normal"
+                className="relative z-10 drop-shadow-2xl"
+                  description="프론트엔드 개발자 fullkeem의 3D 아바타. 마우스를 올리거나 클릭하면 인터랙티브한 3D 효과를 경험할 수 있습니다."
+                  ariaLabel="개발자 아바타. 인터랙티브한 3D 효과가 있습니다. Enter 또는 Space 키로 상호작용할 수 있습니다."
+                  focusable={true}
                 />
               </div>
             </motion.div>
