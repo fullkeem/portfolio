@@ -29,10 +29,16 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 's3.us-west-2.amazonaws.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'ui-avatars.com',
+        port: '',
+        pathname: '/api/**',
+      },
     ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [320, 420, 768, 1024, 1200, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    imageSizes: [16, 32, 48, 64, 96, 128, 192, 256, 320, 384, 512], // 아바타 크기 추가
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30일로 증가
     dangerouslyAllowSVG: false,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
