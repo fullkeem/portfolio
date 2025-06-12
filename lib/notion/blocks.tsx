@@ -3,7 +3,6 @@ import type {
   BlockObjectResponse,
   RichTextItemResponse,
 } from '@notionhq/client/build/src/api-endpoints';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -15,13 +14,175 @@ interface NotionBlocksProps {
   blocks: NotionBlock[];
 }
 
+// 그룹화된 블록 타입 정의
+interface GroupedBlock {
+  type: 'numbered_list_group' | 'bulleted_list_group' | 'original';
+  items?: NotionBlock[];
+  block?: NotionBlock;
+  id: string;
+}
+
+// 블록 그룹화 함수
+function groupBlocks(blocks: NotionBlock[]): GroupedBlock[] {
+  const groupedBlocks: GroupedBlock[] = [];
+  let currentNumberedList: NotionBlock[] = [];
+  let currentBulletedList: NotionBlock[] = [];
+
+  for (const block of blocks) {
+    if (block.type === 'numbered_list_item') {
+      // 기존 bulleted list가 있으면 먼저 추가
+      if (currentBulletedList.length > 0) {
+        groupedBlocks.push({
+          type: 'bulleted_list_group',
+          items: currentBulletedList,
+          id: `bulleted-group-${currentBulletedList[0].id}`,
+        });
+        currentBulletedList = [];
+      }
+      currentNumberedList.push(block);
+    } else if (block.type === 'bulleted_list_item') {
+      // 기존 numbered list가 있으면 먼저 추가
+      if (currentNumberedList.length > 0) {
+        groupedBlocks.push({
+          type: 'numbered_list_group',
+          items: currentNumberedList,
+          id: `numbered-group-${currentNumberedList[0].id}`,
+        });
+        currentNumberedList = [];
+      }
+      currentBulletedList.push(block);
+    } else {
+      // 다른 블록 타입이 나오면 기존 리스트들을 먼저 추가
+      if (currentNumberedList.length > 0) {
+        groupedBlocks.push({
+          type: 'numbered_list_group',
+          items: currentNumberedList,
+          id: `numbered-group-${currentNumberedList[0].id}`,
+        });
+        currentNumberedList = [];
+      }
+      if (currentBulletedList.length > 0) {
+        groupedBlocks.push({
+          type: 'bulleted_list_group',
+          items: currentBulletedList,
+          id: `bulleted-group-${currentBulletedList[0].id}`,
+        });
+        currentBulletedList = [];
+      }
+      // 일반 블록 추가
+      groupedBlocks.push({
+        type: 'original',
+        block,
+        id: block.id,
+      });
+    }
+  }
+
+  // 마지막에 남은 리스트들 처리
+  if (currentNumberedList.length > 0) {
+    groupedBlocks.push({
+      type: 'numbered_list_group',
+      items: currentNumberedList,
+      id: `numbered-group-${currentNumberedList[0].id}`,
+    });
+  }
+  if (currentBulletedList.length > 0) {
+    groupedBlocks.push({
+      type: 'bulleted_list_group',
+      items: currentBulletedList,
+      id: `bulleted-group-${currentBulletedList[0].id}`,
+    });
+  }
+
+  return groupedBlocks;
+}
+
 export function NotionBlocks({ blocks }: NotionBlocksProps) {
+  const groupedBlocks = groupBlocks(blocks);
+
   return (
     <div role="document" aria-label="블로그 포스트 내용">
-      {blocks.map((block, index) => (
-        <NotionBlock key={block.id} block={block} index={index} />
+      {groupedBlocks.map((groupedBlock, index) => (
+        <GroupedNotionBlock key={groupedBlock.id} groupedBlock={groupedBlock} index={index} />
       ))}
     </div>
+  );
+}
+
+function GroupedNotionBlock({
+  groupedBlock,
+  index,
+}: {
+  groupedBlock: GroupedBlock;
+  index: number;
+}) {
+  switch (groupedBlock.type) {
+    case 'numbered_list_group':
+      return <NumberedListGroupBlock items={groupedBlock.items!} />;
+    case 'bulleted_list_group':
+      return <BulletedListGroupBlock items={groupedBlock.items!} />;
+    case 'original':
+      return <NotionBlock block={groupedBlock.block!} index={index} />;
+    default:
+      return null;
+  }
+}
+
+// 그룹화된 번호 매기기 목록 컴포넌트
+function NumberedListGroupBlock({ items }: { items: NotionBlock[] }) {
+  return (
+    <ol
+      className="mb-4 ml-4 list-outside list-decimal text-foreground/90 dark:text-foreground/95"
+      role="list"
+    >
+      {items.map((block) => {
+        if (block.type !== 'numbered_list_item') return null;
+        const { numbered_list_item } = block;
+
+        // 자식 블록들 가져오기
+        const children = (block as any).numbered_list_item?.children || [];
+
+        return (
+          <li key={block.id} className="mb-2 pl-2" role="listitem">
+            <div>{renderRichText(numbered_list_item.rich_text)}</div>
+            {children.length > 0 && (
+              <div className="ml-4 mt-2">
+                <NotionBlocks blocks={children} />
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+// 그룹화된 글머리 기호 목록 컴포넌트
+function BulletedListGroupBlock({ items }: { items: NotionBlock[] }) {
+  return (
+    <ul
+      className="mb-4 ml-4 list-outside list-disc text-foreground/90 dark:text-foreground/95"
+      role="list"
+    >
+      {items.map((block) => {
+        if (block.type !== 'bulleted_list_item') return null;
+        const { bulleted_list_item } = block;
+
+        // 자식 블록들 가져오기
+        const children = (block as any).bulleted_list_item?.children || [];
+
+        return (
+          <li key={block.id} className="mb-2 pl-2" role="listitem">
+            <div>{renderRichText(bulleted_list_item.rich_text)}</div>
+            {children.length > 0 && (
+              <div className="ml-4 mt-2">
+                <NotionBlocks blocks={children} />
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -37,10 +198,6 @@ function NotionBlock({ block, index }: { block: NotionBlock; index: number }) {
       return <Heading2Block block={block} index={index} />;
     case 'heading_3':
       return <Heading3Block block={block} index={index} />;
-    case 'bulleted_list_item':
-      return <BulletedListBlock block={block} />;
-    case 'numbered_list_item':
-      return <NumberedListBlock block={block} />;
     case 'quote':
       return <QuoteBlock block={block} />;
     case 'code':
@@ -53,6 +210,12 @@ function NotionBlock({ block, index }: { block: NotionBlock; index: number }) {
       return <CalloutBlock block={block} />;
     case 'toggle':
       return <ToggleBlock block={block} />;
+    case 'column_list':
+      return <ColumnListBlock block={block} />;
+    // 리스트 항목들은 그룹화되어 처리되므로 여기서는 null 반환
+    case 'numbered_list_item':
+    case 'bulleted_list_item':
+      return null;
     default:
       return null;
   }
@@ -184,34 +347,6 @@ function Heading3Block({ block, index }: { block: NotionBlock; index: number }) 
   );
 }
 
-function BulletedListBlock({ block }: { block: NotionBlock }) {
-  if (block.type !== 'bulleted_list_item') return null;
-  const { bulleted_list_item } = block;
-
-  return (
-    <ul
-      className="mb-2 ml-4 list-inside list-disc text-foreground/90 dark:text-foreground/95"
-      role="list"
-    >
-      <li role="listitem">{renderRichText(bulleted_list_item.rich_text)}</li>
-    </ul>
-  );
-}
-
-function NumberedListBlock({ block }: { block: NotionBlock }) {
-  if (block.type !== 'numbered_list_item') return null;
-  const { numbered_list_item } = block;
-
-  return (
-    <ol
-      className="mb-2 ml-4 list-inside list-decimal text-foreground/90 dark:text-foreground/95"
-      role="list"
-    >
-      <li role="listitem">{renderRichText(numbered_list_item.rich_text)}</li>
-    </ol>
-  );
-}
-
 function QuoteBlock({ block }: { block: NotionBlock }) {
   if (block.type !== 'quote') return null;
   const { quote } = block;
@@ -291,6 +426,9 @@ function CalloutBlock({ block }: { block: NotionBlock }) {
   const { callout } = block;
   const emoji = callout.icon?.type === 'emoji' ? callout.icon.emoji : '💡';
 
+  // 자식 블록들 가져오기
+  const children = (block as any).callout?.children || [];
+
   return (
     <aside
       className="my-4 flex gap-3 rounded-lg border bg-secondary/50 p-4 text-foreground/90 dark:text-foreground/95"
@@ -300,7 +438,14 @@ function CalloutBlock({ block }: { block: NotionBlock }) {
       <span className="text-2xl" role="img" aria-label="알림 아이콘">
         {emoji}
       </span>
-      <div className="flex-1">{renderRichText(callout.rich_text)}</div>
+      <div className="flex-1">
+        {renderRichText(callout.rich_text)}
+        {children.length > 0 && (
+          <div className="mt-2">
+            <NotionBlocks blocks={children} />
+          </div>
+        )}
+      </div>
     </aside>
   );
 }
@@ -308,6 +453,9 @@ function CalloutBlock({ block }: { block: NotionBlock }) {
 function ToggleBlock({ block }: { block: NotionBlock }) {
   if (block.type !== 'toggle') return null;
   const { toggle } = block;
+
+  // 자식 블록들 가져오기
+  const children = (block as any).toggle?.children || [];
 
   return (
     <details className="my-4 rounded-lg border p-4" role="group" aria-label="접을 수 있는 콘텐츠">
@@ -323,11 +471,43 @@ function ToggleBlock({ block }: { block: NotionBlock }) {
         role="region"
         aria-label="토글 내용"
       >
-        {/* 토글 내부의 자식 블록들은 별도로 가져와야 함 */}
-        <p className="text-muted-foreground">
-          [Toggle content - requires fetching children blocks]
-        </p>
+        {children.length > 0 ? (
+          <NotionBlocks blocks={children} />
+        ) : (
+          <p className="text-muted-foreground">빈 토글</p>
+        )}
       </div>
     </details>
+  );
+}
+
+function ColumnListBlock({ block }: { block: NotionBlock }) {
+  if (block.type !== 'column_list') return null;
+
+  // 자식 블록들(columns) 가져오기
+  const columns = (block as any).column_list?.children || [];
+
+  return (
+    <div className="my-4" role="region" aria-label="컬럼 레이아웃">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {columns.map((column: any, index: number) => (
+          <div key={column.id || index} className="rounded-lg border p-4">
+            {column.column?.children && column.column.children.length > 0 ? (
+              <NotionBlocks blocks={column.column.children} />
+            ) : (
+              <p className="text-sm text-muted-foreground">빈 컬럼</p>
+            )}
+          </div>
+        ))}
+      </div>
+      {columns.length === 0 && (
+        <div className="rounded-lg border border-dashed border-muted-foreground/30 p-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>📊</span>
+            <span>Column Layout (빈 컬럼)</span>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
