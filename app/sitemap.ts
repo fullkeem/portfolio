@@ -1,9 +1,9 @@
 import { MetadataRoute } from 'next';
-import { notionClient } from '@/lib/notion/client';
+import { getPortfolios, getBlogPosts } from '@/lib/notion/client';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  
+
   // 정적 페이지들
   const staticPages = [
     '',
@@ -20,18 +20,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     // 동적 페이지들 - 포트폴리오
-    const portfolios = await notionClient.getPortfolios();
+    const portfolios = await getPortfolios();
     const portfolioPages = portfolios.map((portfolio) => ({
       url: `${baseUrl}/portfolio/${portfolio.id}`,
-      lastModified: new Date(portfolio.updatedAt || portfolio.createdAt),
+      lastModified: new Date(portfolio.createdAt),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     }));
 
     // 동적 페이지들 - 블로그 포스트
-    const posts = await notionClient.getBlogPosts();
+    const posts = await getBlogPosts();
     const blogPages = posts
-      .filter(post => post.published) // 발행된 포스트만
+      .filter(post => post.slug && post.title) // 유효한 포스트만
       .map((post) => ({
         url: `${baseUrl}/blog/${post.slug}`,
         lastModified: new Date(post.updatedAt || post.publishedAt),
