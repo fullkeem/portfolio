@@ -1,4 +1,6 @@
-import React, { Fragment } from 'react';
+'use client';
+
+import React, { Fragment, useState } from 'react';
 import type {
   BlockObjectResponse,
   RichTextItemResponse,
@@ -12,6 +14,128 @@ type NotionBlock = BlockObjectResponse;
 
 interface NotionBlocksProps {
   blocks: NotionBlock[];
+}
+
+// 향상된 이미지 컴포넌트
+interface EnhancedImageProps {
+  src: string;
+  originalSrc: string;
+  alt: string;
+  caption: string;
+  blockId: string;
+}
+
+function EnhancedImage({ src, originalSrc, alt, caption, blockId }: EnhancedImageProps) {
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
+    null
+  );
+
+  const handleImageError = () => {
+    setImageError(true);
+    setIsLoading(false);
+  };
+
+  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = event.currentTarget;
+    setImageDimensions({
+      width: img.naturalWidth,
+      height: img.naturalHeight,
+    });
+    setIsLoading(false);
+    setImageError(false);
+  };
+
+  const handleRetry = () => {
+    if (retryCount < 2) {
+      setImageError(false);
+      setIsLoading(true);
+      setRetryCount((prev) => prev + 1);
+      // 이미지 재로드를 위해 timestamp 추가
+      const img = document.getElementById(`img-${blockId}`) as HTMLImageElement;
+      if (img) {
+        img.src = `${src}${src.includes('?') ? '&' : '?'}retry=${Date.now()}`;
+      }
+    }
+  };
+
+  // 이미지 비율 계산
+  const getImageContainerStyle = () => {
+    if (!imageDimensions) {
+      return 'relative w-full min-h-[200px] max-h-[600px]';
+    }
+
+    const { width, height } = imageDimensions;
+    const aspectRatio = width / height;
+
+    // 세로형 이미지 (비율 < 0.8)
+    if (aspectRatio < 0.8) {
+      return 'relative w-full max-w-md mx-auto';
+    }
+    // 정사각형에 가까운 이미지 (0.8 <= 비율 <= 1.2)
+    else if (aspectRatio <= 1.2) {
+      return 'relative w-full max-w-lg mx-auto';
+    }
+    // 가로형 이미지 (비율 > 1.2)
+    else {
+      return 'relative w-full max-w-4xl mx-auto';
+    }
+  };
+
+  if (imageError) {
+    return (
+      <div className="relative flex min-h-[250px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-muted-foreground/30 bg-secondary/50">
+        <div className="p-6 text-center">
+          <div className="mb-2 text-4xl">🖼️</div>
+          <p className="mb-3 text-sm text-muted-foreground">이미지를 불러올 수 없습니다</p>
+          <div className="space-y-2">
+            {retryCount < 2 && (
+              <button
+                onClick={handleRetry}
+                className="rounded bg-primary px-3 py-1 text-xs text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                다시 시도 ({retryCount + 1}/3)
+              </button>
+            )}
+            <details className="text-xs">
+              <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+                원본 URL 보기
+              </summary>
+              <p className="mt-1 break-all text-muted-foreground/70">{originalSrc}</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={getImageContainerStyle()}>
+      {isLoading && (
+        <div className="absolute inset-0 z-10 flex min-h-[200px] items-center justify-center rounded-lg bg-secondary/50">
+          <div className="flex flex-col items-center gap-2">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+            <p className="text-sm text-muted-foreground">이미지 로딩 중...</p>
+          </div>
+        </div>
+      )}
+      <img
+        id={`img-${blockId}`}
+        src={src}
+        alt={alt}
+        className="h-auto w-full rounded-lg shadow-sm"
+        loading="lazy"
+        onLoad={handleImageLoad}
+        onError={handleImageError}
+        style={{
+          maxHeight: '600px',
+          objectFit: 'contain',
+        }}
+      />
+    </div>
+  );
 }
 
 // 그룹화된 블록 타입 정의
@@ -132,7 +256,7 @@ function GroupedNotionBlock({
 function NumberedListGroupBlock({ items }: { items: NotionBlock[] }) {
   return (
     <ol
-      className="mb-4 ml-4 list-outside list-decimal text-foreground/90 dark:text-foreground/95"
+      className="mb-4 ml-4 list-outside list-decimal space-y-3 text-base leading-relaxed text-foreground/90 dark:text-foreground/95 lg:text-lg lg:leading-loose"
       role="list"
     >
       {items.map((block) => {
@@ -143,7 +267,7 @@ function NumberedListGroupBlock({ items }: { items: NotionBlock[] }) {
         const children = (block as any).numbered_list_item?.children || [];
 
         return (
-          <li key={block.id} className="mb-2 pl-2" role="listitem">
+          <li key={block.id} className="pl-2" role="listitem">
             <div>{renderRichText(numbered_list_item.rich_text)}</div>
             {children.length > 0 && (
               <div className="ml-4 mt-2">
@@ -161,7 +285,7 @@ function NumberedListGroupBlock({ items }: { items: NotionBlock[] }) {
 function BulletedListGroupBlock({ items }: { items: NotionBlock[] }) {
   return (
     <ul
-      className="mb-4 ml-4 list-outside list-disc text-foreground/90 dark:text-foreground/95"
+      className="mb-4 ml-4 list-outside list-disc space-y-3 text-base leading-relaxed text-foreground/90 dark:text-foreground/95 lg:text-lg lg:leading-loose"
       role="list"
     >
       {items.map((block) => {
@@ -172,7 +296,7 @@ function BulletedListGroupBlock({ items }: { items: NotionBlock[] }) {
         const children = (block as any).bulleted_list_item?.children || [];
 
         return (
-          <li key={block.id} className="mb-2 pl-2" role="listitem">
+          <li key={block.id} className="pl-2" role="listitem">
             <div>{renderRichText(bulleted_list_item.rich_text)}</div>
             {children.length > 0 && (
               <div className="ml-4 mt-2">
@@ -290,7 +414,7 @@ function ParagraphBlock({ block }: { block: NotionBlock }) {
   }
 
   return (
-    <p className="mb-4 leading-relaxed text-foreground/90 dark:text-foreground/95">
+    <p className="mb-4 text-base leading-relaxed text-foreground/90 dark:text-foreground/95 lg:text-lg lg:leading-loose">
       {renderRichText(paragraph.rich_text)}
     </p>
   );
@@ -320,7 +444,7 @@ function Heading2Block({ block, index }: { block: NotionBlock; index: number }) 
   return (
     <h3
       id={`heading-${index}`}
-      className="mb-3 mt-6 text-2xl font-semibold text-foreground"
+      className="mb-2 mt-6 text-2xl font-semibold text-foreground"
       role="heading"
       aria-level={3}
       tabIndex={-1}
@@ -337,7 +461,7 @@ function Heading3Block({ block, index }: { block: NotionBlock; index: number }) 
   return (
     <h4
       id={`heading-${index}`}
-      className="mb-2 mt-4 text-xl font-semibold text-foreground"
+      className="mb-1 mt-4 text-xl font-semibold text-foreground"
       role="heading"
       aria-level={4}
       tabIndex={-1}
@@ -395,19 +519,24 @@ function ImageBlock({ block }: { block: NotionBlock }) {
   if (block.type !== 'image') return null;
   const { image } = block;
 
-  const src = image.type === 'external' ? image.external.url : image.file.url;
+  const originalSrc = image.type === 'external' ? image.external.url : image.file.url;
   const caption = image.caption.length ? image.caption[0].plain_text : '';
+
+  // 프록시 URL 생성 (Notion 이미지인 경우)
+  const isNotionImage =
+    originalSrc.includes('notion.so') || originalSrc.includes('s3.us-west-2.amazonaws.com');
+  const src = isNotionImage
+    ? `/api/image-proxy?url=${encodeURIComponent(originalSrc)}`
+    : originalSrc;
 
   return (
     <figure className="my-6" role="img">
-      <BlogImage
+      <EnhancedImage
         src={src}
+        originalSrc={originalSrc}
         alt={caption || '블로그 포스트 이미지'}
-        fill
-        className="rounded-lg object-contain"
-        loading="lazy"
-        containerClassName="relative w-full [aspect-ratio:16/9] min-h-[250px]"
-        showLoadingSpinner={true}
+        caption={caption}
+        blockId={block.id}
       />
       {caption && (
         <figcaption
@@ -487,6 +616,39 @@ function ColumnListBlock({ block }: { block: NotionBlock }) {
   // 자식 블록들(columns) 가져오기
   const columns = (block as any).column_list?.children || [];
 
+  // 컬럼이 2개인 경우 (텍스트 + 이미지 레이아웃)
+  if (columns.length === 2) {
+    return (
+      <div className="my-6" role="region" aria-label="컬럼 레이아웃">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+          {columns.map((column: any, index: number) => {
+            const hasImage = column.column?.children?.some((child: any) => child.type === 'image');
+
+            return (
+              <div
+                key={column.id || index}
+                className={`${
+                  hasImage
+                    ? 'flex items-center justify-center' // 이미지 컬럼: 중앙 정렬
+                    : 'flex flex-col space-y-4' // 텍스트 컬럼: 세로 중앙 정렬
+                }`}
+              >
+                {column.column?.children && column.column.children.length > 0 ? (
+                  <div className={hasImage ? 'w-full' : 'w-full max-w-none'}>
+                    <NotionBlocks blocks={column.column.children} />
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">빈 컬럼</p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // 3개 이상의 컬럼인 경우 (기존 그리드 레이아웃)
   return (
     <div className="my-4" role="region" aria-label="컬럼 레이아웃">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
