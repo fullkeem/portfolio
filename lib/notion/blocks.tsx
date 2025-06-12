@@ -32,8 +32,23 @@ function EnhancedImage({ src, originalSrc, alt, caption, blockId }: EnhancedImag
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
     null
   );
+  const [useDirectUrl, setUseDirectUrl] = useState(false);
+
+  // GIF 파일 감지
+  const isGif = originalSrc.toLowerCase().includes('.gif') || src.toLowerCase().includes('.gif');
+
+  // GIF의 경우 직접 URL 사용, 일반 이미지는 프록시 사용
+  const imageUrl = isGif && !useDirectUrl ? originalSrc : src;
 
   const handleImageError = () => {
+    // GIF이고 첫 번째 시도라면 직접 URL로 재시도
+    if (isGif && !useDirectUrl && retryCount === 0) {
+      setUseDirectUrl(true);
+      setRetryCount(1);
+      setIsLoading(true);
+      return;
+    }
+
     setImageError(true);
     setIsLoading(false);
   };
@@ -49,14 +64,14 @@ function EnhancedImage({ src, originalSrc, alt, caption, blockId }: EnhancedImag
   };
 
   const handleRetry = () => {
-    if (retryCount < 2) {
+    if (retryCount < 3) {
       setImageError(false);
       setIsLoading(true);
       setRetryCount((prev) => prev + 1);
-      // 이미지 재로드를 위해 timestamp 추가
-      const img = document.getElementById(`img-${blockId}`) as HTMLImageElement;
-      if (img) {
-        img.src = `${src}${src.includes('?') ? '&' : '?'}retry=${Date.now()}`;
+
+      // GIF의 경우 직접 URL과 프록시 URL을 번갈아 시도
+      if (isGif) {
+        setUseDirectUrl(!useDirectUrl);
       }
     }
   };
@@ -91,12 +106,12 @@ function EnhancedImage({ src, originalSrc, alt, caption, blockId }: EnhancedImag
           <div className="mb-2 text-4xl">🖼️</div>
           <p className="mb-3 text-sm text-muted-foreground">이미지를 불러올 수 없습니다</p>
           <div className="space-y-2">
-            {retryCount < 2 && (
+            {retryCount < 3 && (
               <button
                 onClick={handleRetry}
                 className="rounded bg-primary px-3 py-1 text-xs text-primary-foreground transition-colors hover:bg-primary/90"
               >
-                다시 시도 ({retryCount + 1}/3)
+                다시 시도 ({retryCount + 1}/4)
               </button>
             )}
             <details className="text-xs">
@@ -123,7 +138,7 @@ function EnhancedImage({ src, originalSrc, alt, caption, blockId }: EnhancedImag
       )}
       <img
         id={`img-${blockId}`}
-        src={src}
+        src={imageUrl}
         alt={alt}
         className="h-auto w-full rounded-lg shadow-sm"
         loading="lazy"
@@ -133,6 +148,11 @@ function EnhancedImage({ src, originalSrc, alt, caption, blockId }: EnhancedImag
           maxHeight: '600px',
           objectFit: 'contain',
         }}
+        // GIF의 경우 추가 속성
+        {...(isGif && {
+          crossOrigin: 'anonymous',
+          referrerPolicy: 'no-referrer',
+        })}
       />
     </div>
   );

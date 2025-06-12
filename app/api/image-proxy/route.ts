@@ -19,14 +19,26 @@ export async function GET(request: NextRequest) {
       return new NextResponse('Invalid image URL', { status: 400 });
     }
 
+    // GIF 파일 감지
+    const isGif = imageUrl.toLowerCase().includes('.gif');
+
+    // GIF의 경우 더 긴 타임아웃과 특별한 헤더 사용
+    const timeoutMs = isGif ? 15000 : 10000; // GIF: 15초, 일반: 10초
+
     // 이미지 fetch
     const response = await fetch(imageUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Referer': 'https://www.notion.so/',
+        'Accept': isGif ? 'image/gif,image/*,*/*;q=0.8' : 'image/*,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Sec-Fetch-Dest': 'image',
+        'Sec-Fetch-Mode': 'no-cors',
+        'Sec-Fetch-Site': 'cross-site',
       },
       // 타임아웃 설정
-      signal: AbortSignal.timeout(10000), // 10초
+      signal: AbortSignal.timeout(timeoutMs),
     });
 
     if (!response.ok) {
@@ -43,12 +55,15 @@ export async function GET(request: NextRequest) {
     // 이미지 데이터 가져오기
     const imageBuffer = await response.arrayBuffer();
 
-    // 캐싱 헤더 설정
+    // 캐싱 헤더 설정 (GIF는 더 긴 캐시)
     const headers = new Headers();
     headers.set('Content-Type', contentType);
-    headers.set('Cache-Control', 'public, max-age=86400, s-maxage=86400'); // 24시간 캐시
-    headers.set('CDN-Cache-Control', 'public, max-age=86400');
-    headers.set('Vercel-CDN-Cache-Control', 'public, max-age=86400');
+
+    // GIF는 더 오래 캐시 (7일), 일반 이미지는 1일
+    const cacheMaxAge = isGif ? 604800 : 86400; // 7일 vs 1일
+    headers.set('Cache-Control', `public, max-age=${cacheMaxAge}, s-maxage=${cacheMaxAge}`);
+    headers.set('CDN-Cache-Control', `public, max-age=${cacheMaxAge}`);
+    headers.set('Vercel-CDN-Cache-Control', `public, max-age=${cacheMaxAge}`);
 
     // CORS 헤더
     headers.set('Access-Control-Allow-Origin', '*');
