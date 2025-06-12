@@ -96,7 +96,7 @@ export function AboutHero() {
                 신뢰할 수 있는
               </span> */}
               <span className="block bg-gradient-to-r from-foreground to-accent/70 bg-clip-text text-transparent">
-                풀스택 개발자
+                프론트엔드 개발자
               </span>
             </h1>
           </div>
