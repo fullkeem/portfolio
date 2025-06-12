@@ -5,6 +5,7 @@ import { AboutCredibility } from '@/components/about/AboutCredibility';
 // import { AboutJourney } from '@/components/about/AboutJourney';
 import { AboutPhilosophy } from '@/components/about/AboutPhilosophy';
 import { AboutTestimonials } from '@/components/about/AboutTestimonials';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="min-h-screen">
+      <JsonLd type="professional-service" />
       <AboutHero />
       <AboutProblemSolution />
       <AboutCredibility />

@@ -1,4 +1,5 @@
 import { HeroSection } from '@/components/home/HeroSection';
+import { JsonLd } from '@/components/seo/JsonLd';
 import dynamic from 'next/dynamic';
 
 // GSAP을 사용하는 AboutSection을 동적 로드 (Below-fold이므로 안전)
@@ -137,6 +138,7 @@ const ContactSection = dynamic(
 export default function HomePage() {
   return (
     <>
+      <JsonLd type="organization" />
       <HeroSection />
       <AboutSection />
       <PortfolioSection />
