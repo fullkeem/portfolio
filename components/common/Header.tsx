@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ThemeToggle } from "./ThemeToggle";
-import { cn } from "@/lib/utils/cn";
-import { mainNavigation } from "@/config/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { ThemeToggle } from './ThemeToggle';
+import { Logo } from './Logo';
+import { cn } from '@/lib/utils/cn';
+import { mainNavigation } from '@/config/navigation';
 
 const navigation = mainNavigation;
 
@@ -20,24 +21,25 @@ export function Header() {
       setIsScrolled(window.scrollY > 10);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <header
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-300",
-        isScrolled
-          ? "bg-background/80 backdrop-blur-md border-b"
-          : "bg-transparent"
+        'fixed top-0 z-50 w-full transition-all duration-300',
+        isScrolled ? 'border-b bg-background/80 backdrop-blur-md' : 'bg-transparent'
       )}
     >
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="text-xl font-bold">
-            Fullkeem
-          </Link>
+          <Logo
+            size="lg"
+            href="/"
+            ariaLabel="fullkeem 홈페이지로 이동"
+            className="text-xl font-bold"
+          />
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:gap-8">
@@ -46,10 +48,8 @@ export function Header() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "relative text-sm font-medium transition-colors hover:text-primary",
-                  pathname === item.href
-                    ? "text-primary"
-                    : "text-muted-foreground"
+                  'relative text-sm font-medium transition-colors hover:text-primary',
+                  pathname === item.href ? 'text-primary' : 'text-muted-foreground'
                 )}
               >
                 {item.name}
@@ -80,11 +80,7 @@ export function Header() {
                 stroke="currentColor"
               >
                 {isMobileMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 ) : (
                   <path
                     strokeLinecap="round"
@@ -112,10 +108,10 @@ export function Header() {
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "block px-3 py-2 text-base font-medium rounded-md",
+                    'block rounded-md px-3 py-2 text-base font-medium',
                     pathname === item.href
-                      ? "bg-secondary text-primary"
-                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                      ? 'bg-secondary text-primary'
+                      : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                   )}
                 >
                   {item.name}

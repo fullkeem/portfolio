@@ -88,7 +88,7 @@ export function HeroSection() {
                   ref={titleRef}
                   className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-3xl font-bold leading-tight text-transparent sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl"
                 >
-                  Frontend Developer
+                  Fullkeem
                 </h1>
                 <motion.p
                   initial={{ y: 50, opacity: 0, scale: 0.9 }}
@@ -109,7 +109,7 @@ export function HeroSection() {
                 <MagneticButton
                   href="#portfolio"
                   className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 lg:px-8 lg:py-3 lg:text-base"
-                  magneticStrength={0.4}
+                  magneticStrength={0}
                   scaleOnHover={1.1}
                 >
                   포트폴리오 보기
@@ -117,7 +117,7 @@ export function HeroSection() {
                 <MagneticButton
                   href="/contact"
                   className="inline-flex items-center justify-center rounded-md bg-secondary px-6 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary/80 lg:px-8 lg:py-3 lg:text-base"
-                  magneticStrength={0.4}
+                  magneticStrength={0}
                   scaleOnHover={1.1}
                 >
                   프로젝트 문의
@@ -151,10 +151,10 @@ export function HeroSection() {
                   }}
                 />
 
-                <Avatar3D 
-                size="xl" 
-                animationSpeed="normal"
-                className="relative z-10 drop-shadow-2xl"
+                <Avatar3D
+                  size="xl"
+                  animationSpeed="normal"
+                  className="relative z-10 drop-shadow-2xl"
                   description="프론트엔드 개발자 fullkeem의 3D 아바타. 마우스를 올리거나 클릭하면 인터랙티브한 3D 효과를 경험할 수 있습니다."
                   ariaLabel="개발자 아바타. 인터랙티브한 3D 효과가 있습니다. Enter 또는 Space 키로 상호작용할 수 있습니다."
                   focusable={true}

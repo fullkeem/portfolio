@@ -45,7 +45,7 @@ export function JsonLd({ type, data }: JsonLdProps) {
         return {
           '@context': 'https://schema.org',
           '@type': 'WebSite',
-          name: 'fullkeem - Frontend Developer Portfolio',
+          name: 'fullkeem - Fullkeem Portfolio',
           description:
             '프론트엔드 개발자 fullkeem의 포트폴리오입니다. React, Next.js, TypeScript를 활용한 다양한 프로젝트를 확인해보세요.',
           url: baseUrl,
@@ -53,7 +53,7 @@ export function JsonLd({ type, data }: JsonLdProps) {
             '@type': 'Person',
             name: 'fullkeem',
             url: baseUrl,
-            jobTitle: 'Frontend Developer',
+            jobTitle: 'Fullkeem',
             worksFor: {
               '@type': 'Organization',
               name: 'fullkeem',
@@ -70,7 +70,7 @@ export function JsonLd({ type, data }: JsonLdProps) {
           '@context': 'https://schema.org',
           '@type': 'Person',
           name: 'fullkeem',
-          jobTitle: 'Frontend Developer',
+          jobTitle: 'Fullkeem',
           description:
             '사용자 경험을 중시하며 최신 기술을 활용하여 효율적인 웹 애플리케이션을 개발하는 프론트엔드 개발자입니다.',
           url: baseUrl,
@@ -166,7 +166,7 @@ export function JsonLd({ type, data }: JsonLdProps) {
           founder: {
             '@type': 'Person',
             name: 'fullkeem',
-            jobTitle: 'Frontend Developer',
+            jobTitle: 'Fullkeem',
           },
           contactPoint: {
             '@type': 'ContactPoint',
@@ -197,7 +197,7 @@ export function JsonLd({ type, data }: JsonLdProps) {
           provider: {
             '@type': 'Person',
             name: 'fullkeem',
-            jobTitle: 'Frontend Developer',
+            jobTitle: 'Fullkeem',
             url: baseUrl,
           },
           serviceType: 'Web Development',
@@ -240,7 +240,7 @@ export function JsonLd({ type, data }: JsonLdProps) {
           mainEntity: {
             '@type': 'Person',
             name: 'fullkeem',
-            jobTitle: 'Frontend Developer',
+            jobTitle: 'Fullkeem',
             url: baseUrl,
             contactPoint: {
               '@type': 'ContactPoint',

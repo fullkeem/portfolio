@@ -89,24 +89,51 @@ export function Card({
       {/* 이미지 */}
       {image && (
         <div className="relative aspect-video overflow-hidden bg-muted">
-          <Image
-            src={
-              image.includes('unsplash.com')
-                ? optimizeUnsplashUrl(image.trim(), 400, 300, {
-                    quality: imagePresets.blogCard.quality,
-                    format: 'auto',
-                  })
-                : image.trim()
+          {(() => {
+            const isGif = image.toLowerCase().includes('.gif');
+            const imageUrl = image.includes('unsplash.com')
+              ? optimizeUnsplashUrl(image.trim(), 400, 300, {
+                  quality: imagePresets.blogCard.quality,
+                  format: 'auto',
+                })
+              : image.trim();
+
+            // GIF의 경우 일반 img 태그 사용 (Next.js Image 최적화 우회)
+            if (isGif) {
+              return (
+                <img
+                  src={imageUrl}
+                  alt={imageAlt}
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading={priority ? 'eager' : 'lazy'}
+                  crossOrigin="anonymous"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    // GIF 로딩 실패시 프록시 URL로 재시도
+                    const target = e.target as HTMLImageElement;
+                    if (!target.src.includes('/api/image-proxy')) {
+                      target.src = `/api/image-proxy?url=${encodeURIComponent(imageUrl)}`;
+                    }
+                  }}
+                />
+              );
             }
-            alt={imageAlt}
-            width={400} // 명시적 크기 추가
-            height={300}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes={imagePresets.blogCard.sizes}
-            quality={imagePresets.blogCard.quality}
-            priority={priority}
-            loading={priority ? 'eager' : 'lazy'}
-          />
+
+            // 일반 이미지는 Next.js Image 컴포넌트 사용
+            return (
+              <Image
+                src={imageUrl}
+                alt={imageAlt}
+                width={400}
+                height={300}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                sizes={imagePresets.blogCard.sizes}
+                quality={imagePresets.blogCard.quality}
+                priority={priority}
+                loading={priority ? 'eager' : 'lazy'}
+              />
+            );
+          })()}
           {/* 호버시 오버레이 */}
           {href && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
