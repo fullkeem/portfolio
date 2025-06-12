@@ -3,9 +3,9 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { BlogPost } from '@/types';
-import { formatDate, calculateReadingTime } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import { optimizeUnsplashUrl, imagePresets } from '@/lib/utils/image';
 
 interface RelatedPostsProps {
@@ -84,11 +84,6 @@ export default function RelatedPosts({
                       <div className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-                      </div>
-                      <span>•</span>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        <span>{calculateReadingTime(post.excerpt)}분</span>
                       </div>
                     </div>
 

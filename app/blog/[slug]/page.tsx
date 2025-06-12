@@ -9,7 +9,7 @@ import { BlogImage } from '@/components/ui/OptimizedImage';
 import { ArrowLeft, Calendar, Clock, Tag, Share2 } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { NotionBlocks } from '@/lib/notion/blocks';
-import { formatDate, calculateReadingTime } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import TableOfContents from '@/components/blog/TableOfContents';
 import RelatedPosts from '@/components/blog/RelatedPosts';
 import Comments from '@/components/blog/Comments';
@@ -277,11 +277,7 @@ export default function BlogDetailPage() {
                     <Calendar className="h-4 w-4" />
                     <time dateTime={blogPost.publishedAt}>{formatDate(blogPost.publishedAt)}</time>
                   </div>
-                  <span>•</span>
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" />
-                    <span>{calculateReadingTime(blogPost.excerpt)}분 읽기</span>
-                  </div>
+
                   {/* 공유 버튼 */}
                   <button
                     onClick={handleShare}

@@ -129,7 +129,6 @@ export function BlogSection() {
                           <p className="mb-4 line-clamp-2 text-muted-foreground">{post.excerpt}</p>
                           <div className="flex items-center justify-between text-sm text-muted-foreground">
                             <span>{new Date(post.publishedAt).toLocaleDateString('ko-KR')}</span>
-                            <span>5분 읽기</span>
                           </div>
                         </div>
 
