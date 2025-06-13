@@ -39,11 +39,11 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     url: 'https://fullkeem.dev',
     siteName: 'fullkeem Portfolio',
-    title: 'Fullkeem | fullkeem',
+    title: 'Fullkeem | Web Developer',
     description: '랜딩 페이지 제작 전문 프론트엔드 개발자',
     images: [
       {
-        url: '/og-image.png',
+        url: '/images/default.png',
         width: 1200,
         height: 630,
         alt: 'Fullkeem | fullkeem',
@@ -52,9 +52,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fullkeem | fullkeem',
+    title: 'Fullkeem | web developer',
     description: '랜딩 페이지 제작 전문 프론트엔드 개발자',
-    images: ['/og-image.png'],
+    images: ['/images/default.png'],
   },
   robots: {
     index: true,
