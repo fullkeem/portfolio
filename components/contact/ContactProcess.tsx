@@ -14,19 +14,19 @@ const processSteps = [
     icon: FileText,
     title: '디자인 & 설계',
     description: '화면 설계 및 디자인 시안 작업',
-    duration: '3-5일',
+    duration: '1-2일',
   },
   {
     icon: Code,
     title: '개발 & 구현',
     description: '실제 개발 작업 및 기능 구현',
-    duration: '1-3주',
+    duration: '2-4일',
   },
   {
     icon: Rocket,
     title: '테스트 & 배포',
     description: '품질 검증 후 실서버 배포',
-    duration: '1-3일',
+    duration: '1-2일',
   },
 ];
 
@@ -47,7 +47,7 @@ export function ContactProcess() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {processSteps.map((step, index) => {
             const IconComponent = step.icon;
             return (
@@ -59,8 +59,8 @@ export function ContactProcess() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                {/* Step number and line */}
-                <div className="mb-6 flex items-center">
+                {/* Desktop: Step number and line above box */}
+                <div className="mb-6 hidden items-center lg:flex">
                   <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground">
                     {index + 1}
                   </div>
@@ -69,14 +69,19 @@ export function ContactProcess() {
                   )}
                 </div>
 
-                {/* Icon and content */}
-                <div className="rounded-lg border border-border bg-background p-6 transition-shadow hover:shadow-md">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                {/* Icon and content box */}
+                <div className="relative rounded-lg border border-border bg-background p-6 pl-8 text-right transition-shadow hover:shadow-md sm:p-8 lg:p-6 lg:pl-6 lg:text-left">
+                  {/* Mobile & Tablet: Step number inside box at top-left */}
+                  <div className="absolute left-3 top-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground lg:hidden">
+                    {index + 1}
+                  </div>
+
+                  <div className="mb-4 ml-auto flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 lg:ml-0">
                     <IconComponent className="h-6 w-6 text-primary" />
                   </div>
 
                   <h3 className="mb-2 text-xl font-semibold">{step.title}</h3>
-                  <p className="mb-3 leading-relaxed text-muted-foreground">{step.description}</p>
+                  <p className="mb-3 text-muted-foreground">{step.description}</p>
                   <div className="text-sm font-medium text-primary">소요 기간: {step.duration}</div>
                 </div>
               </motion.div>
