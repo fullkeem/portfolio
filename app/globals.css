@@ -171,14 +171,30 @@ html {
   }
 
   /* 3D 회전 유틸리티 클래스 */
-  .rotate-y-6 { transform: rotateY(6deg); }
-  .rotate-y-12 { transform: rotateY(12deg); }
-  .rotate-y-15 { transform: rotateY(15deg); }
-  .rotate-y-18 { transform: rotateY(18deg); }
-  .rotate-x-3 { transform: rotateX(3deg); }
-  .rotate-x-5 { transform: rotateX(5deg); }
-  .rotate-x-6 { transform: rotateX(6deg); }
-  .rotate-x-9 { transform: rotateX(9deg); }
+  .rotate-y-6 {
+    transform: rotateY(6deg);
+  }
+  .rotate-y-12 {
+    transform: rotateY(12deg);
+  }
+  .rotate-y-15 {
+    transform: rotateY(15deg);
+  }
+  .rotate-y-18 {
+    transform: rotateY(18deg);
+  }
+  .rotate-x-3 {
+    transform: rotateX(3deg);
+  }
+  .rotate-x-5 {
+    transform: rotateX(5deg);
+  }
+  .rotate-x-6 {
+    transform: rotateX(6deg);
+  }
+  .rotate-x-9 {
+    transform: rotateX(9deg);
+  }
 
   /* 복합 회전 효과 */
   .rotate-3d-hover {
@@ -187,24 +203,22 @@ html {
 
   /* 그림자 효과 */
   .shadow-3d {
-    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1))
-            drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08));
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08));
   }
 
   .shadow-3d-hover {
-    filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.15))
-            drop-shadow(0 12px 24px rgba(0, 0, 0, 0.1));
+    filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.15)) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.1));
   }
 
   /* 미니멀 글로우 효과 */
   .glow-minimal {
-    box-shadow: 
+    box-shadow:
       0 0 20px rgba(71, 85, 105, 0.1),
       0 0 40px rgba(71, 85, 105, 0.05);
   }
 
   .glow-minimal-hover {
-    box-shadow: 
+    box-shadow:
       0 0 30px rgba(71, 85, 105, 0.15),
       0 0 60px rgba(71, 85, 105, 0.08),
       0 0 90px rgba(71, 85, 105, 0.04);
@@ -234,7 +248,7 @@ html {
       width: 280px;
       height: 280px;
     }
-    
+
     .perspective-1200 {
       perspective: 900px;
     }
@@ -246,11 +260,11 @@ html {
       width: 240px;
       height: 240px;
     }
-    
+
     .perspective-1200 {
       perspective: 700px;
     }
-    
+
     /* 모바일에서 3D 효과 강도 조절 */
     .avatar-interactive:hover {
       transform: translateZ(15px) rotateY(8deg) rotateX(3deg) scale(1.03);
@@ -263,7 +277,7 @@ html {
       width: 200px;
       height: 200px;
     }
-    
+
     .perspective-1200 {
       perspective: 600px;
     }
@@ -280,7 +294,7 @@ html {
       animation: none !important;
       transition: none !important;
     }
-    
+
     .avatar-3d-container *,
     .avatar-card *,
     .avatar-minimal * {
@@ -305,7 +319,7 @@ html {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
-  
+
   /* 스크린 리더 전용 텍스트 */
   .sr-only {
     position: absolute;
@@ -318,7 +332,7 @@ html {
     white-space: nowrap;
     border: 0;
   }
-  
+
   /* 포커스 가능한 sr-only (키보드 탐색 시 표시) */
   .sr-only-focusable:focus {
     position: static;
@@ -330,66 +344,66 @@ html {
     clip: auto;
     white-space: normal;
   }
-  
+
   /* 키보드 포커스 스타일 개선 */
   .avatar-interactive:focus-visible {
     outline: 2px solid theme('colors.primary.DEFAULT');
     outline-offset: 2px;
     border-radius: 50%;
   }
-  
+
   /* 고대비 모드 지원 */
   @media (prefers-contrast: high) {
     .avatar-3d-container {
       border: 2px solid currentColor;
     }
-    
+
     .glow-minimal,
     .glow-minimal-hover {
       box-shadow: none;
     }
-    
+
     .shadow-3d,
     .shadow-3d-hover {
       filter: none;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     }
   }
-  
+
   /* 모션 안전 유틸리티 */
   @media (prefers-reduced-motion: no-preference) {
     .motion-safe\:animate-float {
       animation: float 3s ease-in-out infinite;
     }
   }
-  
+
   @media (prefers-reduced-motion: reduce) {
     .motion-reduce\:animate-none {
       animation: none;
     }
-    
+
     .motion-reduce\:transform-none {
       transform: none !important;
     }
   }
-  
+
   /* 터치 디바이스 최적화 */
   @media (hover: none) and (pointer: coarse) {
     .avatar-interactive:hover {
       transform: none;
     }
-    
+
     .avatar-interactive:active {
       transform: scale(0.95);
     }
   }
-  
+
   /* 투명도 줄이기 설정 지원 */
   @media (prefers-reduced-transparency: reduce) {
     .bg-background\/90 {
       background-color: theme('colors.background');
     }
-    
+
     .backdrop-blur-sm {
       backdrop-filter: none;
     }

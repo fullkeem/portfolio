@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function AboutHero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -96,7 +97,7 @@ export function AboutHero() {
                 신뢰할 수 있는
               </span> */}
               <span className="block bg-gradient-to-r from-foreground to-accent/70 bg-clip-text text-transparent">
-                풀스택 개발자
+                프론트엔드 개발자
               </span>
             </h1>
           </div>

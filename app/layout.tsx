@@ -23,7 +23,7 @@ const jetbrainsMono = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: {
-    default: 'Frontend Developer | fullkeem',
+    default: 'Fullkeem | fullkeem',
     template: '%s | fullkeem',
   },
   icons: {
@@ -39,20 +39,20 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     url: 'https://fullkeem.dev',
     siteName: 'fullkeem Portfolio',
-    title: 'Frontend Developer | fullkeem',
+    title: 'Fullkeem | fullkeem',
     description: '랜딩 페이지 제작 전문 프론트엔드 개발자',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Frontend Developer | fullkeem',
+        alt: 'Fullkeem | fullkeem',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Frontend Developer | fullkeem',
+    title: 'Fullkeem | fullkeem',
     description: '랜딩 페이지 제작 전문 프론트엔드 개발자',
     images: ['/og-image.png'],
   },

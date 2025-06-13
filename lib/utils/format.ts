@@ -17,7 +17,7 @@ export function formatRelativeTime(date: string | Date): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   const now = new Date();
   const diff = now.getTime() - d.getTime();
-  
+
   const seconds = Math.floor(diff / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
@@ -31,17 +31,6 @@ export function formatRelativeTime(date: string | Date): string {
   if (hours > 0) return `${hours}시간 전`;
   if (minutes > 0) return `${minutes}분 전`;
   return '방금 전';
-}
-
-/**
- * 읽기 시간 계산 (한글 기준)
- */
-export function calculateReadingTime(content: string): number {
-  // 한글은 분당 약 300-400자 읽기 가능
-  const wordsPerMinute = 350;
-  const wordCount = content.length;
-  const readingTime = Math.ceil(wordCount / wordsPerMinute);
-  return Math.max(1, readingTime); // 최소 1분
 }
 
 /**

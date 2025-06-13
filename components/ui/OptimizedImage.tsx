@@ -30,6 +30,18 @@ function getProxiedImageUrl(src: string): string {
   }
 }
 
+// GIF 애니메이션 이미지인지 확인하는 함수
+function isAnimatedGif(src: string): boolean {
+  try {
+    const url = new URL(src);
+    const pathname = url.pathname.toLowerCase();
+    return pathname.endsWith('.gif') || url.search.includes('.gif');
+  } catch {
+    // URL이 아닌 경우 (예: 상대 경로) 확장자만 확인
+    return typeof src === 'string' && src.toLowerCase().includes('.gif');
+  }
+}
+
 export function OptimizedImage({
   src,
   alt,
@@ -50,6 +62,9 @@ export function OptimizedImage({
     useProxy ? getProxiedImageUrl(src as string) : src
   );
   const [retryCount, setRetryCount] = useState(0);
+
+  // GIF 애니메이션 이미지인지 확인
+  const isGifImage = isAnimatedGif(src as string);
 
   const handleLoad = useCallback(
     (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -105,8 +120,9 @@ export function OptimizedImage({
       <Image
         src={currentSrc}
         alt={alt}
-        placeholder="blur"
-        blurDataURL={getOptimizedBlurDataURL(imageType)}
+        placeholder={isGifImage ? 'empty' : 'blur'}
+        blurDataURL={isGifImage ? undefined : getOptimizedBlurDataURL(imageType)}
+        unoptimized={isGifImage}
         onLoad={handleLoad}
         onError={handleError}
         className={cn(

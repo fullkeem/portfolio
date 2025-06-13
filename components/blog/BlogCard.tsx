@@ -1,8 +1,8 @@
 'use client';
 
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { BlogPost } from '@/types';
-import { formatDate, calculateReadingTime } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import { Card } from '@/components/ui/Card';
 import { getImageOrFallback } from '@/lib/utils/image';
 import { imageConfig } from '@/config/image';
@@ -17,10 +17,6 @@ export default function BlogCard({ post, index = 0 }: BlogCardProps) {
     {
       icon: <Calendar className="h-3 w-3" />,
       text: formatDate(post.publishedAt),
-    },
-    {
-      icon: <Clock className="h-3 w-3" />,
-      text: `${calculateReadingTime(post.excerpt)}분`,
     },
   ];
 

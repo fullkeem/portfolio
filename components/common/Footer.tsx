@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { footerNavigation } from "@/config/navigation";
+import Link from 'next/link';
+import { footerNavigation } from '@/config/navigation';
 
 const footerLinks = footerNavigation;
 
@@ -10,14 +10,14 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="flex flex-col items-center gap-4 md:flex-row md:gap-8">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Frontend Developer. All rights reserved.
+              © {new Date().getFullYear()} Fullkeem. All rights reserved.
             </p>
             <nav className="flex gap-6">
               {footerLinks.main.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {link.name}
                 </Link>
@@ -31,7 +31,7 @@ export function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
                 {link.name}
               </Link>

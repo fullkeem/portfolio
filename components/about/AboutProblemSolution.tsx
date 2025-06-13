@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { AlertTriangle, CheckCircle, MessageSquare, Clock, Zap, Shield } from 'lucide-react';
+import Image from 'next/image';
 
 const problems = [
   {
@@ -105,6 +106,38 @@ export function AboutProblemSolution() {
         >
           <div className="relative">
             <div className="absolute inset-0 top-1/2 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+            {/* Heart 이미지 - 배경에 반투명하게 겹치게 배치 */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2"
+            >
+              <motion.div
+                animate={{
+                  scale: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                className="relative"
+              >
+                <Image
+                  src="/images/heart.png"
+                  alt="따뜻한 마음으로 함께합니다"
+                  width={200}
+                  height={200}
+                  className="opacity-10 blur-sm dark:opacity-5"
+                />
+                {/* 추가 글로우 효과 */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/5 to-accent/5 blur-2xl" />
+              </motion.div>
+            </motion.div>
+
             <div className="relative inline-block bg-background px-8 py-4">
               <h2 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-4xl font-bold text-transparent md:text-6xl">
                 저와 함께하면 다릅니다
