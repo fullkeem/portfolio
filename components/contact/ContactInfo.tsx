@@ -3,13 +3,12 @@
 import { motion } from 'framer-motion';
 import { Mail, MessageCircle, Github, Linkedin, Clock, MapPin } from 'lucide-react';
 
-// TODO: 실제 연락처 정보로 업데이트 필요
 const CONTACT_INFO = {
-  email: 'your-email@example.com', // 실제 이메일로 변경
-  kakaoLink: 'https://open.kakao.com/your-link', // 실제 카카오톡 오픈채팅 링크로 변경
-  github: 'https://github.com/your-username', // 실제 GitHub 링크로 변경
-  linkedin: 'https://linkedin.com/in/your-profile', // 실제 LinkedIn 링크로 변경
-  responseTime: '24시간 이내', // 응답 시간
+  email: process.env.NEXT_PUBLIC_EMAIL,
+  kakaoLink: process.env.NEXT_PUBLIC_KAKAO_LINK, // 실제 카카오톡 오픈채팅 링크로 변경
+  github: process.env.NEXT_PUBLIC_GITHUB_URL, // 실제 GitHub 링크로 변경
+  linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL, // 실제 LinkedIn 링크로 변경
+  responseTime: '2시간 이내', // 응답 시간
   location: '대한민국 서울', // 위치 정보
 };
 
@@ -67,7 +66,7 @@ const additionalInfo = [
 
 export function ContactInfo() {
   return (
-    <section className="bg-secondary/20 py-24">
+    <section className="bg-secondary/20 pb-20">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -137,22 +136,6 @@ export function ContactInfo() {
             );
           })}
         </div>
-
-        {/* 연락처 수정 안내 (개발자용) */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="mx-auto mt-12 max-w-2xl rounded-lg border border-primary/20 bg-primary/5 p-4"
-        >
-          <p className="text-center text-sm text-muted-foreground">
-            <strong className="text-primary">개발자 노트:</strong>
-            연락처 정보는{' '}
-            <code className="rounded bg-muted px-1">components/contact/ContactInfo.tsx</code> 파일의
-            <code className="rounded bg-muted px-1">CONTACT_INFO</code> 객체에서 수정할 수 있습니다.
-          </p>
-        </motion.div>
       </div>
     </section>
   );
