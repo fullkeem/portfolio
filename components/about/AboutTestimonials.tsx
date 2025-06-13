@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // const achievements = [
 //   {
@@ -82,15 +83,47 @@ export function AboutTestimonials() {
             ))}
           </motion.div> */}
 
-        {/* CTA 섹션 */}
+        {/* CTA 섹션 - 강조 박스 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
           viewport={{ once: true }}
-          className="text-center"
+          className="relative text-center"
         >
-          <div className="mx-auto max-w-4xl rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/10 to-accent/10 p-8">
+          <div className="relative mx-auto max-w-4xl rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/10 to-accent/10 p-8">
+            {/* Calling 이미지 */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
+              whileInView={{ opacity: 1, scale: 1, rotate: -15 }}
+              transition={{ duration: 1.2, delay: 0.8 }}
+              viewport={{ once: true }}
+              className="absolute hidden md:left-4 md:top-5 md:block lg:left-12 lg:top-5 xl:left-20 xl:top-5"
+            >
+              <motion.div
+                animate={{
+                  y: [0, -10, 0],
+                  rotate: [0, 15, 0],
+                  scale: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 3.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                className="relative"
+              >
+                <Image
+                  src="/images/calling.png"
+                  alt="프로젝트 시작하기"
+                  width={120}
+                  height={120}
+                  className="h-16 w-16 drop-shadow-xl transition-transform duration-300 hover:scale-110 lg:h-20 lg:w-20 xl:h-20 xl:w-20"
+                />
+                {/* 글로우 효과 */}
+                <div className="absolute inset-0 -z-10 rounded-full bg-blue-500/20 opacity-70 blur-lg lg:opacity-100" />
+              </motion.div>
+            </motion.div>
             <h3 className="mb-4 text-2xl font-bold md:text-3xl">
               다음 성공 스토리의 주인공은 바로 여러분입니다
             </h3>
@@ -101,7 +134,7 @@ export function AboutTestimonials() {
             </p>
 
             {/* CTA 버튼들 */}
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <div className="relative flex flex-col justify-center gap-4 sm:flex-row">
               <Link
                 href="/portfolio"
                 className="group inline-flex items-center justify-center rounded-lg bg-primary px-8 py-4 text-lg font-medium text-primary-foreground transition-all duration-300 hover:scale-105 hover:bg-primary/90"
