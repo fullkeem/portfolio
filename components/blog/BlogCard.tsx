@@ -5,7 +5,6 @@ import { BlogPost } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { Card } from '@/components/ui/Card';
 import { getImageOrFallback } from '@/lib/utils/image';
-import { imageConfig } from '@/config/image';
 
 interface BlogCardProps {
   post: BlogPost;

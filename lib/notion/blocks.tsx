@@ -8,7 +8,6 @@ import type {
 import Link from 'next/link';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { BlogImage } from '@/components/ui/OptimizedImage';
 
 type NotionBlock = BlockObjectResponse;
 
@@ -25,7 +24,7 @@ interface EnhancedImageProps {
   blockId: string;
 }
 
-function EnhancedImage({ src, originalSrc, alt, caption, blockId }: EnhancedImageProps) {
+function EnhancedImage({ src, originalSrc, alt, blockId }: EnhancedImageProps) {
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
@@ -284,6 +283,7 @@ function NumberedListGroupBlock({ items }: { items: NotionBlock[] }) {
         const { numbered_list_item } = block;
 
         // 자식 블록들 가져오기
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const children = (block as any).numbered_list_item?.children || [];
 
         return (
@@ -313,6 +313,7 @@ function BulletedListGroupBlock({ items }: { items: NotionBlock[] }) {
         const { bulleted_list_item } = block;
 
         // 자식 블록들 가져오기
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const children = (block as any).bulleted_list_item?.children || [];
 
         return (
@@ -576,6 +577,7 @@ function CalloutBlock({ block }: { block: NotionBlock }) {
   const emoji = callout.icon?.type === 'emoji' ? callout.icon.emoji : '💡';
 
   // 자식 블록들 가져오기
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const children = (block as any).callout?.children || [];
 
   return (
@@ -604,6 +606,7 @@ function ToggleBlock({ block }: { block: NotionBlock }) {
   const { toggle } = block;
 
   // 자식 블록들 가져오기
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const children = (block as any).toggle?.children || [];
 
   return (
@@ -634,6 +637,7 @@ function ColumnListBlock({ block }: { block: NotionBlock }) {
   if (block.type !== 'column_list') return null;
 
   // 자식 블록들(columns) 가져오기
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const columns = (block as any).column_list?.children || [];
 
   // 컬럼이 2개인 경우 (텍스트 + 이미지 레이아웃)
@@ -641,8 +645,11 @@ function ColumnListBlock({ block }: { block: NotionBlock }) {
     return (
       <div className="my-6" role="region" aria-label="컬럼 레이아웃">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
-          {columns.map((column: any, index: number) => {
-            const hasImage = column.column?.children?.some((child: any) => child.type === 'image');
+          {columns.map((column: NotionBlock, index: number) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const hasImage = (column as any).column?.children?.some(
+              (child: NotionBlock) => child.type === 'image'
+            );
 
             return (
               <div
@@ -653,9 +660,11 @@ function ColumnListBlock({ block }: { block: NotionBlock }) {
                     : 'flex flex-col space-y-4' // 텍스트 컬럼: 세로 중앙 정렬
                 }`}
               >
-                {column.column?.children && column.column.children.length > 0 ? (
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {(column as any).column?.children && (column as any).column.children.length > 0 ? (
                   <div className={hasImage ? 'w-full' : 'w-full max-w-none'}>
-                    <NotionBlocks blocks={column.column.children} />
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                    <NotionBlocks blocks={(column as any).column.children} />
                   </div>
                 ) : (
                   <p className="text-sm text-muted-foreground">빈 컬럼</p>
@@ -672,6 +681,7 @@ function ColumnListBlock({ block }: { block: NotionBlock }) {
   return (
     <div className="my-4" role="region" aria-label="컬럼 레이아웃">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {columns.map((column: any, index: number) => (
           <div key={column.id || index} className="rounded-lg border p-4">
             {column.column?.children && column.column.children.length > 0 ? (

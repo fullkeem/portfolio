@@ -44,8 +44,11 @@ interface CardProps {
 
   // 애니메이션 설정
   animation?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     initial?: Variants | any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     animate?: Variants | any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     whileHover?: Variants | any;
     transition?: Transition;
   };

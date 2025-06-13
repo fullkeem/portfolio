@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, Suspense } from 'react';
+import { useMemo, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { Portfolio } from '@/types';

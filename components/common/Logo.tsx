@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils/cn';
 
 interface LogoProps {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   showText?: boolean;
   className?: string;
   imageClassName?: string;
@@ -33,13 +33,18 @@ const sizeConfig = {
     text: 'text-2xl',
     spacing: 'ml-3',
   },
+  xl: {
+    container: 'h-14 w-14',
+    image: { width: 56, height: 56 },
+    text: 'text-3xl',
+    spacing: 'ml-4',
+  },
 };
 
 export function Logo({
   size = 'md',
   className = '',
   imageClassName = '',
-  textClassName = '',
   href,
   ariaLabel = 'fullkeem 홈페이지로 이동',
 }: LogoProps) {

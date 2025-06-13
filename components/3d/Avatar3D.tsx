@@ -179,7 +179,7 @@ export const Avatar3D = memo(function Avatar3D({
 
   // 접근성 속성 계산
   const accessibilityProps = useMemo(() => {
-    const props: any = {
+    const props: Record<string, string | number> = {
       role: enableInteraction ? 'button' : 'img',
       'aria-label':
         ariaLabel ||

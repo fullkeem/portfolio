@@ -11,7 +11,6 @@ import { TiltCard } from '@/components/common/MagneticButton';
 import {
   optimizeUnsplashUrl,
   imagePresets,
-  getImageLoadingStrategy,
   getOptimalQuality,
   extractImageMetadata,
   getImageOrFallback,
@@ -74,13 +73,6 @@ export function BlogSection() {
                     )
                   : null;
 
-                // 로딩 전략 결정 (블로그는 LCP가 아님)
-                const loadingStrategy = getImageLoadingStrategy(
-                  false, // LCP 아님
-                  index < 3, // 첫 3개는 above fold
-                  index
-                );
-
                 // 이미지 메타데이터
                 const imageMetadata = imageSrc
                   ? extractImageMetadata(imageSrc)
@@ -110,7 +102,6 @@ export function BlogSection() {
                               sizes={imagePresets.blogCard.sizes}
                               quality={getOptimalQuality(imagePresets.blogCard.quality, false)}
                               loading="lazy" // BlogSection은 모든 이미지 지연 로딩
-                              // @ts-ignore - Next.js 15 새로운 속성
                               fetchPriority="low" // 낮은 우선순위로 설정
                               decoding="async"
                             />

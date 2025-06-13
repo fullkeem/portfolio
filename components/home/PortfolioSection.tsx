@@ -11,7 +11,6 @@ import { TiltCard } from '@/components/common/MagneticButton';
 import {
   optimizeUnsplashUrl,
   imagePresets,
-  getImageLoadingStrategy,
   getOptimalQuality,
   extractImageMetadata,
   getImageOrFallback,
@@ -92,13 +91,6 @@ export function PortfolioSection() {
                     )
                   : null;
 
-                // 로딩 전략 결정 (첫 번째 이미지는 최고 우선순위)
-                const loadingStrategy = getImageLoadingStrategy(
-                  index === 0, // 첫 번째 이미지가 LCP
-                  true, // above fold
-                  index
-                );
-
                 // 이미지 메타데이터
                 const imageMetadata = imageSrc
                   ? extractImageMetadata(imageSrc)
@@ -118,57 +110,19 @@ export function PortfolioSection() {
                       >
                         <div className="relative aspect-video overflow-hidden bg-muted">
                           {imageSrc ? (
-                            (() => {
-                              const isGif = portfolio.thumbnail?.toLowerCase().includes('.gif');
-
-                              // GIF의 경우 일반 img 태그 사용
-                              if (isGif) {
-                                return (
-                                  <img
-                                    src={portfolio.thumbnail}
-                                    alt={imageMetadata.alt}
-                                    title={imageMetadata.title}
-                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                    loading={index === 0 ? 'eager' : 'lazy'}
-                                    crossOrigin="anonymous"
-                                    referrerPolicy="no-referrer"
-                                    onError={(e) => {
-                                      // GIF 로딩 실패시 프록시 URL로 재시도
-                                      const target = e.target as HTMLImageElement;
-                                      if (!target.src.includes('/api/image-proxy')) {
-                                        target.src = `/api/image-proxy?url=${encodeURIComponent(portfolio.thumbnail!)}`;
-                                      }
-                                    }}
-                                  />
-                                );
-                              }
-
-                              // 일반 이미지는 Next.js Image 컴포넌트 사용
-                              return (
-                                <Image
-                                  src={imageSrc?.trim() || ''}
-                                  alt={imageMetadata.alt}
-                                  title={imageMetadata.title}
-                                  width={index === 0 ? 600 : 400}
-                                  height={index === 0 ? 400 : 300}
-                                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                  sizes={
-                                    index === 0
-                                      ? '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                                      : imagePresets.portfolioCard.sizes
-                                  }
-                                  quality={getOptimalQuality(
-                                    index === 0 ? 95 : imagePresets.portfolioCard.quality,
-                                    index === 0
-                                  )}
-                                  loading={index === 0 ? 'eager' : 'lazy'}
-                                  priority={index === 0}
-                                  // @ts-ignore - Next.js 15 새로운 속성
-                                  fetchPriority={index === 0 ? 'high' : 'low'}
-                                  decoding={loadingStrategy.decoding}
-                                />
-                              );
-                            })()
+                            <Image
+                              src={imageSrc?.trim() || ''}
+                              alt={imageMetadata.alt}
+                              title={imageMetadata.title}
+                              width={400}
+                              height={300}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              sizes={imagePresets.portfolioCard.sizes}
+                              quality={getOptimalQuality(imagePresets.portfolioCard.quality, false)}
+                              loading="lazy"
+                              fetchPriority="low"
+                              decoding="async"
+                            />
                           ) : (
                             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
                           )}

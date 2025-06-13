@@ -202,6 +202,7 @@ export function getOptimalQuality(
 
   // 네트워크 상태 확인 (지원되는 경우)
   if (typeof navigator !== 'undefined' && 'connection' in navigator) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const connection = (navigator as any).connection;
     if (connection?.effectiveType === 'slow-2g' || connection?.effectiveType === '2g') {
       return Math.max(baseQuality - 20, 50);
@@ -218,13 +219,14 @@ export function getOptimalQuality(
  * 이미지 메타데이터 추출
  * SEO 및 접근성 최적화
  */
-export function extractImageMetadata(url: string): {
+export function extractImageMetadata(imageUrl: string): {
   alt: string;
   title?: string;
+  description?: string;
 } {
   // Unsplash URL에서 메타데이터 추출
-  if (url.includes('unsplash.com')) {
-    const urlParts = url.split('/');
+  if (imageUrl.includes('unsplash.com')) {
+    const urlParts = imageUrl.split('/');
     const photoId = urlParts[urlParts.length - 1]?.split('?')[0];
     return {
       alt: `High-quality image from Unsplash (${photoId})`,

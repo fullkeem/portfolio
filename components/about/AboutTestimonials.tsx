@@ -125,12 +125,12 @@ export function AboutTestimonials() {
               </motion.div>
             </motion.div>
             <h3 className="mb-4 text-2xl font-bold md:text-3xl">
-              다음 성공 스토리의 주인공은 바로 여러분입니다
+              함께 만들어갈 첫 번째 성공 스토리
             </h3>
             <p className="mb-8 text-lg text-muted-foreground">
-              지금까지 50여 개의 프로젝트를 성공적으로 완료하며 쌓아온
+              신선한 아이디어와 열정으로 여러분만의 특별한 웹사이트를
               <br className="hidden md:block" />
-              경험과 노하우로 여러분의 프로젝트를 완성해보세요.
+              합리적인 가격에 정성껏 제작해드립니다.
             </p>
 
             {/* CTA 버튼들 */}

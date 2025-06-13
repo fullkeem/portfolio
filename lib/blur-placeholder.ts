@@ -67,7 +67,7 @@ export function getOptimizedBlurDataURL(imageType?: 'profile' | 'portfolio' | 'b
 }
 
 // 실제 이미지에서 blur placeholder 생성 (서버 사이드에서 사용)
-export async function generateBlurFromImage(imageUrl: string): Promise<string> {
+export async function generateBlurFromImage(): Promise<string> {
   try {
     // 실제 구현에서는 sharp 라이브러리를 사용하여 이미지를 작게 리사이즈하고 blur 처리
     // 여기서는 기본 placeholder 반환

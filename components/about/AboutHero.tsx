@@ -1,182 +1,73 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ChevronDown, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
 
 export function AboutHero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const subtitleRef = useRef<HTMLDivElement>(null);
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // 타이틀 애니메이션
+    if (inView && titleRef.current) {
       gsap.fromTo(
         titleRef.current,
-        {
-          y: 100,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          ease: 'power4.out',
-          delay: 0.2,
-        }
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
       );
-
-      // 서브타이틀 애니메이션
-      gsap.fromTo(
-        subtitleRef.current,
-        {
-          y: 50,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: 'power3.out',
-          delay: 0.8,
-        }
-      );
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+    }
+  }, [inView]);
 
   return (
-    <section
-      ref={containerRef}
-      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-background via-secondary/20 to-primary/5"
-    >
-      {/* 배경 데코레이션 */}
-      <div className="bg-grid-small-black/[0.2] dark:bg-grid-small-white/[0.2] absolute inset-0" />
-      <div className="absolute inset-0 bg-gradient-to-br from-background/80 to-transparent" />
+    <section className="relative py-20 md:py-32">
+      <div className="container mx-auto px-4">
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className="mx-auto max-w-4xl text-center"
+        >
+          <h1 ref={titleRef} className="mb-6 text-4xl font-bold md:text-6xl">
+            안녕하세요!
+            <br />
+            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              프론트엔드 개발자
+            </span>{' '}
+            풀킴입니다
+          </h1>
 
-      {/* 플로팅 요소들 */}
-      <motion.div
-        className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-primary/10 blur-3xl"
-        animate={{
-          x: [0, 100, 0],
-          y: [0, -100, 0],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-accent/10 blur-3xl"
-        animate={{
-          x: [0, -100, 0],
-          y: [0, 100, 0],
-        }}
-        transition={{
-          duration: 25,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
-      />
+          <p className="mb-8 text-lg text-muted-foreground md:text-xl">
+            사용자 중심의 웹 경험을 만들어가는 개발자입니다.
+            <br />
+            프론트엔드부터 백엔드까지, 완성도 높은 서비스를 구현합니다.
+          </p>
 
-      <div className="container relative z-10 mx-auto px-4">
-        <div className="mx-auto max-w-4xl text-center">
-          {/* 메인 타이틀 */}
-          <div ref={titleRef} className="mb-8">
-            <h1 className="mb-6 text-5xl font-bold leading-loose md:text-7xl">
-              <span className="block bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                크몽에서 만나볼 수 있는
-              </span>
-              {/* <span className="block bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                신뢰할 수 있는
-              </span> */}
-              <span className="block bg-gradient-to-r from-foreground to-accent/70 bg-clip-text text-transparent">
-                프론트엔드 개발자
-              </span>
-            </h1>
-          </div>
-
-          {/* 서브타이틀 */}
-          <div ref={subtitleRef}>
-            <div className="mb-8">
-              <p className="mb-2 text-xl leading-relaxed text-muted-foreground md:text-2xl">
-                혼자 고민하던 <span className="font-semibold text-primary">랜딩 페이지 제작</span>,
-              </p>
-              <p className="text-xl leading-relaxed text-muted-foreground md:text-2xl">
-                이제 <span className="font-semibold text-foreground">웹 개발자</span>와 함께
-                해결해보세요.
-              </p>
-            </div>
-
-            {/* 키워드 태그들 */}
-            <div className="mb-12 flex flex-wrap justify-center gap-3">
-              {[
-                '고객 중심 소통',
-                '완성도 높은 결과물',
-                '약속된 일정 준수',
-                '사후 관리',
-                '합리적 가격',
-              ].map((tag, index) => (
-                <motion.span
-                  key={tag}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1.2 + index * 0.1, duration: 0.5 }}
-                  className="rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-medium text-primary"
-                >
-                  {tag}
-                </motion.span>
-              ))}
-            </div>
-
-            {/* CTA 버튼들 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2, duration: 0.6 }}
-              className="flex flex-col justify-center gap-4 sm:flex-row"
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            <motion.a
+              href="#contact"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              {/* <Link
-                href="/portfolio"
-                className="group inline-flex items-center justify-center rounded-lg bg-primary px-8 py-4 text-lg font-medium text-primary-foreground transition-all duration-300 hover:scale-105 hover:bg-primary/90"
-              >
-                포트폴리오 보기
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Link> */}
+              프로젝트 문의하기
+            </motion.a>
 
-              <Link
-                href="/contact"
-                className="block rounded-lg border border-border bg-secondary px-10 py-4 text-lg font-medium text-foreground transition-all duration-300 hover:scale-105 hover:bg-secondary/80"
-              >
-                프로젝트 문의하기
-              </Link>
-            </motion.div>
-
-            {/* 스크롤 인디케이터 */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2.5, duration: 0.8 }}
-              className="mt-16"
+            <motion.a
+              href="/portfolio"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-base font-medium transition-colors hover:bg-secondary"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <div className="flex flex-col items-center text-muted-foreground">
-                <span className="mb-4 text-sm">아래로 스크롤하여 더 알아보기</span>
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <ChevronDown className="h-6 w-6" />
-                </motion.div>
-              </div>
-            </motion.div>
+              포트폴리오 보기
+            </motion.a>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

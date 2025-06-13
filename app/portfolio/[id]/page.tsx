@@ -1,9 +1,7 @@
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import { GitBranch, ExternalLink, ArrowLeft, Calendar } from 'lucide-react';
 import { getPortfolioById, getPageContent } from '@/lib/notion/client';
-import type { Portfolio as NotionPortfolio } from '@/lib/notion/client';
 import { NotionBlocks } from '@/lib/notion/blocks';
 import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { formatDate } from '@/lib/utils';
@@ -47,37 +45,46 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
             <p className="mb-6 text-xl text-muted-foreground">{portfolio.description}</p>
 
             {/* 메타 정보 */}
-            <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
+            <div className="mb-6 flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                <time>{formatDate(portfolio.createdAt)}</time>
+                <time dateTime={portfolio.createdAt}>{formatDate(portfolio.createdAt)}</time>
               </div>
+            </div>
 
-              {/* 외부 링크 */}
-              <div className="flex items-center gap-4">
-                {portfolio.githubUrl && (
-                  <Link
-                    href={portfolio.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 transition-colors hover:text-foreground"
-                  >
-                    <GitBranch className="h-4 w-4" />
-                    GitHub
-                  </Link>
-                )}
-                {portfolio.liveUrl && (
-                  <Link
-                    href={portfolio.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 transition-colors hover:text-foreground"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    Live Demo
-                  </Link>
-                )}
-              </div>
+            {/* 기술 스택 */}
+            <div className="mb-6 flex flex-wrap gap-2">
+              {portfolio.technologies.map((tech) => (
+                <span key={tech} className="rounded-lg bg-secondary px-3 py-1 text-sm font-medium">
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            {/* 링크들 */}
+            <div className="flex flex-wrap gap-4">
+              {portfolio.liveUrl && (
+                <Link
+                  href={portfolio.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  라이브 사이트
+                </Link>
+              )}
+              {portfolio.githubUrl && (
+                <Link
+                  href={portfolio.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-secondary"
+                >
+                  <GitBranch className="h-4 w-4" />
+                  GitHub
+                </Link>
+              )}
             </div>
           </header>
 
@@ -94,18 +101,6 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
               showLoadingSpinner={true}
             />
           )}
-
-          {/* 기술 스택 */}
-          <section className="mb-12">
-            <h2 className="mb-4 text-2xl font-semibold">사용 기술</h2>
-            <div className="flex flex-wrap gap-2">
-              {portfolio.technologies.map((tech) => (
-                <span key={tech} className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium">
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </section>
 
           {/* Notion 콘텐츠 */}
           <section className="prose prose-lg max-w-none dark:prose-invert">
@@ -153,6 +148,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     title: `${portfolio.title} | Portfolio`,
     description: portfolio.description,
     openGraph: {
+      title: portfolio.title,
+      description: portfolio.description,
+      images: portfolio.thumbnail ? [{ url: portfolio.thumbnail, width: 1200, height: 630 }] : [],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
       title: portfolio.title,
       description: portfolio.description,
       images: portfolio.thumbnail ? [portfolio.thumbnail] : [],
