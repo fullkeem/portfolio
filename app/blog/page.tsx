@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { JsonLd } from '@/components/seo/JsonLd';
 import { BlogListClient } from '@/components/blog/BlogListClient';
 import { BlogPost } from '@/types';
 
@@ -35,25 +34,5 @@ async function getBlogPostsData(): Promise<BlogPost[]> {
 export default async function BlogPage() {
   const blogPosts = await getBlogPostsData();
 
-  // 구조화 데이터용 블로그 포스트 아이템 변환
-  const blogItems = blogPosts.map((post: BlogPost) => ({
-    id: post.id,
-    title: post.title,
-    description: post.excerpt,
-    url: `/blog/${post.id}`,
-  }));
-
-  return (
-    <>
-      <JsonLd
-        type="blog-list"
-        data={{
-          items: blogItems,
-          totalItems: blogPosts.length,
-          url: '/blog',
-        }}
-      />
-      <BlogListClient blogPosts={blogPosts} />
-    </>
-  );
+  return <BlogListClient blogPosts={blogPosts} />;
 }
