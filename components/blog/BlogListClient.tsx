@@ -1,11 +1,10 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { BlogPost } from '@/types';
-import { useFilterStore } from '@/store/filterStore';
 import BlogCard from '@/components/blog/BlogCard';
 import BlogFilters from '@/components/blog/BlogFilters';
 import BlogPagination from '@/components/blog/BlogPagination';
+import { BlogPost } from '@/types';
 
 const POSTS_PER_PAGE = 9;
 
@@ -13,16 +12,26 @@ interface BlogListClientProps {
   blogPosts: BlogPost[];
 }
 
+interface FilterState {
+  category: string | null;
+  tags: string[];
+  search: string;
+}
+
 export function BlogListClient({ blogPosts }: BlogListClientProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const { selectedCategory, selectedTags, blogSearchQuery } = useFilterStore();
+  const [filters, setFilters] = useState<FilterState>({
+    category: null,
+    tags: [],
+    search: '',
+  });
 
   // 필터링된 블로그 포스트
   const filteredPosts = useMemo(() => {
     return blogPosts.filter((post) => {
       // 검색어 필터
-      if (blogSearchQuery) {
-        const searchLower = blogSearchQuery.toLowerCase();
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
         const matchesSearch =
           post.title.toLowerCase().includes(searchLower) ||
           post.excerpt.toLowerCase().includes(searchLower) ||
@@ -32,24 +41,25 @@ export function BlogListClient({ blogPosts }: BlogListClientProps) {
       }
 
       // 카테고리 필터
-      if (selectedCategory && selectedCategory !== '전체') {
-        if (post.category !== selectedCategory) return false;
+      if (filters.category && filters.category !== '전체') {
+        if (post.category !== filters.category) return false;
       }
 
-      // 태그 필터 (선택된 태그가 있다면)
-      if (selectedTags.length > 0) {
-        const hasSelectedTag = selectedTags.some((tag) => post.tags.includes(tag));
+      // 태그 필터
+      if (filters.tags.length > 0) {
+        const hasSelectedTag = filters.tags.some((tag) => post.tags.includes(tag));
         if (!hasSelectedTag) return false;
       }
 
       return true;
     });
-  }, [blogPosts, selectedCategory, selectedTags, blogSearchQuery]);
+  }, [blogPosts, filters]);
 
   // 페이지네이션 관련 계산
   const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
   const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-  const currentPosts = filteredPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const currentPosts = filteredPosts.slice(startIndex, endIndex);
 
   // 모든 태그 추출
   const availableTags = useMemo(() => {
@@ -60,11 +70,23 @@ export function BlogListClient({ blogPosts }: BlogListClientProps) {
   // 필터가 변경되면 첫 페이지로 이동
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedCategory, selectedTags, blogSearchQuery]);
+  }, [filters]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFilterChange = (newFilters: Partial<FilterState>) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      category: null,
+      tags: [],
+      search: '',
+    });
   };
 
   return (
@@ -79,7 +101,12 @@ export function BlogListClient({ blogPosts }: BlogListClientProps) {
         </div>
 
         {/* 필터 섹션 */}
-        <BlogFilters availableTags={availableTags} />
+        <BlogFilters
+          availableTags={availableTags}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onClearFilters={clearFilters}
+        />
 
         {/* 블로그 포스트 그리드 */}
         <div className="mx-auto max-w-6xl">
