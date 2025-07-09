@@ -15,13 +15,11 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // 사용자가 스크롤을 시작하면 Lenis를 로드
     const handleScroll = () => {
-      if (!shouldLoadLenis) {
-        setShouldLoadLenis(true);
-        // 스크롤 이벤트 리스너 제거 (한 번만 실행)
-        window.removeEventListener('scroll', handleScroll);
-        window.removeEventListener('wheel', handleScroll);
-        window.removeEventListener('touchstart', handleScroll);
-      }
+      setShouldLoadLenis(true);
+      // 스크롤 이벤트 리스너 제거 (한 번만 실행)
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('wheel', handleScroll);
+      window.removeEventListener('touchstart', handleScroll);
     };
 
     // 다양한 스크롤 이벤트 감지
@@ -40,7 +38,7 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
       window.removeEventListener('touchstart', handleScroll);
       clearTimeout(timeout);
     };
-  }, [shouldLoadLenis]);
+  }, []); // 의존성 배열 제거하여 한 번만 실행
 
   // Lenis가 로드되지 않았으면 일반 div로 감싸기
   if (!shouldLoadLenis) {

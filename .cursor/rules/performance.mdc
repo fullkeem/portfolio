@@ -1,0 +1,50 @@
+---
+alwaysApply: true
+description: 성능 최적화 규칙과 개선 방안
+---
+
+# 성능 최적화 가이드
+
+## 이미지 최적화
+- **Next.js Image 컴포넌트** 필수 사용
+- [components/OptimizedImage.tsx](mdc:components/OptimizedImage.tsx) - 커스텀 이미지 컴포넌트
+- **Blur placeholder**: SVG 기반 blur 효과 구현
+- **포맷**: AVIF → WebP → JPEG 순서로 fallback
+
+## 코드 스플리팅
+- **Dynamic imports**: 페이지 수준에서 적용
+- **Suspense**: 로딩 상태 처리
+- **Lazy loading**: 중요하지 않은 컴포넌트에 적용
+
+```typescript
+const Component = dynamic(() => import('./Component'), {
+  loading: () => <Skeleton />,
+  ssr: false // 필요시
+});
+```
+
+## 번들 최적화
+- **Tree shaking**: 사용하지 않는 코드 제거
+- **Code splitting**: 라우트 기반 분할
+- **Compression**: Gzip/Brotli 압축 활성화
+
+## SEO 최적화
+- **JSON-LD 스키마**: [components/seo/JsonLd.tsx](mdc:components/seo/JsonLd.tsx)
+- **메타데이터**: 각 페이지별 최적화
+- **구조화된 데이터**: Person, Article, Organization 타입
+
+## 렌더링 최적화
+- **React.memo**: 불필요한 리렌더링 방지
+- **useMemo/useCallback**: 값 및 함수 메모이제이션
+- **서버 컴포넌트**: 가능한 한 서버에서 렌더링
+
+## 성능 측정
+- **Core Web Vitals**: LCP, FID, CLS 모니터링
+- **Lighthouse**: 정기적인 성능 측정
+- **Bundle Analyzer**: 번들 크기 분석
+
+## 피해야 할 것들
+- 과도한 애니메이션 (60fps 미만)
+- 불필요한 라이브러리 의존성
+- 최적화되지 않은 이미지 사용
+- 동기식 데이터 페칭
