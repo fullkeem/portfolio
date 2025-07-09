@@ -1,27 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { BlogPost } from '@/types';
-import { BlogCardSkeleton } from '@/components/common/loading/Skeleton';
-import { TiltCard } from '@/components/common/MagneticButton';
-import {
-  optimizeUnsplashUrl,
-  imagePresets,
-  getOptimalQuality,
-  extractImageMetadata,
-  getImageOrFallback,
-} from '@/lib/utils/image';
 
 export function BlogSection() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,13 +26,28 @@ export function BlogSection() {
     fetchPosts();
   }, []);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
     <section id="blog" className="py-20 md:py-32">
       <div className="container mx-auto px-4">
         <motion.div
-          ref={ref}
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5 }}
           className="mb-12 text-center"
         >
@@ -55,87 +55,72 @@ export function BlogSection() {
           <p className="text-lg text-muted-foreground">개발 경험과 인사이트를 공유합니다</p>
         </motion.div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={containerVariants}
+          className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+        >
           {loading
-            ? // 로딩 스켈레톤
-              [...Array(3)].map((_, i) => <BlogCardSkeleton key={i} />)
-            : posts.map((post, index) => {
-                // 이미지 최적화 설정
-                const imageSrc = post.coverImage
-                  ? optimizeUnsplashUrl(
-                      getImageOrFallback(post.coverImage, post.category || 'blog'),
-                      400,
-                      300,
-                      {
-                        quality: getOptimalQuality(imagePresets.blogCard.quality, false),
-                        format: 'auto',
-                      }
-                    )
-                  : null;
-
-                // 이미지 메타데이터
-                const imageMetadata = imageSrc
-                  ? extractImageMetadata(imageSrc)
-                  : { alt: post.title };
-
-                return (
-                  <motion.div
-                    key={post.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <Link href={`/blog/${post.slug}`}>
-                      <TiltCard
-                        className="group relative h-full cursor-pointer overflow-hidden rounded-lg border bg-background"
-                        tiltStrength={8}
-                      >
-                        <div className="relative aspect-video overflow-hidden bg-muted">
-                          {imageSrc ? (
-                            <Image
-                              src={imageSrc?.trim() || ''}
-                              alt={imageMetadata.alt}
-                              title={imageMetadata.title}
-                              width={400} // 명시적 크기 추가
-                              height={300}
-                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                              sizes={imagePresets.blogCard.sizes}
-                              quality={getOptimalQuality(imagePresets.blogCard.quality, false)}
-                              loading="lazy" // BlogSection은 모든 이미지 지연 로딩
-                              fetchPriority="low" // 낮은 우선순위로 설정
-                              decoding="async"
-                            />
-                          ) : (
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
-                          )}
-                          <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
+            ? [...Array(3)].map((_, i) => (
+                <div key={i} className="animate-pulse rounded-lg border bg-background p-0">
+                  <div className="aspect-video bg-gray-200 dark:bg-gray-800"></div>
+                  <div className="space-y-3 p-6">
+                    <div className="h-4 w-16 rounded bg-gray-200 dark:bg-gray-800"></div>
+                    <div className="h-6 w-32 rounded bg-gray-200 dark:bg-gray-800"></div>
+                    <div className="space-y-2">
+                      <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-800"></div>
+                      <div className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-800"></div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="h-4 w-20 rounded bg-gray-200 dark:bg-gray-800"></div>
+                      <div className="h-4 w-16 rounded bg-gray-200 dark:bg-gray-800"></div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            : posts.map((post) => (
+                <motion.div key={post.id} variants={itemVariants}>
+                  <Link href={`/blog/${post.slug}`}>
+                    <div className="group h-full cursor-pointer overflow-hidden rounded-lg border bg-background transition-transform hover:scale-[1.02]">
+                      <div className="relative aspect-video overflow-hidden bg-muted">
+                        {post.coverImage ? (
+                          <Image
+                            src={post.coverImage}
+                            alt={post.title}
+                            width={400}
+                            height={300}
+                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
+                        )}
+                      </div>
+                      <div className="p-6">
+                        <div className="mb-2 text-xs font-medium text-primary">
+                          {post.category || 'Blog'}
                         </div>
-                        <div className="relative z-10 p-6">
-                          <div className="mb-2 text-xs font-medium text-primary">
-                            {post.category || 'Blog'}
-                          </div>
-                          <h3 className="mb-2 text-xl font-semibold transition-colors group-hover:text-primary">
-                            {post.title}
-                          </h3>
-                          <p className="mb-4 line-clamp-2 text-muted-foreground">{post.excerpt}</p>
-                          <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <span>{new Date(post.publishedAt).toLocaleDateString('ko-KR')}</span>
-                          </div>
+                        <h3 className="mb-2 text-xl font-semibold transition-colors group-hover:text-primary">
+                          {post.title}
+                        </h3>
+                        <p className="mb-4 line-clamp-2 text-muted-foreground">{post.excerpt}</p>
+                        <div className="flex items-center justify-between text-sm text-muted-foreground">
+                          <span>{new Date(post.publishedAt).toLocaleDateString('ko-KR')}</span>
                         </div>
-
-                        {/* Hover overlay effect */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      </TiltCard>
-                    </Link>
-                  </motion.div>
-                );
-              })}
-        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           className="mt-12 text-center"
         >
           <Link

@@ -1,28 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { Portfolio } from '@/types';
-import { PortfolioCardSkeleton } from '@/components/common/loading/Skeleton';
-import { TiltCard } from '@/components/common/MagneticButton';
-import {
-  optimizeUnsplashUrl,
-  imagePresets,
-  getOptimalQuality,
-  extractImageMetadata,
-  getImageOrFallback,
-} from '@/lib/utils/image';
-import { ImagePreloader } from '@/components/ui/ImagePreloader';
 
 export function PortfolioSection() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,27 +26,28 @@ export function PortfolioSection() {
     fetchPortfolios();
   }, []);
 
-  // LCP 이미지 preload를 위한 첫 번째 포트폴리오 이미지 (더 큰 크기로 최적화)
-  const firstPortfolio = portfolios[0];
-  const firstImageSrc = firstPortfolio?.thumbnail
-    ? optimizeUnsplashUrl(getImageOrFallback(firstPortfolio.thumbnail, 'development'), 600, 400, {
-        quality: getOptimalQuality(95, true), // LCP 이미지는 높은 품질로
-        format: 'webp', // WebP 강제 사용
-      })
-    : null;
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
     <section id="portfolio" className="bg-secondary/20 py-20 md:py-32">
-      {/* LCP 이미지 preload - 더 높은 우선순위 */}
-      {firstImageSrc && (
-        <ImagePreloader src={firstImageSrc} isLCP={true} isAboveFold={true} index={0} />
-      )}
-
       <div className="container mx-auto px-4">
         <motion.div
-          ref={ref}
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5 }}
           className="mb-12 text-center"
         >
@@ -70,104 +55,87 @@ export function PortfolioSection() {
           <p className="text-lg text-muted-foreground">최근 작업한 프로젝트들을 확인해보세요</p>
         </motion.div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={containerVariants}
+          className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+        >
           {loading
-            ? // 로딩 스켈레톤
-              [...Array(3)].map((_, i) => <PortfolioCardSkeleton key={i} />)
-            : portfolios.map((portfolio, index) => {
-                // 이미지 최적화 설정 (첫 번째 이미지는 더 큰 크기와 높은 품질)
-                const imageSrc = portfolio.thumbnail
-                  ? optimizeUnsplashUrl(
-                      getImageOrFallback(portfolio.thumbnail, 'development'),
-                      index === 0 ? 600 : 400, // 첫 번째 이미지는 더 큰 크기
-                      index === 0 ? 400 : 300,
-                      {
-                        quality: getOptimalQuality(
-                          index === 0 ? 95 : imagePresets.portfolioCard.quality,
-                          index === 0
-                        ),
-                        format: index === 0 ? 'webp' : 'auto', // 첫 번째는 WebP 강제
-                      }
-                    )
-                  : null;
-
-                // 이미지 메타데이터
-                const imageMetadata = imageSrc
-                  ? extractImageMetadata(imageSrc)
-                  : { alt: portfolio.title };
-
-                return (
-                  <motion.div
-                    key={portfolio.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <Link href={`/portfolio/${portfolio.id}`}>
-                      <TiltCard
-                        className="group relative h-full cursor-pointer overflow-hidden rounded-lg border bg-background"
-                        tiltStrength={12}
-                      >
-                        <div className="relative aspect-video overflow-hidden bg-muted">
-                          {imageSrc ? (
-                            <Image
-                              src={imageSrc?.trim() || ''}
-                              alt={imageMetadata.alt}
-                              title={imageMetadata.title}
-                              width={400}
-                              height={300}
-                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                              sizes={imagePresets.portfolioCard.sizes}
-                              quality={getOptimalQuality(imagePresets.portfolioCard.quality, false)}
-                              loading="lazy"
-                              fetchPriority="low"
-                              decoding="async"
-                            />
-                          ) : (
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
+            ? [...Array(3)].map((_, i) => (
+                <div key={i} className="animate-pulse rounded-lg border bg-background p-0">
+                  <div className="aspect-video bg-gray-200 dark:bg-gray-800"></div>
+                  <div className="space-y-3 p-6">
+                    <div className="h-4 w-16 rounded bg-gray-200 dark:bg-gray-800"></div>
+                    <div className="h-6 w-32 rounded bg-gray-200 dark:bg-gray-800"></div>
+                    <div className="space-y-2">
+                      <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-800"></div>
+                      <div className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-800"></div>
+                    </div>
+                    <div className="flex gap-2">
+                      {[...Array(3)].map((_, j) => (
+                        <div
+                          key={j}
+                          className="h-6 w-12 rounded bg-gray-200 dark:bg-gray-800"
+                        ></div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))
+            : portfolios.map((portfolio) => (
+                <motion.div key={portfolio.id} variants={itemVariants}>
+                  <Link href={`/portfolio/${portfolio.id}`}>
+                    <div className="group h-full cursor-pointer overflow-hidden rounded-lg border bg-background transition-transform hover:scale-[1.02]">
+                      <div className="relative aspect-video overflow-hidden bg-muted">
+                        {portfolio.thumbnail ? (
+                          <Image
+                            src={portfolio.thumbnail}
+                            alt={portfolio.title}
+                            width={400}
+                            height={300}
+                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
+                        )}
+                      </div>
+                      <div className="p-6">
+                        <div className="mb-2 text-xs font-medium text-primary">
+                          {portfolio.projectType || 'Project'}
+                        </div>
+                        <h3 className="mb-2 text-xl font-semibold transition-colors group-hover:text-primary">
+                          {portfolio.title}
+                        </h3>
+                        <p className="mb-4 line-clamp-2 text-muted-foreground">
+                          {portfolio.description}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {portfolio.technologies.slice(0, 3).map((tech) => (
+                            <span key={tech} className="rounded-md bg-secondary px-2 py-1 text-xs">
+                              {tech}
+                            </span>
+                          ))}
+                          {portfolio.technologies.length > 3 && (
+                            <span className="rounded-md bg-secondary px-2 py-1 text-xs">
+                              +{portfolio.technologies.length - 3}
+                            </span>
                           )}
-                          <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
                         </div>
-                        <div className="relative z-10 p-6">
-                          <div className="mb-2 text-xs font-medium text-primary">
-                            {portfolio.projectType || 'Project'}
-                          </div>
-                          <h3 className="mb-2 text-xl font-semibold transition-colors group-hover:text-primary">
-                            {portfolio.title}
-                          </h3>
-                          <p className="mb-4 line-clamp-2 text-muted-foreground">
-                            {portfolio.description}
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {portfolio.technologies.slice(0, 3).map((tech) => (
-                              <span
-                                key={tech}
-                                className="rounded-md bg-secondary px-2 py-1 text-xs"
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                            {portfolio.technologies.length > 3 && (
-                              <span className="rounded-md bg-secondary px-2 py-1 text-xs">
-                                +{portfolio.technologies.length - 3}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Hover overlay effect */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      </TiltCard>
-                    </Link>
-                  </motion.div>
-                );
-              })}
-        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           className="mt-12 text-center"
         >
           <Link
