@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
@@ -23,7 +22,7 @@ export function ContactForm() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
   });
@@ -32,37 +31,21 @@ export function ContactForm() {
     setSubmissionState('loading');
 
     try {
-      // EmailJS 동적 로드 (Contact 페이지에서만 필요시 로드)
-      const emailjs = await import('@emailjs/browser').then((mod) => mod.default);
+      // API 호출로 간소화
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-      // EmailJS 환경변수 확인
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-
-      if (!serviceId || !templateId || !publicKey) {
-        throw new Error('EmailJS 환경변수가 설정되지 않았습니다.');
+      if (!response.ok) {
+        throw new Error('전송에 실패했습니다.');
       }
 
-      // EmailJS 템플릿 파라미터 준비
-      const templateParams = {
-        from_name: data.name,
-        from_email: data.email,
-        project_type: data.projectType
-          ? projectTypeOptions.find((opt) => opt.value === data.projectType)?.label
-          : '미선택',
-        budget: data.budget
-          ? budgetOptions.find((opt) => opt.value === data.budget)?.label
-          : '미선택',
-        timeline: data.timeline || '미입력',
-        message: data.message,
-        to_name: 'fullkeem', // 수신자 이름
-      };
-
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
-
       setSubmissionState('success');
-      reset(); // 폼 초기화
+      reset();
 
       // 3초 후 상태 초기화
       setTimeout(() => {
@@ -80,41 +63,38 @@ export function ContactForm() {
   };
 
   const renderSubmissionFeedback = () => {
+    const baseClasses =
+      'flex items-center justify-center gap-3 rounded-lg px-4 py-3 transition-opacity';
+
     switch (submissionState) {
       case 'loading':
         return (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex items-center justify-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
+          <div
+            className={`${baseClasses} bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400`}
           >
             <Loader2 className="h-5 w-5 animate-spin" />
             <span>메시지를 전송하고 있습니다...</span>
-          </motion.div>
+          </div>
         );
 
       case 'success':
         return (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex items-center justify-center gap-3 rounded-lg bg-green-50 px-4 py-3 text-green-700 dark:bg-green-900/20 dark:text-green-400"
+          <div
+            className={`${baseClasses} bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400`}
           >
             <CheckCircle className="h-5 w-5" />
             <span>메시지가 성공적으로 전송되었습니다! 빠른 시일 내에 답변드리겠습니다.</span>
-          </motion.div>
+          </div>
         );
 
       case 'error':
         return (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex items-center justify-center gap-3 rounded-lg bg-red-50 px-4 py-3 text-red-700 dark:bg-red-900/20 dark:text-red-400"
+          <div
+            className={`${baseClasses} bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400`}
           >
             <AlertCircle className="h-5 w-5" />
             <span>메시지 전송에 실패했습니다. 다시 시도하거나 다른 연락 방법을 이용해주세요.</span>
-          </motion.div>
+          </div>
         );
 
       default:
@@ -125,13 +105,7 @@ export function ContactForm() {
   return (
     <section className="py-24">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mx-auto max-w-2xl"
-        >
+        <div className="mx-auto max-w-2xl">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">프로젝트 문의하기</h2>
             <p className="text-lg text-muted-foreground">
@@ -230,7 +204,7 @@ export function ContactForm() {
                 type="text"
                 id="timeline"
                 className="w-full rounded-lg border border-border bg-background px-4 py-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-primary"
-                placeholder="예: 2주 내, 연말까지, 급하지 않음 등"
+                placeholder="예: 2주 내, 이번 달 안에"
               />
               {errors.timeline && (
                 <p className="mt-1 text-sm text-red-500">{errors.timeline.message}</p>
@@ -240,43 +214,46 @@ export function ContactForm() {
             {/* 메시지 */}
             <div>
               <label htmlFor="message" className="mb-2 block text-sm font-medium">
-                상세 내용 <span className="text-red-500">*</span>
+                프로젝트 상세 설명 <span className="text-red-500">*</span>
               </label>
               <textarea
                 {...register('message')}
                 id="message"
                 rows={6}
-                className="w-full resize-none rounded-lg border border-border bg-background px-4 py-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-primary"
-                placeholder="프로젝트에 대해 자세히 설명해주세요. 원하는 기능, 디자인 스타일, 참고 사이트 등을 포함해주시면 더 정확한 견적을 드릴 수 있습니다."
+                className="w-full rounded-lg border border-border bg-background px-4 py-3 transition-colors focus:border-transparent focus:ring-2 focus:ring-primary"
+                placeholder="프로젝트에 대한 자세한 설명을 적어주세요. 목적, 타겟 고객, 원하는 기능 등을 포함해 주시면 더 정확한 견적을 제공할 수 있습니다."
               />
               {errors.message && (
                 <p className="mt-1 text-sm text-red-500">{errors.message.message}</p>
               )}
             </div>
 
-            {/* 제출 피드백 */}
-            {submissionState !== 'idle' && <div className="mb-6">{renderSubmissionFeedback()}</div>}
-
             {/* 제출 버튼 */}
-            <Button
-              animated={false}
-              type="submit"
-              loading={submissionState === 'loading'}
-              disabled={isSubmitting || submissionState === 'loading'}
-              icon={submissionState === 'loading' ? undefined : <Send className="h-5 w-5" />}
-              className="w-full px-8 py-4"
-              size="lg"
-            >
-              {submissionState === 'loading' ? '전송 중...' : '메시지 보내기'}
-            </Button>
+            <div className="space-y-4">
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full"
+                disabled={submissionState === 'loading'}
+              >
+                {submissionState === 'loading' ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    전송 중...
+                  </>
+                ) : (
+                  <>
+                    <Send className="mr-2 h-4 w-4" />
+                    메시지 전송
+                  </>
+                )}
+              </Button>
 
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground">
-                또는 위의 연락 방법을 통해 직접 연락주세요
-              </p>
+              {/* 제출 상태 피드백 */}
+              {submissionState !== 'idle' && renderSubmissionFeedback()}
             </div>
           </form>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

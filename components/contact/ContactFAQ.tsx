@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
 interface FAQItem {
@@ -57,29 +56,16 @@ export function ContactFAQ() {
   return (
     <section className="bg-secondary/20 py-24">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mb-16 text-center"
-        >
+        <div className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">자주 묻는 질문</h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             프로젝트 진행과 관련하여 자주 묻는 질문들을 정리했습니다
           </p>
-        </motion.div>
+        </div>
 
         <div className="mx-auto max-w-3xl">
           {faqData.map((faq, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="mb-4"
-            >
+            <div key={index} className="mb-4">
               <div className="overflow-hidden rounded-lg border border-border bg-background">
                 <button
                   onClick={() => toggleAccordion(index)}
@@ -88,48 +74,31 @@ export function ContactFAQ() {
                   aria-controls={`faq-answer-${index}`}
                 >
                   <span className="pr-4 text-lg font-medium">{faq.question}</span>
-                  <motion.div
-                    animate={{ rotate: openIndex === index ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex-shrink-0"
+                  <div
+                    className={`flex-shrink-0 transition-transform duration-200 ${
+                      openIndex === index ? 'rotate-180' : ''
+                    }`}
                   >
                     <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                  </motion.div>
+                  </div>
                 </button>
 
-                <AnimatePresence>
-                  {openIndex === index && (
-                    <motion.div
-                      id={`faq-answer-${index}`}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: 'easeInOut' }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-6 pb-6 pt-2">
-                        <p className="leading-relaxed text-muted-foreground">{faq.answer}</p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {openIndex === index && (
+                  <div id={`faq-answer-${index}`} className="px-6 pb-6 pt-2">
+                    <p className="leading-relaxed text-muted-foreground">{faq.answer}</p>
+                  </div>
+                )}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="mt-12 text-center"
-        >
+        <div className="mt-12 text-center">
           <p className="mb-4 text-lg text-muted-foreground">다른 궁금한 점이 있으시나요?</p>
           <p className="text-sm text-muted-foreground">
             위의 연락 방법을 통해 언제든지 문의해 주세요. 친절하게 답변드리겠습니다.
           </p>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

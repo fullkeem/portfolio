@@ -1,15 +1,14 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Mail, MessageCircle, Github, Linkedin, Clock, MapPin } from 'lucide-react';
 
 const CONTACT_INFO = {
   email: process.env.NEXT_PUBLIC_EMAIL,
-  kakaoLink: process.env.NEXT_PUBLIC_KAKAO_LINK, // 실제 카카오톡 오픈채팅 링크로 변경
-  github: process.env.NEXT_PUBLIC_GITHUB_URL, // 실제 GitHub 링크로 변경
-  linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL, // 실제 LinkedIn 링크로 변경
-  responseTime: '2시간 이내', // 응답 시간
-  location: '대한민국 서울', // 위치 정보
+  kakaoLink: process.env.NEXT_PUBLIC_KAKAO_LINK,
+  github: process.env.NEXT_PUBLIC_GITHUB_URL,
+  linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL,
+  responseTime: '2시간 이내',
+  location: '대한민국 서울',
 };
 
 const contactMethods = [
@@ -68,36 +67,24 @@ export function ContactInfo() {
   return (
     <section className="bg-secondary/20 pb-20">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mb-16 text-center"
-        >
+        <div className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">연락 방법</h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             아래 방법 중 편하신 방법으로 연락해 주세요
           </p>
-        </motion.div>
+        </div>
 
         {/* 연락 방법 카드들 */}
         <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-2">
-          {contactMethods.map((method, index) => {
+          {contactMethods.map((method) => {
             const IconComponent = method.icon;
             return (
-              <motion.a
+              <a
                 key={method.title}
                 href={method.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="block rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:shadow-md"
+                className="block rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md"
               >
                 <div className="flex items-start gap-4">
                   <div className={`rounded-lg p-3 ${method.bgColor}`}>
@@ -109,22 +96,18 @@ export function ContactInfo() {
                     <p className={`font-medium ${method.color}`}>{method.value}</p>
                   </div>
                 </div>
-              </motion.a>
+              </a>
             );
           })}
         </div>
 
         {/* 추가 정보 */}
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 md:grid-cols-2">
-          {additionalInfo.map((info, index) => {
+          {additionalInfo.map((info) => {
             const IconComponent = info.icon;
             return (
-              <motion.div
+              <div
                 key={info.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                viewport={{ once: true }}
                 className="flex items-center gap-4 rounded-lg border border-border bg-background p-4"
               >
                 <IconComponent className="h-5 w-5 text-primary" />
@@ -132,7 +115,7 @@ export function ContactInfo() {
                   <p className="text-sm text-muted-foreground">{info.title}</p>
                   <p className="font-medium">{info.value}</p>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

@@ -4,7 +4,6 @@ import { ContactHero } from '@/components/contact/ContactHero';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { ContactFAQ } from '@/components/contact/ContactFAQ';
 import { ContactProcess } from '@/components/contact/ContactProcess';
-import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -22,7 +21,6 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="min-h-screen">
-      <JsonLd type="contact-page" />
       <ContactHero />
       <ContactInfo />
       <ContactForm />
