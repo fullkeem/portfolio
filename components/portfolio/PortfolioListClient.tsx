@@ -1,30 +1,11 @@
 'use client';
 
-import { useMemo, Suspense } from 'react';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import { Portfolio } from '@/types';
-import { PortfolioCardSkeleton } from '@/components/common/loading/Skeleton';
+import { PortfolioCard } from '@/components/portfolio/PortfolioCard';
+import { PortfolioFilter } from '@/components/portfolio/PortfolioFilter';
 import { useFilterStore } from '@/store/filterStore';
-
-// Dynamic imports로 코드 스플리팅
-const PortfolioCard = dynamic(
-  () =>
-    import('@/components/portfolio/PortfolioCard').then((mod) => ({ default: mod.PortfolioCard })),
-  {
-    loading: () => <PortfolioCardSkeleton />,
-  }
-);
-
-const PortfolioFilter = dynamic(
-  () =>
-    import('@/components/portfolio/PortfolioFilter').then((mod) => ({
-      default: mod.PortfolioFilter,
-    })),
-  {
-    loading: () => <div className="mb-8 h-20 animate-pulse rounded-lg bg-secondary/50" />,
-  }
-);
 
 interface PortfolioListClientProps {
   portfolios: Portfolio[];
@@ -67,6 +48,21 @@ export function PortfolioListClient({ portfolios }: PortfolioListClientProps) {
     return Array.from(techSet).sort();
   }, [portfolios]);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
     <div className="min-h-screen py-20 md:py-32">
       <div className="container mx-auto px-4">
@@ -84,9 +80,7 @@ export function PortfolioListClient({ portfolios }: PortfolioListClientProps) {
         </motion.div>
 
         {/* 필터 섹션 */}
-        <Suspense fallback={<div className="mb-8 h-20 animate-pulse rounded-lg bg-secondary/50" />}>
-          <PortfolioFilter technologies={allTechnologies} />
-        </Suspense>
+        <PortfolioFilter technologies={allTechnologies} />
 
         {/* 포트폴리오 그리드 */}
         <div className="mt-12">
@@ -94,31 +88,17 @@ export function PortfolioListClient({ portfolios }: PortfolioListClientProps) {
             <motion.div
               className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
               initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1,
-                  },
-                },
-              }}
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={containerVariants}
             >
-              {filteredPortfolios.map((portfolio, index) => (
-                <motion.div
-                  key={portfolio.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                >
-                  <PortfolioCard portfolio={portfolio} index={index} />
+              {filteredPortfolios.map((portfolio) => (
+                <motion.div key={portfolio.id} variants={itemVariants}>
+                  <PortfolioCard portfolio={portfolio} />
                 </motion.div>
               ))}
             </motion.div>
           ) : (
-            // 결과 없음
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -134,8 +114,9 @@ export function PortfolioListClient({ portfolios }: PortfolioListClientProps) {
         {/* 결과 개수 표시 */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
           className="mt-8 text-center text-sm text-muted-foreground"
         >
           총 {filteredPortfolios.length}개의 프로젝트
