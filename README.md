@@ -1,4 +1,4 @@
-# 🚀 Full-Stack Developer Portfolio
+# 🚀 FrontEnd Developer Portfolio
 
 > **Next.js 15** 기반의 모던한 포트폴리오 웹사이트
 
