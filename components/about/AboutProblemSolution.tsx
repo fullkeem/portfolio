@@ -175,9 +175,9 @@ export function AboutProblemSolution() {
           <div className="mx-auto max-w-3xl rounded-lg border border-primary/20 bg-gradient-to-r from-primary/10 to-accent/10 p-8">
             <h3 className="mb-4 text-2xl font-bold">한 줄 정리</h3>
             <p className="text-lg text-muted-foreground">
-              "AI 검색 시대에 맞춘 AEO 설계 + AI 자동화 제작 + 속도 최적화 + 데이터 리포트" -{' '}
-              <br className="hidden md:block" />이 풀세트를 1인 개발자가 한 번에 제공하는 것이 내
-              서비스만의 강력한 차별점입니다.
+              &ldquo;AI 검색 시대에 맞춘 AEO 설계 + AI 자동화 제작 + 속도 최적화 + 데이터
+              리포트&rdquo; - <br className="hidden md:block" />이 풀세트를 1인 개발자가 한 번에
+              제공하는 것이 내 서비스만의 강력한 차별점입니다.
             </p>
           </div>
         </div>

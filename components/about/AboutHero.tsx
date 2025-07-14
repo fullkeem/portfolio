@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { TrendingUp, Zap, Target } from 'lucide-react';
 
 const stats = [
@@ -72,12 +73,12 @@ export function AboutHero() {
               프로젝트 상담 받기
             </a>
 
-            <a
+            <Link
               href="/portfolio"
               className="inline-flex items-center gap-2 rounded-md border border-border px-8 py-4 text-base font-medium transition-all duration-300 hover:scale-105 hover:bg-secondary"
             >
               성공 사례 보기
-            </a>
+            </Link>
           </div>
         </div>
       </div>
