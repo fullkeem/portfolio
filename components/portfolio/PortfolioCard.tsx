@@ -4,16 +4,35 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Portfolio } from '@/types';
 import { Github, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
 
 interface PortfolioCardProps {
   portfolio: Portfolio;
 }
 
 export function PortfolioCard({ portfolio }: PortfolioCardProps) {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+
   const handleExternalLink = (url: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  // Image Proxy를 통해 이미지 URL 처리
+  const getProxiedImageUrl = (imageUrl: string) => {
+    if (!imageUrl) return '';
+    return `/api/image-proxy?url=${encodeURIComponent(imageUrl)}`;
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoading(false);
   };
 
   return (
@@ -21,17 +40,44 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
       <div className="group h-full cursor-pointer overflow-hidden rounded-lg border bg-background transition-transform hover:scale-[1.02] hover:shadow-lg">
         {/* 이미지 */}
         <div className="relative aspect-video overflow-hidden bg-muted">
-          {portfolio.thumbnail ? (
-            <Image
-              src={portfolio.thumbnail}
-              alt={portfolio.title}
-              width={400}
-              height={300}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              loading="lazy"
-            />
+          {portfolio.thumbnail && !imageError ? (
+            <>
+              {/* 로딩 스켈레톤 */}
+              {imageLoading && (
+                <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-muted to-muted/50" />
+              )}
+              <Image
+                src={getProxiedImageUrl(portfolio.thumbnail)}
+                alt={portfolio.title}
+                width={400}
+                height={300}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+              />
+            </>
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
+              <div className="text-center">
+                <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-lg bg-primary/10">
+                  <svg
+                    className="h-8 w-8 text-primary/60"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+                <p className="text-sm text-muted-foreground">프로젝트 이미지</p>
+              </div>
+            </div>
           )}
 
           {/* Featured 배지 */}
@@ -67,30 +113,28 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
           </div>
 
           {/* 액션 버튼들 */}
-          {(portfolio.githubUrl || portfolio.liveUrl) && (
-            <div className="flex gap-2">
-              {portfolio.githubUrl && (
-                <button
-                  onClick={(e) => handleExternalLink(portfolio.githubUrl!, e)}
-                  className="flex items-center gap-1 rounded-md bg-secondary px-3 py-1.5 text-xs transition-colors hover:bg-secondary/80"
-                  title="GitHub 저장소"
-                >
-                  <Github className="h-3 w-3" />
-                  GitHub
-                </button>
-              )}
-              {portfolio.liveUrl && (
-                <button
-                  onClick={(e) => handleExternalLink(portfolio.liveUrl!, e)}
-                  className="flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground transition-colors hover:bg-primary/90"
-                  title="라이브 사이트"
-                >
-                  <ExternalLink className="h-3 w-3" />
-                  Live
-                </button>
-              )}
-            </div>
-          )}
+          <div className="flex gap-2">
+            {portfolio.githubUrl && (
+              <button
+                onClick={(e) => handleExternalLink(portfolio.githubUrl!, e)}
+                className="flex items-center gap-1 rounded-md bg-secondary px-3 py-1.5 text-xs transition-colors hover:bg-secondary/80"
+                title="GitHub 저장소"
+              >
+                <Github className="h-3 w-3" />
+                GitHub
+              </button>
+            )}
+            {portfolio.liveUrl && (
+              <button
+                onClick={(e) => handleExternalLink(portfolio.liveUrl!, e)}
+                className="flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground transition-colors hover:bg-primary/90"
+                title="라이브 사이트"
+              >
+                <ExternalLink className="h-3 w-3" />
+                Live
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </Link>
