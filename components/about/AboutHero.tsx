@@ -1,73 +1,85 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
+import { useState, useEffect } from 'react';
+import { TrendingUp, Zap, Target } from 'lucide-react';
+
+const stats = [
+  { number: '1.2초', label: '평균 로딩 속도', icon: Zap },
+  { number: '25%', label: '전환율 개선', icon: TrendingUp },
+  { number: '95+', label: 'SEO 점수', icon: Target },
+];
 
 export function AboutHero() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  const titleRef = useRef<HTMLHeadingElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (inView && titleRef.current) {
-      gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
-      );
-    }
-  }, [inView]);
+    setIsVisible(true);
+  }, []);
 
   return (
     <section className="relative py-20 md:py-32">
       <div className="container mx-auto px-4">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="mx-auto max-w-4xl text-center"
+        <div
+          className={`mx-auto max-w-4xl text-center transition-all duration-1000 ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+          }`}
         >
-          <h1 ref={titleRef} className="mb-6 text-4xl font-bold md:text-6xl">
-            안녕하세요!
+          <h1 className="mb-6 text-3xl font-bold md:text-5xl">
+            <span>단순히 페이지 제작을 넘어,</span>
             <br />
             <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              프론트엔드 개발자
-            </span>{' '}
-            풀킴입니다
+              비즈니스 성장을 위한 디지털 경험 설계자가
+            </span>
+            <br />
+            <span>되어 드리겠습니다.</span>
           </h1>
 
-          <p className="mb-8 text-lg text-muted-foreground md:text-xl">
-            사용자 중심의 웹 경험을 만들어가는 개발자입니다.
+          <p className="mb-12 text-lg text-muted-foreground md:text-xl">
+            데이터 기반 설계와 전환율 최적화로
             <br />
-            프론트엔드부터 백엔드까지, 완성도 높은 서비스를 구현합니다.
+            고객의 비즈니스 성장을 함께 만들어갑니다.
           </p>
 
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <motion.a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              프로젝트 문의하기
-            </motion.a>
-
-            <motion.a
-              href="/portfolio"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-6 py-3 text-base font-medium transition-colors hover:bg-secondary"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              포트폴리오 보기
-            </motion.a>
+          {/* 핵심 성과 지표 */}
+          <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {stats.map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <div
+                  key={stat.label}
+                  className={`rounded-lg border border-border bg-background/50 p-6 transition-all duration-700 hover:scale-105 hover:shadow-lg ${
+                    isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                  }`}
+                  style={{ transitionDelay: `${300 + index * 100}ms` }}
+                >
+                  <div className="mb-3 flex justify-center">
+                    <div className="rounded-full bg-primary/10 p-3">
+                      <IconComponent className="h-6 w-6 text-primary" />
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-primary md:text-3xl">{stat.number}</div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                </div>
+              );
+            })}
           </div>
-        </motion.div>
+
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            <a
+              href="/contact"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-8 py-4 text-base font-medium text-primary-foreground transition-all duration-300 hover:scale-105 hover:bg-primary/90"
+            >
+              프로젝트 상담 받기
+            </a>
+
+            <a
+              href="/portfolio"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-8 py-4 text-base font-medium transition-all duration-300 hover:scale-105 hover:bg-secondary"
+            >
+              성공 사례 보기
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );

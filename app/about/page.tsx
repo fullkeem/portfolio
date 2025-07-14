@@ -2,33 +2,31 @@ import type { Metadata } from 'next';
 import { AboutHero } from '@/components/about/AboutHero';
 import { AboutProblemSolution } from '@/components/about/AboutProblemSolution';
 import { AboutCredibility } from '@/components/about/AboutCredibility';
-// import { AboutJourney } from '@/components/about/AboutJourney';
 import { AboutPhilosophy } from '@/components/about/AboutPhilosophy';
 import { AboutTestimonials } from '@/components/about/AboutTestimonials';
-import { JsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'About',
+  title: 'About - 랜딩페이지 전문가 fullkeem',
   description:
-    '크몽에서 만나는 신뢰할 수 있는 프론트엔드 개발자 fullkeem. 고객 중심의 소통과 완성도 높은 웹사이트 제작을 약속합니다.',
+    '매출을 만드는 랜딩페이지 제작 전문가 fullkeem. AEO 설계, AI 자동화, 성능 최적화, 데이터 분석으로 고객의 비즈니스 성장을 함께 만들어갑니다.',
   openGraph: {
-    title: 'About | fullkeem',
-    description: '크몽에서 만나는 신뢰할 수 있는 프론트엔드 개발자',
+    title: 'About - 랜딩페이지 전문가 fullkeem',
+    description:
+      '매출을 만드는 랜딩페이지 제작 전문가. 비즈니스 파트너로서 실제 성과에 집중합니다.',
   },
   twitter: {
-    title: 'About | fullkeem',
-    description: '크몽에서 만나는 신뢰할 수 있는 프론트엔드 개발자',
+    title: 'About - 랜딩페이지 전문가 fullkeem',
+    description:
+      '매출을 만드는 랜딩페이지 제작 전문가. 비즈니스 파트너로서 실제 성과에 집중합니다.',
   },
 };
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen">
-      <JsonLd type="professional-service" />
       <AboutHero />
       <AboutProblemSolution />
       <AboutCredibility />
-      {/* <AboutJourney /> */}
       <AboutPhilosophy />
       <AboutTestimonials />
     </div>
