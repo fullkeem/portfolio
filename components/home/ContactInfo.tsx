@@ -1,14 +1,12 @@
 'use client';
 
-import { Mail, MessageCircle, Github, Linkedin, Clock, MapPin } from 'lucide-react';
+import { Mail, MessageCircle, Github, Linkedin } from 'lucide-react';
 
 const CONTACT_INFO = {
   email: process.env.NEXT_PUBLIC_EMAIL,
   kakaoLink: process.env.NEXT_PUBLIC_KAKAO_LINK,
   github: process.env.NEXT_PUBLIC_GITHUB_URL,
   linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL,
-  responseTime: '2시간 이내',
-  location: '대한민국 서울',
 };
 
 const contactMethods = [
@@ -50,25 +48,12 @@ const contactMethods = [
   },
 ];
 
-const additionalInfo = [
-  {
-    icon: Clock,
-    title: '평균 응답 시간',
-    value: CONTACT_INFO.responseTime,
-  },
-  {
-    icon: MapPin,
-    title: '위치',
-    value: CONTACT_INFO.location,
-  },
-];
-
 export function ContactInfo() {
   return (
     <section className="bg-secondary/20 pb-20">
       <div className="container mx-auto px-4">
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">연락 방법</h2>
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Contact</h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             아래 방법 중 편하신 방법으로 연락해 주세요
           </p>
@@ -97,25 +82,6 @@ export function ContactInfo() {
                   </div>
                 </div>
               </a>
-            );
-          })}
-        </div>
-
-        {/* 추가 정보 */}
-        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 md:grid-cols-2">
-          {additionalInfo.map((info) => {
-            const IconComponent = info.icon;
-            return (
-              <div
-                key={info.title}
-                className="flex items-center gap-4 rounded-lg border border-border bg-background p-4"
-              >
-                <IconComponent className="h-5 w-5 text-primary" />
-                <div>
-                  <p className="text-sm text-muted-foreground">{info.title}</p>
-                  <p className="font-medium">{info.value}</p>
-                </div>
-              </div>
             );
           })}
         </div>

@@ -2,8 +2,8 @@ import { HeroSection } from '@/components/home/HeroSection';
 import { AboutSection } from '@/components/home/AboutSection';
 import { PortfolioSection } from '@/components/home/PortfolioSection';
 import { BlogSection } from '@/components/home/BlogSection';
-import { ContactSection } from '@/components/home/ContactSection';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { ContactInfo } from '@/components/home/ContactInfo';
 
 export default function HomePage() {
   return (
@@ -11,9 +11,9 @@ export default function HomePage() {
       <JsonLd type="organization" />
       <HeroSection />
       <AboutSection />
+      <ContactInfo />
       <PortfolioSection />
       <BlogSection />
-      <ContactSection />
     </>
   );
 }
