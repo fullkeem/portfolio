@@ -29,7 +29,7 @@ export function HeroSection() {
                   transition={{ delay: 0.2, duration: 0.8, ease: 'easeOut' }}
                   className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground lg:mx-0 lg:text-xl xl:text-2xl"
                 >
-                  랜딩 페이지 제작 전문 프론트엔드 개발자
+                  Frontend Developers
                 </motion.p>
               </div>
 

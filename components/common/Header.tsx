@@ -62,13 +62,15 @@ export function Header() {
     >
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <Logo
-            size="lg"
-            href="/"
-            ariaLabel="fullkeem 홈페이지로 이동"
-            className="text-xl font-bold"
-          />
-
+          <h1 className="text-l flex items-center gap-1 font-bold">
+            <Logo
+              size="lg"
+              href="/"
+              ariaLabel="fullkeem 홈페이지로 이동"
+              className="text-xl font-bold"
+            />
+            Fullkeem
+          </h1>
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:gap-8">
             {navigation.map((item) => (
@@ -91,7 +93,6 @@ export function Header() {
             ))}
             <ThemeToggle />
           </div>
-
           {/* Mobile Menu Button */}
           <div className="flex md:hidden">
             <ThemeToggle />
