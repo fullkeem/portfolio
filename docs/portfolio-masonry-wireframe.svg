@@ -1,0 +1,144 @@
+<svg width="1200" height="1100" viewBox="0 0 1200 1100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="1100" fill="#f8f9fa" stroke="none"/>
+  
+  <!-- Page Container -->
+  <rect x="100" y="60" width="1000" height="980" fill="white" stroke="#e9ecef" stroke-width="1" rx="8"/>
+  
+  <!-- Header Section -->
+  <g id="header">
+    <!-- Title -->
+    <rect x="450" y="120" width="300" height="40" fill="none" stroke="#6c757d" stroke-width="2" stroke-dasharray="4,4" rx="4"/>
+    <text x="600" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#495057">Portfolio Gallery</text>
+    
+    <!-- Description -->
+    <rect x="350" y="180" width="500" height="20" fill="none" stroke="#adb5bd" stroke-width="1" stroke-dasharray="2,2" rx="2"/>
+    <text x="600" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#6c757d">Image-focused Portfolio Layout</text>
+  </g>
+  
+  <!-- Masonry Grid Section -->
+  <g id="masonry-grid">
+    <!-- Column 1 - Left -->
+    <!-- Image Card 1 - Portrait -->
+    <g id="image-card-1">
+      <rect x="150" y="240" width="280" height="350" fill="#e9ecef" stroke="#ced4da" stroke-width="2" rx="8"/>
+      <rect x="160" y="250" width="260" height="330" fill="#f8f9fa" stroke="none" rx="4"/>
+      <text x="290" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#adb5bd">📷</text>
+      <text x="290" y="445" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6c757d">Portrait Image</text>
+      <!-- Hover shadow effect -->
+      <rect x="150" y="240" width="280" height="350" fill="none" stroke="#007bff" stroke-width="0" stroke-opacity="0.3" rx="8">
+        <animate attributeName="stroke-width" values="0;3;0" dur="2s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    
+    <!-- Image Card 2 - Square -->
+    <g id="image-card-2">
+      <rect x="150" y="610" width="280" height="280" fill="#e9ecef" stroke="#ced4da" stroke-width="2" rx="8"/>
+      <rect x="160" y="620" width="260" height="260" fill="#f8f9fa" stroke="none" rx="4"/>
+      <text x="290" y="755" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#adb5bd">📷</text>
+      <text x="290" y="775" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6c757d">Square Image</text>
+    </g>
+    
+    <!-- Column 2 - Middle -->
+    <!-- Image Card 3 - Landscape -->
+    <g id="image-card-3">
+      <rect x="460" y="240" width="280" height="200" fill="#e9ecef" stroke="#ced4da" stroke-width="2" rx="8"/>
+      <rect x="470" y="250" width="260" height="180" fill="#f8f9fa" stroke="none" rx="4"/>
+      <text x="600" y="345" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#adb5bd">📷</text>
+      <text x="600" y="365" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6c757d">Landscape Image</text>
+    </g>
+    
+    <!-- Image Card 4 - Tall Portrait -->
+    <g id="image-card-4">
+      <rect x="460" y="460" width="280" height="420" fill="#e9ecef" stroke="#ced4da" stroke-width="2" rx="8"/>
+      <rect x="470" y="470" width="260" height="400" fill="#f8f9fa" stroke="none" rx="4"/>
+      <text x="600" y="675" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#adb5bd">📷</text>
+      <text x="600" y="695" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6c757d">Tall Portrait</text>
+      <!-- Hover shadow effect -->
+      <rect x="460" y="460" width="280" height="420" fill="none" stroke="#28a745" stroke-width="0" stroke-opacity="0.3" rx="8">
+        <animate attributeName="stroke-width" values="0;3;0" dur="3s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    
+    <!-- Column 3 - Right -->
+    <!-- Image Card 5 - Medium Portrait -->
+    <g id="image-card-5">
+      <rect x="770" y="240" width="280" height="320" fill="#e9ecef" stroke="#ced4da" stroke-width="2" rx="8"/>
+      <rect x="780" y="250" width="260" height="300" fill="#f8f9fa" stroke="none" rx="4"/>
+      <text x="910" y="405" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#adb5bd">📷</text>
+      <text x="910" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6c757d">Medium Portrait</text>
+    </g>
+    
+    <!-- Image Card 6 - Square -->
+    <g id="image-card-6">
+      <rect x="770" y="580" width="280" height="280" fill="#e9ecef" stroke="#ced4da" stroke-width="2" rx="8"/>
+      <rect x="780" y="590" width="260" height="260" fill="#f8f9fa" stroke="none" rx="4"/>
+      <text x="910" y="725" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#adb5bd">📷</text>
+      <text x="910" y="745" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6c757d">Square Image</text>
+      <!-- Hover shadow effect -->
+      <rect x="770" y="580" width="280" height="280" fill="none" stroke="#dc3545" stroke-width="0" stroke-opacity="0.3" rx="8">
+        <animate attributeName="stroke-width" values="0;3;0" dur="2.5s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    
+    <!-- Additional Images for density -->
+    <!-- Image Card 7 - Small Landscape -->
+    <g id="image-card-7">
+      <rect x="150" y="910" width="280" height="180" fill="#e9ecef" stroke="#ced4da" stroke-width="2" rx="8"/>
+      <rect x="160" y="920" width="260" height="160" fill="#f8f9fa" stroke="none" rx="4"/>
+      <text x="290" y="1005" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#adb5bd">📷</text>
+      <text x="290" y="1025" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6c757d">Landscape</text>
+    </g>
+  </g>
+  
+  <!-- Grid Lines (Optional - for reference) -->
+  <g stroke="#e9ecef" stroke-width="1" stroke-dasharray="5,5" opacity="0.3">
+    <!-- Vertical guides -->
+    <line x1="150" y1="220" x2="150" y2="900"/>
+    <line x1="460" y1="220" x2="460" y2="900"/>
+    <line x1="770" y1="220" x2="770" y2="900"/>
+    <line x1="1080" y1="220" x2="1080" y2="900"/>
+  </g>
+  
+  <!-- Annotations -->
+  <g id="annotations">
+    <!-- Column spacing annotation -->
+    <line x1="430" y1="210" x2="460" y2="210" stroke="#007bff" stroke-width="2"/>
+    <text x="445" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#007bff">32px gap</text>
+    
+    <!-- Masonry effect arrow -->
+    <path d="m 460,520 20,0 -5,-5 m 5,5 -5,5" stroke="#dc3545" stroke-width="2" fill="none"/>
+    <text x="490" y="525" font-family="Arial, sans-serif" font-size="10" fill="#dc3545">Masonry Layout</text>
+    <text x="490" y="540" font-family="Arial, sans-serif" font-size="8" fill="#6c757d">(Auto Height Adjustment)</text>
+  </g>
+  
+  <!-- Image Type Legend -->
+  <g id="legend">
+    <rect x="1120" y="100" width="70" height="140" fill="white" stroke="#dee2e6" stroke-width="1" rx="4"/>
+    <text x="1125" y="115" font-family="Arial, sans-serif" font-size="10" fill="#495057" font-weight="bold">Image Types</text>
+    
+    <!-- Landscape -->
+    <rect x="1125" y="125" width="20" height="12" fill="#e9ecef" stroke="#ced4da" stroke-width="1" rx="2"/>
+    <text x="1150" y="135" font-family="Arial, sans-serif" font-size="8" fill="#495057">Landscape</text>
+    
+    <!-- Square -->
+    <rect x="1125" y="145" width="15" height="15" fill="#e9ecef" stroke="#ced4da" stroke-width="1" rx="2"/>
+    <text x="1145" y="155" font-family="Arial, sans-serif" font-size="8" fill="#495057">Square</text>
+    
+    <!-- Portrait -->
+    <rect x="1125" y="165" width="12" height="20" fill="#e9ecef" stroke="#ced4da" stroke-width="1" rx="2"/>
+    <text x="1142" y="175" font-family="Arial, sans-serif" font-size="8" fill="#495057">Portrait</text>
+    
+    <!-- Tall Portrait -->
+    <rect x="1125" y="190" width="10" height="25" fill="#e9ecef" stroke="#ced4da" stroke-width="1" rx="2"/>
+    <text x="1140" y="203" font-family="Arial, sans-serif" font-size="8" fill="#495057">Tall</text>
+    
+    <text x="1125" y="230" font-family="Arial, sans-serif" font-size="7" fill="#6c757d">Pinterest-style</text>
+  </g>
+  
+  <!-- Results Counter -->
+  <g id="results-counter">
+    <rect x="520" y="1000" width="160" height="20" fill="none" stroke="#adb5bd" stroke-width="1" stroke-dasharray="2,2" rx="2"/>
+    <text x="600" y="1015" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#6c757d">총 7개의 이미지</text>
+  </g>
+</svg>
