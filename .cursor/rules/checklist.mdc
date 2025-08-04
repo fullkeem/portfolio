@@ -1,11 +1,11 @@
 ---
 alwaysApply: true
-description: 개발 체크리스트와 핵심 구현 사항 가이드
 ---
 
 # 포트폴리오 사이트 개발 가이드라인
 
 ## 프로젝트 구조
+
 - Next.js 15.1.x + TypeScript 사용
 - [app/layout.tsx](mdc:app/layout.tsx) - 루트 레이아웃
 - [components/](mdc:components/) - 재사용 컴포넌트
@@ -13,23 +13,27 @@ description: 개발 체크리스트와 핵심 구현 사항 가이드
 - [store/](mdc:store/) - Zustand 상태 관리
 
 ## 핵심 페이지 구조
+
 - **Home**: Hero + About + Portfolio + Blog + Contact 섹션
 - **Portfolio**: 필터링 + 그리드 레이아웃 + 상세 페이지
 - **Blog**: 목록 + 검색/필터 + 상세 페이지 + 댓글
 - **Contact**: 연락처 + FAQ + 문의 프로세스
 
 ## 필수 구현 사항
+
 - [components/common/Header.tsx](mdc:components/common/Header.tsx) - 반응형 네비게이션
 - [components/common/ThemeToggle.tsx](mdc:components/common/ThemeToggle.tsx) - 다크모드 지원
 - [lib/notion/client.ts](mdc:lib/notion/client.ts) - Notion API 클라이언트
 - [store/filterStore.ts](mdc:store/filterStore.ts) - 필터링 상태 관리
 
 ## 애니메이션 및 인터랙션
+
 - GSAP: 텍스트 애니메이션, 스크롤 트리거
 - Framer Motion: 컴포넌트 전환, 호버 효과
 - [components/LenisProvider.tsx](mdc:components/LenisProvider.tsx) - 스무스 스크롤
 
 ## 성능 최적화 필수사항
+
 - Next.js Image 컴포넌트 사용
 - Dynamic imports로 코드 스플리팅
 - Blur placeholder 구현

@@ -1,51 +1,56 @@
 ---
-globs: *.tsx,*.ts,*.css
-description: 디자인 시스템과 컴포넌트 설계 가이드
+alwaysApply: true
 ---
 
 # 디자인 시스템 가이드
 
 ## 컬러 시스템
+
 - CSS Variables 사용 ([app/globals.css](mdc:app/globals.css))
 - 라이트/다크 모드 지원
 - Primary: #3B82F6, Secondary: #6B7280
 
 ## 타이포그래피
+
 - **Heading**: Pretendard (한글), Inter (영문)
 - **Body**: Pretendard (한글), Inter (영문)
 - **Code**: JetBrains Mono
 
 ## 컴포넌트 설계 원칙
+
 - **재사용성**: 공통 컴포넌트는 [components/ui/](mdc:components/ui/) 폴더에 배치
 - **Props 타입**: 명확한 TypeScript 인터페이스 정의
 - **접근성**: ARIA 속성 및 키보드 네비게이션 지원
 - **반응형**: 모바일 퍼스트 접근
 
 ## 애니메이션 패턴
+
 ```typescript
 // GSAP 스크롤 트리거
 gsap.timeline({
   scrollTrigger: {
     trigger: element,
-    start: "top 80%",
-    toggleActions: "play pause resume reverse"
-  }
+    start: 'top 80%',
+    toggleActions: 'play pause resume reverse',
+  },
 });
 
 // Framer Motion 페이지 전환
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
+  exit: { opacity: 0, y: -20 },
 };
 ```
 
 ## 레이아웃 패턴
+
 - **Container**: 최대 너비 1200px, 좌우 패딩 적용
 - **Grid**: CSS Grid 또는 Flexbox 사용
 - **Spacing**: Tailwind 스페이싱 시스템 활용
 
 ## 상태 관리
+
 - **전역 상태**: [store/filterStore.ts](mdc:store/filterStore.ts) - Zustand
 - **서버 상태**: TanStack Query (필요시)
 - **폼 상태**: React Hook Form + Zod 검증
