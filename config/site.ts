@@ -19,7 +19,6 @@ export const siteConfig = {
     'Next.js',
     'TypeScript',
     '웹개발',
-    '크몽',
   ],
 };
 

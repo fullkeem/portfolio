@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Avatar3D } from '@/components/3d/Avatar3D';
+import Link from 'next/link';
 
 export function HeroSection() {
   return (
@@ -39,18 +40,18 @@ export function HeroSection() {
                 transition={{ delay: 0.4, duration: 0.6 }}
                 className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start lg:gap-4"
               >
-                <a
-                  href="#portfolio"
+                <Link
+                  href="/portfolio"
                   className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-8 text-lg font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   포트폴리오 보기
-                </a>
-                <a
-                  href="/contact"
+                </Link>
+                <Link
+                  href="/blog"
                   className="inline-flex h-11 items-center justify-center rounded-md bg-secondary px-8 text-lg font-medium text-secondary-foreground transition-colors hover:bg-secondary/80"
                 >
-                  프로젝트 문의
-                </a>
+                  블로그 보기
+                </Link>
               </motion.div>
             </div>
 
