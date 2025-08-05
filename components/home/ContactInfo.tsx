@@ -18,6 +18,7 @@ const contactMethods = [
     href: `mailto:${CONTACT_INFO.email}`,
     color: 'text-blue-500',
     bgColor: 'bg-blue-500/10',
+    contactId: 'email',
   },
   {
     icon: MessageCircle,
@@ -27,6 +28,7 @@ const contactMethods = [
     href: CONTACT_INFO.kakaoLink,
     color: 'text-yellow-500',
     bgColor: 'bg-yellow-500/10',
+    contactId: 'kakao',
   },
   {
     icon: Github,
@@ -36,6 +38,7 @@ const contactMethods = [
     href: CONTACT_INFO.github,
     color: 'text-gray-500',
     bgColor: 'bg-gray-500/10',
+    contactId: 'github',
   },
   {
     icon: Linkedin,
@@ -45,6 +48,7 @@ const contactMethods = [
     href: CONTACT_INFO.linkedin,
     color: 'text-blue-600',
     bgColor: 'bg-blue-600/10',
+    contactId: 'linkedin',
   },
 ];
 
@@ -69,6 +73,7 @@ export function ContactInfo() {
                 href={method.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-contact={method.contactId}
                 className="block rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md"
               >
                 <div className="flex items-start gap-4">
