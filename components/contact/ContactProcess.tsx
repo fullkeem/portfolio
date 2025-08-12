@@ -17,7 +17,7 @@ const processSteps = [
   {
     icon: Lightbulb,
     title: '기획 및 디자인 제안',
-    duration: '3-5일',
+    duration: '1-2일',
     description: '사용자 경험을 고려한 와이어프레임과 디자인 시안을 제작합니다.',
     deliverables: ['와이어프레임', '디자인 시안', 'UI/UX 가이드라인'],
     color: 'text-yellow-500',
@@ -27,7 +27,7 @@ const processSteps = [
   {
     icon: Code,
     title: '개발 및 테스트',
-    duration: '7-14일',
+    duration: '2-3일',
     description: '최신 기술 스택으로 개발하고 다양한 디바이스에서 테스트합니다.',
     deliverables: ['반응형 웹사이트', '성능 최적화', '크로스 브라우저 테스트'],
     color: 'text-green-500',
@@ -63,7 +63,7 @@ export function ContactProcess() {
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">프로젝트 진행 프로세스</h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            체계적인 프로세스로 고품질의 랜딩페이지를 제작합니다
+            체계적인 프로세스로 고품질의 페이지를 제작합니다
           </p>
         </div>
 
@@ -72,15 +72,9 @@ export function ContactProcess() {
           {processSteps.map((step, index) => {
             const IconComponent = step.icon;
             const isVisible = visibleSteps.includes(index);
-            const isLastStep = index === processSteps.length - 1;
 
             return (
               <div key={step.title} className="relative">
-                {/* 연결선 */}
-                {!isLastStep && (
-                  <div className="absolute left-6 top-16 z-0 h-24 w-0.5 bg-border md:left-8"></div>
-                )}
-
                 <div
                   className={`relative z-10 mb-12 transition-all duration-700 ${
                     isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
@@ -141,7 +135,7 @@ export function ContactProcess() {
         <div className="mt-16 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-6 py-3">
             <span className="text-sm font-medium text-primary">총 예상 기간:</span>
-            <span className="text-lg font-bold text-primary">2-3주</span>
+            <span className="text-lg font-bold text-primary">1-2주</span>
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
             프로젝트 규모에 따라 일정이 조정될 수 있습니다

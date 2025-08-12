@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { ContactHero } from '@/components/contact/ContactHero';
 import { ContactInfo } from '@/components/home/ContactInfo';
 import { ContactProcess } from '@/components/contact/ContactProcess';
 import { ContactFAQ } from '@/components/contact/ContactFAQ';
@@ -22,7 +21,6 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="min-h-screen">
-      <ContactHero />
       <ContactInfo />
       <ContactProcess />
       <ContactFAQ />

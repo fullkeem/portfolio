@@ -54,7 +54,7 @@ const contactMethods = [
 
 export function ContactInfo() {
   return (
-    <section className="bg-secondary/20 pb-20">
+    <section className="bg-secondary/20 py-20 md:py-32">
       <div className="container mx-auto px-4">
         <div className="mb-16 text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">Contact</h2>
