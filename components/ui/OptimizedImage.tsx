@@ -1,7 +1,7 @@
 'use client';
 
 import Image, { ImageProps } from 'next/image';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { getOptimizedBlurDataURL } from '@/lib/blur-placeholder';
 
@@ -64,7 +64,7 @@ export function OptimizedImage({
   const [retryCount, setRetryCount] = useState(0);
 
   // GIF 애니메이션 이미지인지 확인
-  const isGifImage = isAnimatedGif(src as string);
+  const isGifImage = useMemo(() => isAnimatedGif(src as string), [src]);
 
   const handleLoad = useCallback(
     (event: React.SyntheticEvent<HTMLImageElement>) => {

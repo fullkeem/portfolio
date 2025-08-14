@@ -1,9 +1,8 @@
+import 'server-only';
 import { Client } from "@notionhq/client";
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
-import type {
-  NotionPortfolioProperties,
-  NotionBlogProperties
-} from "./types";
+import type { NotionPortfolioProperties, NotionBlogProperties } from "./types";
+import type { Portfolio, BlogPost } from '@/types';
 import { getPlainTextFromRichText, getFileUrl } from "./types";
 
 if (!process.env.NOTION_TOKEN) {
@@ -14,29 +13,7 @@ const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 });
 
-export interface Portfolio {
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  technologies: string[];
-  liveUrl?: string;
-  githubUrl?: string;
-  createdAt: string;
-  featured: boolean;
-}
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  category: string;
-  tags: string[];
-  publishedAt: string;
-  updatedAt: string;
-  coverImage?: string;
-}
+// Use shared app-level types from /types
 
 // Portfolio 관련 함수들
 export async function getPortfolios(): Promise<Portfolio[]> {
@@ -189,10 +166,13 @@ function parsePortfolioPage(page: PageObjectResponse): Portfolio {
     description: properties.Description?.rich_text ? getPlainTextFromRichText(properties.Description.rich_text) : "",
     thumbnail: properties.Thumbnail?.files?.[0] ? getFileUrl(properties.Thumbnail.files[0]) : "",
     technologies: properties.Technologies?.multi_select?.map((tech) => tech.name) || [],
+    projectType: properties.ProjectType?.select?.name as Portfolio['projectType'],
     liveUrl: properties.LiveURL?.url || undefined,
     githubUrl: properties.GitHubURL?.url || undefined,
     createdAt: page.created_time,
     featured: properties.Featured?.checkbox || false,
+    published: properties.Published?.checkbox ?? true,
+    order: properties.Order?.number ?? 0,
   };
 }
 
