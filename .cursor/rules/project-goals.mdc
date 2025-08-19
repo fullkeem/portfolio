@@ -1,0 +1,49 @@
+---
+alwaysApply: true
+description: fullkeem 포트폴리오 사이트의 프로젝트 목표와 범위 정의
+---
+
+# 프로젝트 목표와 범위
+
+## 목표
+
+### 핵심 목표
+
+- **다각화된 개발자 정체성 구현**: 랜딩페이지 제작자를 넘어서 다양한 작업물을 크리에이티브하게 소화할 수 있는 개발자임을 증명하는 포트폴리오 구축
+- **개발 기록 플랫폼**: 개인의 개발 과정, 학습 노하우, 기술적 인사이트를 지속적으로 기록할 수 있는 flexible한 블로깅 시스템 구현
+- **최소 노력 리팩토링**: 현재 [app/layout.tsx](mdc:app/layout.tsx), [components/](mdc:components/), [lib/notion/](mdc:lib/notion/) 구조를 최대한 활용하여 점진적 개선
+
+### 사용자 경험 목표
+
+- **다양성 표현**: 웹 개발, UI/UX, 창작 프로젝트 등 다양한 분야의 작업물을 효과적으로 전시
+- **개발 스토리텔링**: 기술적 도전과 해결 과정을 스토리로 구성하여 전달
+- **인터랙티브 경험**: [components/LenisProvider.tsx](mdc:components/LenisProvider.tsx), GSAP, Framer Motion을 활용한 몰입감 있는 사용자 경험
+
+### 기술적 목표
+
+- **확장 가능한 아키텍처**: [store/filterStore.ts](mdc:store/filterStore.ts)를 기반으로 콘텐츠 분류와 필터링 시스템 고도화
+- **SEO 최적화**: [components/seo/JsonLd.tsx](mdc:components/seo/JsonLd.tsx)를 통한 검색 엔진 최적화로 개발자로서의 온라인 존재감 강화
+- **성능 우선**: [components/OptimizedImage.tsx](mdc:components/OptimizedImage.tsx) 등 기존 최적화 컴포넌트 활용하여 빠른 로딩 경험 제공
+
+## 범위
+
+### 포함 범위
+
+- **Portfolio 섹션 확장**: 기존 랜딩페이지 프로젝트 외 다양한 개발 프로젝트, 실험적 작업, 오픈소스 기여 등을 포함
+- **Blog 시스템 고도화**: [lib/notion/client.ts](mdc:lib/notion/client.ts)를 활용한 기술 블로그, 개발 일지, 학습 노트 카테고리 세분화
+- **About 페이지 리뉴얼**: [app/about/page.tsx](mdc:app/about/page.tsx)에서 개발자로서의 다면적 역량과 철학 표현
+- **인터랙티브 요소 강화**: 기존 [components/common/Header.tsx](mdc:components/common/Header.tsx) 네비게이션 및 사용자 인터랙션 개선
+
+### 제외 범위
+
+- **완전한 재설계**: 현재 디자인 시스템과 컴포넌트 구조를 최대한 보존
+- **새로운 기술 스택 도입**: Next.js 15.1.x + TypeScript 기반 유지, 기존 라이브러리 활용
+- **대규모 데이터베이스 변경**: [lib/supabase/](mdc:lib/supabase/) 구조 대폭 수정 지양
+- **모바일 앱 개발**: 웹 포트폴리오에 집중, 반응형 웹 디자인으로 모바일 대응
+
+### 우선순위
+
+1. **컨텐츠 다양화**: 포트폴리오 프로젝트 유형 확장 및 분류 체계 개선
+2. **블로그 기능 강화**: 카테고리, 태그, 검색 기능을 통한 개발 기록 접근성 향상
+3. **사용자 경험 개선**: 애니메이션과 인터랙션을 통한 몰입도 증대
+4. **SEO 및 성능 최적화**: 개발자 포트폴리오로서의 검색 노출 및 로딩 성능 개선

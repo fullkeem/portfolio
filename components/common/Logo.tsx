@@ -73,7 +73,7 @@ export function Logo({
 
         {!imageError ? (
           <Image
-            src="/images/icon.png"
+            src="/images/icon.webp"
             alt="fullkeem 로고"
             width={config.image.width}
             height={config.image.height}

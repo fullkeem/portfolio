@@ -11,6 +11,25 @@ import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 type NotionBlock = BlockObjectResponse;
 
+// 지원되는 블록 타입 목록
+const SUPPORTED_BLOCK_TYPES = [
+  'paragraph',
+  'heading_1',
+  'heading_2',
+  'heading_3',
+  'quote',
+  'code',
+  'image',
+  'divider',
+  'callout',
+  'toggle',
+  'column_list',
+  'table',
+  'table_row',
+  'numbered_list_item',
+  'bulleted_list_item',
+] as const;
+
 interface NotionBlocksProps {
   blocks: NotionBlock[];
 }
@@ -357,12 +376,17 @@ function NotionBlock({ block, index }: { block: NotionBlock; index: number }) {
       return <ToggleBlock block={block} />;
     case 'column_list':
       return <ColumnListBlock block={block} />;
+    case 'table':
+      return <TableBlock block={block} />;
+    case 'table_row':
+      return <TableRowBlock block={block} />;
     // 리스트 항목들은 그룹화되어 처리되므로 여기서는 null 반환
     case 'numbered_list_item':
     case 'bulleted_list_item':
       return null;
     default:
-      return null;
+      // 지원하지 않는 블록 타입에 대한 fallback 처리
+      return <UnsupportedBlock block={block} />;
   }
 }
 
@@ -496,13 +520,24 @@ function QuoteBlock({ block }: { block: NotionBlock }) {
   if (block.type !== 'quote') return null;
   const { quote } = block;
 
+  // 자식 블록들 가져오기
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const children = (block as any).quote?.children || [];
+
   return (
     <blockquote
       className="my-4 border-l-4 border-primary pl-4 italic text-foreground/80 dark:text-foreground/85"
       role="blockquote"
       cite=""
     >
-      {renderRichText(quote.rich_text)}
+      <div className="space-y-2">
+        {quote.rich_text.length > 0 && <div>{renderRichText(quote.rich_text)}</div>}
+        {children.length > 0 && (
+          <div className="ml-0">
+            <NotionBlocks blocks={children} />
+          </div>
+        )}
+      </div>
     </blockquote>
   );
 }
@@ -700,6 +735,139 @@ function ColumnListBlock({ block }: { block: NotionBlock }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// Table 블록 컴포넌트
+function TableBlock({ block }: { block: NotionBlock }) {
+  if (block.type !== 'table') return null;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const children = (block as any).table?.children || [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tableWidth = (block as any).table?.table_width || 1;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hasColumnHeader = (block as any).table?.has_column_header || false;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hasRowHeader = (block as any).table?.has_row_header || false;
+
+  if (children.length === 0) {
+    return (
+      <div className="my-4 rounded-lg border border-dashed border-muted-foreground/30 p-4">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <span>📊</span>
+          <span>빈 테이블</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="my-6 overflow-x-auto" role="region" aria-label="테이블">
+      <table className="w-full border-collapse rounded-lg border border-border">
+        <tbody>
+          {children.map((row: NotionBlock, rowIndex: number) => (
+            <TableRowBlock
+              key={row.id || rowIndex}
+              block={row}
+              isHeader={hasColumnHeader && rowIndex === 0}
+              isRowHeader={hasRowHeader}
+              columnIndex={0}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// Table Row 블록 컴포넌트
+function TableRowBlock({
+  block,
+  isHeader = false,
+  isRowHeader = false,
+}: {
+  block: NotionBlock;
+  isHeader?: boolean;
+  isRowHeader?: boolean;
+  columnIndex?: number;
+}) {
+  if (block.type !== 'table_row') return null;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cells = (block as any).table_row?.cells || [];
+
+  return (
+    <tr className="border-b border-border last:border-b-0">
+      {cells.map((cell: any[], cellIndex: number) => {
+        const isFirstColumn = cellIndex === 0;
+        const shouldBeHeader = isHeader || (isRowHeader && isFirstColumn);
+        const CellComponent = shouldBeHeader ? 'th' : 'td';
+
+        return (
+          <CellComponent
+            key={cellIndex}
+            className={`border-r border-border px-3 py-2 text-left last:border-r-0 ${
+              shouldBeHeader
+                ? 'bg-secondary/50 font-semibold text-foreground'
+                : 'text-foreground/90 dark:text-foreground/95'
+            }`}
+            {...(shouldBeHeader && {
+              scope: isFirstColumn ? 'row' : 'col',
+              role: 'columnheader',
+            })}
+          >
+            {cell && cell.length > 0 ? (
+              <div className="text-sm leading-relaxed">{renderRichText(cell)}</div>
+            ) : (
+              <div className="text-sm text-muted-foreground">-</div>
+            )}
+          </CellComponent>
+        );
+      })}
+    </tr>
+  );
+}
+
+// 지원하지 않는 블록 타입에 대한 fallback 컴포넌트
+function UnsupportedBlock({ block }: { block: NotionBlock }) {
+  const { type } = block;
+
+  // 개발 환경에서 콘솔에 경고 출력
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(`[Notion Blocks] 지원하지 않는 블록 타입: ${type}`, block);
+  }
+
+  return (
+    <div className="my-4 rounded-lg border border-dashed border-yellow-300 bg-yellow-50 p-4 dark:border-yellow-600 dark:bg-yellow-900/20">
+      <div className="flex items-center gap-2 text-sm text-yellow-800 dark:text-yellow-200">
+        <span>⚠️</span>
+        <span>
+          지원하지 않는 블록 타입:{' '}
+          <code className="rounded bg-yellow-200 px-1 py-0.5 text-xs text-yellow-900 dark:bg-yellow-800 dark:text-yellow-100">
+            {type}
+          </code>
+        </span>
+      </div>
+      <div className="mt-2 text-xs text-yellow-700 dark:text-yellow-300">
+        <p>현재 지원되는 블록 타입: {SUPPORTED_BLOCK_TYPES.join(', ')}</p>
+        <p className="mt-1">
+          이 블록 타입을 지원하려면{' '}
+          <code className="rounded bg-yellow-200 px-1 py-0.5 text-yellow-900 dark:bg-yellow-800 dark:text-yellow-100">
+            lib/notion/blocks.tsx
+          </code>
+          에서 해당 케이스를 추가해주세요.
+        </p>
+      </div>
+      <details className="mt-2">
+        <summary className="cursor-pointer text-xs text-yellow-700 hover:text-yellow-800 dark:text-yellow-300 dark:hover:text-yellow-200">
+          블록 데이터 보기 (개발자용)
+        </summary>
+        <pre className="mt-1 max-h-32 overflow-auto rounded bg-yellow-100 p-2 text-xs text-yellow-900 dark:bg-yellow-900/40 dark:text-yellow-100">
+          {JSON.stringify(block, null, 2)}
+        </pre>
+      </details>
     </div>
   );
 }
