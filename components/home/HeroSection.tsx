@@ -1,10 +1,19 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Avatar3D } from '@/components/3d/Avatar3D';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+
+const Avatar3D = dynamic(() => import('@/components/3d/Avatar3D').then((m) => m.Avatar3D), {
+  ssr: false,
+  loading: () => <div className="h-[320px]" aria-hidden="true" />,
+});
 
 export function HeroSection() {
+  const reduceMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
       {/* Simple background gradient */}
@@ -17,16 +26,21 @@ export function HeroSection() {
             <div className="order-2 space-y-6 text-center lg:order-1 lg:space-y-8 lg:text-left">
               <div className="space-y-4 lg:space-y-6">
                 <motion.h1
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
+                  id="hero-title"
+                  initial={false}
+                  animate={
+                    reduceMotion ? { opacity: 1 } : mounted ? { y: 0, opacity: 1 } : { opacity: 1 }
+                  }
                   transition={{ duration: 0.8, ease: 'easeOut' }}
                   className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-4xl font-bold leading-tight text-transparent sm:text-5xl lg:text-6xl xl:text-7xl"
                 >
                   Fullkeem
                 </motion.h1>
                 <motion.p
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
+                  initial={false}
+                  animate={
+                    reduceMotion ? { opacity: 1 } : mounted ? { y: 0, opacity: 1 } : { opacity: 1 }
+                  }
                   transition={{ delay: 0.2, duration: 0.8, ease: 'easeOut' }}
                   className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground lg:mx-0 lg:text-xl xl:text-2xl"
                 >
@@ -35,8 +49,8 @@ export function HeroSection() {
               </div>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={false}
+                animate={mounted ? { opacity: 1, y: 0 } : { opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
                 className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start lg:gap-4"
               >
@@ -58,8 +72,10 @@ export function HeroSection() {
             {/* 오른쪽: 3D 아바타 */}
             <motion.div
               className="order-1 flex justify-center lg:order-2"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={false}
+              animate={
+                reduceMotion ? { opacity: 1 } : mounted ? { opacity: 1, scale: 1 } : { opacity: 1 }
+              }
               transition={{ delay: 0.6, duration: 0.8, ease: 'easeOut' }}
             >
               <Avatar3D size="xl" />
@@ -71,8 +87,9 @@ export function HeroSection() {
       {/* Simple scroll indicator */}
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        animate={{ y: [0, 8, 0] }}
+        animate={reduceMotion ? undefined : { y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        aria-hidden="true"
       >
         <svg
           className="h-6 w-6 text-muted-foreground"

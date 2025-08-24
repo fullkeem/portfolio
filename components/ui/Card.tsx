@@ -1,6 +1,7 @@
 'use client';
 
 import { motion, Variants, Transition } from 'framer-motion';
+import { TiltCard } from '@/components/common/MagneticButton';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ReactNode } from 'react';
@@ -76,7 +77,7 @@ export function Card({
   },
 }: CardProps) {
   const cardContent = (
-    <div
+    <TiltCard
       className={cn(
         'group relative flex h-full flex-col overflow-hidden rounded-lg border bg-background transition-all hover:bg-secondary/50 hover:shadow-lg',
         className
@@ -227,7 +228,7 @@ export function Card({
           </div>
         )}
       </div>
-    </div>
+    </TiltCard>
   );
 
   if (href) {

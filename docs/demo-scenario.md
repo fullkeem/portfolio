@@ -4,7 +4,7 @@
 
 ### 시나리오
 
-> 프론트엔드 개발자가 크몽에서 랜딩 페이지 제작 서비스를 시작하기 위해 자신을 브랜딩할 수 있는 포트폴리오 사이트를 만들려고 합니다.
+> 작업했던 프로젝트와 개발 기록 및 IT 관련 아티클을 수집해서 기록하고 나를 브랜딩하기 위해 만든 사이트입니다.
 
 **초기 요구사항:**
 
@@ -12,7 +12,6 @@
 - 기술 블로그
 - 연락처 정보
 - Notion API를 통한 콘텐츠 관리
-- 3-4주 내 완성
 
 ## 2. 프로젝트 초기 설정
 
@@ -60,18 +59,18 @@ fullkeem_portfolio/
 1. **Portfolio Database** 생성
 
    - Title, Description, Thumbnail, Technologies 등 속성 추가
-   - Database ID: `1ffc0a73-d8bb-817b-bedd-c915afd74134`
+   - Database ID
 
 2. **Blog Database** 생성
    - Title, Slug, Excerpt, Category, Tags 등 속성 추가
-   - Database ID: `1ffc0a73-d8bb-8136-92b9-c0b3dd57d7c3`
+   - Database ID
 
 ### 3.3 환경 변수 설정
 
 ```env
-NOTION_TOKEN=your_notion_integration_token
-NOTION_DATABASE_ID=1ffc0a73d8bb817bbeddc915afd74134
-NOTION_BLOG_DATABASE_ID=1ffc0a73d8bb813692b9c0b3dd57d7c3
+NOTION_TOKEN
+NOTION_DATABASE_ID
+NOTION_BLOG_DATABASE_ID
 ```
 
 ## 4. 핵심 기능 구현
@@ -226,7 +225,7 @@ const PortfolioDetail = dynamic(() => import('./portfolio-detail'), {
 ```typescript
 export const metadata: Metadata = {
   title: 'Fullkeem | fullkeem',
-  description: '랜딩 페이지 제작 전문 프론트엔드 개발자',
+  description: '프론트엔드 개발자',
   openGraph: {
     images: ['/og-image.png'],
   },
@@ -240,18 +239,6 @@ export const metadata: Metadata = {
 1. GitHub 저장소 연결
 2. 환경 변수 설정
 3. 자동 배포 활성화
-
-### 7.2 도메인 설정
-
-```
-fullkeem.dev (예시)
-www.fullkeem.dev → fullkeem.dev (리다이렉트)
-```
-
-### 7.3 Analytics 설정
-
-- Google Analytics 4 설치
-- Vercel Analytics 활성화
 
 ## 8. 데모 시연 시나리오
 
@@ -306,36 +293,9 @@ try {
 - 빌드 에러 로그 분석
 - Vercel 함수 제한 확인
 
-## 10. 프로젝트 완성 및 런칭
-
-### 10.1 최종 체크리스트
-
-- [ ] 모든 페이지 반응형 테스트
-- [ ] SEO 메타데이터 확인
-- [ ] 성능 지표 90점 이상
-- [ ] 크로스 브라우저 테스트
-- [ ] 접근성 검사
-
-### 10.2 런칭 준비
-
-1. **크몽 프로필 업데이트**
-
-   - 포트폴리오 사이트 링크 추가
-   - 서비스 설명 업데이트
-
-2. **마케팅 준비**
-   - SNS 공유 이미지
-   - 소개 문구 작성
-
-### 10.3 런칭 후 모니터링
-
-- 방문자 통계 확인
-- 문의 전환율 측정
-- 사용자 피드백 수집
-
 ## 결론
 
-이 데모 시나리오는 3-4주 동안 프론트엔드 개발자 포트폴리오 사이트를 구축하는 전체 과정을 보여줍니다. Notion API를 활용한 콘텐츠 관리, 현대적인 디자인과 애니메이션, 그리고 크몽 고객을 위한 최적화된 사용자 경험을 제공합니다.
+이 데모 시나리오는 프론트엔드 개발자 포트폴리오 사이트를 구축하는 전체 과정을 보여줍니다. Notion API를 활용한 콘텐츠 관리, 현대적인 디자인과 애니메이션이 최적화된 사용자 경험을 제공합니다.
 
 주요 성과:
 
@@ -343,4 +303,3 @@ try {
 - ✅ 미니멀하면서도 인터랙티브한 디자인
 - ✅ 빠른 로딩 속도와 우수한 성능
 - ✅ SEO 최적화로 검색 노출 향상
-- ✅ 크몽 고객을 위한 명확한 CTA

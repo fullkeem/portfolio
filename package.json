@@ -16,6 +16,8 @@
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.0.1",
     "@notionhq/client": "^2.2.15",
+    "@react-three/drei": "^10.6.1",
+    "@react-three/fiber": "^9.3.0",
     "@supabase/supabase-js": "^2.39.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "clsx": "^2.1.1",
@@ -38,6 +40,7 @@
     "remark-gfm": "^4.0.0",
     "shiki": "^1.24.0",
     "tailwind-merge": "^2.6.0",
+    "three": "^0.179.1",
     "zod": "^3.25.51",
     "zustand": "^5.0.1"
   },
