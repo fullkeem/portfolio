@@ -6,8 +6,14 @@ import type {
   RichTextItemResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 import Link from 'next/link';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import dynamic from 'next/dynamic';
+// 코드 하이라이터는 클라이언트에서만 필요할 때 로드 (지연 로딩)
+const SyntaxHighlighter = dynamic(() => import('react-syntax-highlighter').then((m) => m.Prism), {
+  ssr: false,
+  loading: () => <pre className="overflow-x-auto rounded-md bg-secondary p-4" />,
+});
+// 코드 하이라이트 테마 타입 선언 (동적 스타일 객체)
+const oneDark: Record<string, React.CSSProperties> = {};
 
 type NotionBlock = BlockObjectResponse;
 
@@ -39,7 +45,6 @@ interface EnhancedImageProps {
   src: string;
   originalSrc: string;
   alt: string;
-  caption: string;
   blockId: string;
 }
 
@@ -591,7 +596,6 @@ function ImageBlock({ block }: { block: NotionBlock }) {
         src={src}
         originalSrc={originalSrc}
         alt={caption || '블로그 포스트 이미지'}
-        caption={caption}
         blockId={block.id}
       />
       {caption && (
@@ -746,8 +750,6 @@ function TableBlock({ block }: { block: NotionBlock }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const children = (block as any).table?.children || [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const tableWidth = (block as any).table?.table_width || 1;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const hasColumnHeader = (block as any).table?.has_column_header || false;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const hasRowHeader = (block as any).table?.has_row_header || false;
@@ -773,7 +775,6 @@ function TableBlock({ block }: { block: NotionBlock }) {
               block={row}
               isHeader={hasColumnHeader && rowIndex === 0}
               isRowHeader={hasRowHeader}
-              columnIndex={0}
             />
           ))}
         </tbody>
@@ -791,7 +792,6 @@ function TableRowBlock({
   block: NotionBlock;
   isHeader?: boolean;
   isRowHeader?: boolean;
-  columnIndex?: number;
 }) {
   if (block.type !== 'table_row') return null;
 
@@ -800,7 +800,7 @@ function TableRowBlock({
 
   return (
     <tr className="border-b border-border last:border-b-0">
-      {cells.map((cell: any[], cellIndex: number) => {
+      {cells.map((cell: RichTextItemResponse[], cellIndex: number) => {
         const isFirstColumn = cellIndex === 0;
         const shouldBeHeader = isHeader || (isRowHeader && isFirstColumn);
         const CellComponent = shouldBeHeader ? 'th' : 'td';

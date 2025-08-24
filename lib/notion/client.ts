@@ -1,4 +1,5 @@
 import 'server-only';
+import { unstable_cache as cache } from 'next/cache';
 import { Client } from "@notionhq/client";
 import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import type { NotionPortfolioProperties, NotionBlogProperties } from "./types";
@@ -59,6 +60,13 @@ export async function getPortfolioById(id: string): Promise<Portfolio | null> {
     return null;
   }
 }
+
+// Cached variants to reduce duplicate work across metadata/page rendering
+export const getCachedPortfolioById = cache(
+  async (id: string) => getPortfolioById(id),
+  ['notion:portfolio:id'],
+  { revalidate: 3600, tags: ['notion:portfolio'] }
+);
 
 // Blog 관련 함수들
 export async function getBlogPosts(): Promise<BlogPost[]> {
@@ -128,6 +136,12 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
   }
 }
 
+export const getCachedBlogPostBySlug = cache(
+  async (slug: string) => getBlogPostBySlug(slug),
+  ['notion:blog:slug'],
+  { revalidate: 3600, tags: ['notion:blog'] }
+);
+
 // 페이지 내용 가져오기
 export async function getPageContent(pageId: string) {
   try {
@@ -155,6 +169,12 @@ export async function getPageContent(pageId: string) {
     return [];
   }
 }
+
+export const getCachedPageContent = cache(
+  async (pageId: string) => getPageContent(pageId),
+  ['notion:blocks:id'],
+  { revalidate: 3600, tags: ['notion:blocks'] }
+);
 
 // 파싱 함수들
 function parsePortfolioPage(page: PageObjectResponse): Portfolio {

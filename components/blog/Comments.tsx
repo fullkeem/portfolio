@@ -15,15 +15,7 @@ interface CommentsProps {
 
 type CommentSystem = 'giscus' | 'custom' | 'both';
 
-// 성능을 위한 스켈레톤 컴포넌트
-function CommentsSkeleton() {
-  return (
-    <div className="animate-pulse space-y-4">
-      <div className="h-4 w-1/4 rounded bg-secondary"></div>
-      <div className="h-32 rounded bg-secondary"></div>
-    </div>
-  );
-}
+import CommentsSkeleton from './CommentsSkeleton';
 
 // 댓글 시스템 선택 컴포넌트
 function CommentSystemSelector({

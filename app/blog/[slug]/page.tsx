@@ -1,24 +1,23 @@
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
-import { getBlogPostBySlug, getPageContent } from '@/lib/notion/client';
-import { NotionBlocks } from '@/lib/notion/blocks';
-import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import { formatDate } from '@/lib/utils';
+import { NotionBlocks } from '@/lib/notion/blocks';
+import { getBlogMarkdownBySlug } from '@/lib/notion/markdown';
+import { getCachedBlogPostBySlug, getCachedPageContent } from '@/lib/notion/client';
+import ContentSkeleton from '@/components/common/loading/ContentSkeleton';
+import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import { ArrowLeft, Calendar, Tag } from 'lucide-react';
+import MarkdownRenderer from '@/components/markdown/MarkdownRenderer';
 
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
-  const blogPost = await getBlogPostBySlug(resolvedParams.slug);
+  const blogPost = await getCachedBlogPostBySlug(resolvedParams.slug);
 
   if (!blogPost) {
     notFound();
   }
-
-  const pageContent = (await getPageContent(blogPost.id)) as BlockObjectResponse[];
-
-  // 읽기 시간 계산 (간소화)
-  const readingTime = Math.max(1, Math.ceil(pageContent.length / 5)); // 5분 정도로 조정
 
   return (
     <div className="min-h-screen py-20 md:py-32">
@@ -51,10 +50,6 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
               <Calendar className="h-4 w-4" />
               <time dateTime={blogPost.publishedAt}>{formatDate(blogPost.publishedAt)}</time>
             </div>
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4" />
-              <span>{readingTime}분 읽기</span>
-            </div>
           </div>
 
           {/* 태그 */}
@@ -84,9 +79,11 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
           </div>
         )}
 
-        {/* Notion 콘텐츠 */}
+        {/* Notion/Markdown 콘텐츠 - 스트리밍 렌더 */}
         <section className="prose prose-lg max-w-none dark:prose-invert">
-          <NotionBlocks blocks={pageContent} />
+          <Suspense fallback={<ContentSkeleton />}>
+            <ContentSection slug={resolvedParams.slug} id={blogPost.id} />
+          </Suspense>
         </section>
 
         {/* 하단 네비게이션 */}
@@ -104,6 +101,17 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
   );
 }
 
+// 본문을 비동기로 가져와 스트리밍 (Markdown 우선, 없으면 블록)
+async function ContentSection({ slug, id }: { slug: string; id: string }) {
+  const mdString = await getBlogMarkdownBySlug(slug);
+  const useMarkdown = Boolean(mdString && mdString.length > 0);
+  if (useMarkdown) {
+    return <MarkdownRenderer markdown={mdString!} />;
+  }
+  const pageContent = (await getCachedPageContent(id)) as BlockObjectResponse[];
+  return <NotionBlocks blocks={pageContent} />;
+}
+
 // 정적 경로 생성
 export async function generateStaticParams() {
   const { getBlogPosts } = await import('@/lib/notion/client');
@@ -117,7 +125,7 @@ export async function generateStaticParams() {
 // 메타데이터 생성 (간소화)
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
-  const blogPost = await getBlogPostBySlug(resolvedParams.slug);
+  const blogPost = await getCachedBlogPostBySlug(resolvedParams.slug);
 
   if (!blogPost) {
     return {

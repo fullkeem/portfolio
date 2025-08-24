@@ -6,6 +6,7 @@ import { Calendar } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import { TiltCard } from '@/components/common/MagneticButton';
 
 interface BlogCardProps {
   post: BlogPost;
@@ -18,9 +19,10 @@ export default function BlogCard({ post, index = 0 }: BlogCardProps) {
   return (
     <Link
       href={`/blog/${post.slug}`}
+      prefetch
       className="group block h-full rounded-lg border bg-background transition-all hover:bg-secondary/50 hover:shadow-md"
     >
-      <article className="flex h-full flex-col overflow-hidden rounded-lg">
+      <TiltCard className="flex h-full flex-col overflow-hidden rounded-lg">
         {/* 이미지 */}
         {post.coverImage && (
           <div className="relative aspect-video overflow-hidden bg-muted">
@@ -83,7 +85,7 @@ export default function BlogCard({ post, index = 0 }: BlogCardProps) {
             </div>
           )}
         </div>
-      </article>
+      </TiltCard>
     </Link>
   );
 }
