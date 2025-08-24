@@ -39,7 +39,7 @@ export const Avatar3D = memo(function Avatar3D({
 
   // 이미지 상태 관리: 클릭할 때마다 토글
   const [isClickedImage, setIsClickedImage] = useState(false);
-  const currentImageSrc = isClickedImage ? '/images/click.png' : '/images/default.png';
+  const currentImageSrc = isClickedImage ? '/images/click.webp' : '/images/default.webp';
 
   // 애니메이션 설정 메모이제이션
   const speeds = useMemo(() => animationSpeeds[animationSpeed], [animationSpeed]);

@@ -1,14 +1,12 @@
 'use client';
 
-import { Mail, MessageCircle, Github, Linkedin, Clock, MapPin } from 'lucide-react';
+import { Mail, MessageCircle, Github, Linkedin } from 'lucide-react';
 
 const CONTACT_INFO = {
   email: process.env.NEXT_PUBLIC_EMAIL,
   kakaoLink: process.env.NEXT_PUBLIC_KAKAO_LINK,
   github: process.env.NEXT_PUBLIC_GITHUB_URL,
   linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL,
-  responseTime: '2시간 이내',
-  location: '대한민국 서울',
 };
 
 const contactMethods = [
@@ -20,6 +18,7 @@ const contactMethods = [
     href: `mailto:${CONTACT_INFO.email}`,
     color: 'text-blue-500',
     bgColor: 'bg-blue-500/10',
+    contactId: 'email',
   },
   {
     icon: MessageCircle,
@@ -29,6 +28,7 @@ const contactMethods = [
     href: CONTACT_INFO.kakaoLink,
     color: 'text-yellow-500',
     bgColor: 'bg-yellow-500/10',
+    contactId: 'kakao',
   },
   {
     icon: Github,
@@ -38,6 +38,7 @@ const contactMethods = [
     href: CONTACT_INFO.github,
     color: 'text-gray-500',
     bgColor: 'bg-gray-500/10',
+    contactId: 'github',
   },
   {
     icon: Linkedin,
@@ -47,28 +48,16 @@ const contactMethods = [
     href: CONTACT_INFO.linkedin,
     color: 'text-blue-600',
     bgColor: 'bg-blue-600/10',
-  },
-];
-
-const additionalInfo = [
-  {
-    icon: Clock,
-    title: '평균 응답 시간',
-    value: CONTACT_INFO.responseTime,
-  },
-  {
-    icon: MapPin,
-    title: '위치',
-    value: CONTACT_INFO.location,
+    contactId: 'linkedin',
   },
 ];
 
 export function ContactInfo() {
   return (
-    <section className="bg-secondary/20 pb-20">
+    <section className="bg-secondary/20 py-20 md:py-32">
       <div className="container mx-auto px-4">
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">연락 방법</h2>
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Contact</h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             아래 방법 중 편하신 방법으로 연락해 주세요
           </p>
@@ -84,6 +73,7 @@ export function ContactInfo() {
                 href={method.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-contact={method.contactId}
                 className="block rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md"
               >
                 <div className="flex items-start gap-4">
@@ -97,25 +87,6 @@ export function ContactInfo() {
                   </div>
                 </div>
               </a>
-            );
-          })}
-        </div>
-
-        {/* 추가 정보 */}
-        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 md:grid-cols-2">
-          {additionalInfo.map((info) => {
-            const IconComponent = info.icon;
-            return (
-              <div
-                key={info.title}
-                className="flex items-center gap-4 rounded-lg border border-border bg-background p-4"
-              >
-                <IconComponent className="h-5 w-5 text-primary" />
-                <div>
-                  <p className="text-sm text-muted-foreground">{info.title}</p>
-                  <p className="font-medium">{info.value}</p>
-                </div>
-              </div>
             );
           })}
         </div>

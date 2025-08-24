@@ -409,3 +409,70 @@ html {
     }
   }
 }
+
+/* Masonry Layout Styles */
+.masonry-grid {
+  display: flex;
+  margin-left: -2rem; /* gap 조절 */
+  width: auto;
+}
+
+.masonry-grid-column {
+  padding-left: 2rem; /* 32px gap */
+  background-clip: padding-box;
+}
+
+.masonry-grid-column > div {
+  margin-bottom: 2rem;
+}
+
+.image-card {
+  transition: all 0.3s ease;
+}
+
+.image-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* 호버 시 컬러 테두리 애니메이션 */
+.image-card:nth-child(3n + 1):hover > div {
+  border-color: #3b82f6; /* blue */
+}
+
+.image-card:nth-child(3n + 2):hover > div {
+  border-color: #10b981; /* green */
+}
+
+.image-card:nth-child(3n + 3):hover > div {
+  border-color: #ef4444; /* red */
+}
+
+/* 반응형 조정 */
+@media (max-width: 1100px) {
+  .masonry-grid {
+    margin-left: -1.5rem;
+  }
+
+  .masonry-grid-column {
+    padding-left: 1.5rem;
+  }
+
+  .masonry-grid-column > div {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .masonry-grid {
+    margin-left: -1rem;
+  }
+
+  .masonry-grid-column {
+    padding-left: 1rem;
+  }
+
+  .masonry-grid-column > div {
+    margin-bottom: 1rem;
+  }
+}

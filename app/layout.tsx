@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     description: '랜딩 페이지 제작 전문 프론트엔드 개발자',
     images: [
       {
-        url: '/images/default.png',
+        url: '/images/default.webp',
         width: 1200,
         height: 630,
         alt: 'Fullkeem | fullkeem',
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Fullkeem | web developer',
     description: '랜딩 페이지 제작 전문 프론트엔드 개발자',
-    images: ['/images/default.png'],
+    images: ['/images/default.webp'],
   },
   robots: {
     index: true,
