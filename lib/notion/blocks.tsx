@@ -6,6 +6,7 @@ import type {
   RichTextItemResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 import Link from 'next/link';
+import { BlogImage } from '@/components/ui/OptimizedImage';
 import dynamic from 'next/dynamic';
 // 코드 하이라이터는 클라이언트에서만 필요할 때 로드 (지연 로딩)
 const SyntaxHighlighter = dynamic(() => import('react-syntax-highlighter').then((m) => m.Prism), {
@@ -52,51 +53,29 @@ function EnhancedImage({ src, originalSrc, alt, blockId }: EnhancedImageProps) {
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
+  const [version, setVersion] = useState(0);
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(
     null
   );
-  const [useDirectUrl, setUseDirectUrl] = useState(false);
 
-  // GIF 파일 감지
+  // GIF 여부만 스타일 제어에 사용 (로더 정책은 BlogImage가 처리)
   const isGif = originalSrc.toLowerCase().includes('.gif') || src.toLowerCase().includes('.gif');
 
-  // GIF의 경우 직접 URL 사용, 일반 이미지는 프록시 사용
-  const imageUrl = isGif && !useDirectUrl ? originalSrc : src;
-
   const handleImageError = () => {
-    // GIF이고 첫 번째 시도라면 직접 URL로 재시도
-    if (isGif && !useDirectUrl && retryCount === 0) {
-      setUseDirectUrl(true);
+    if (retryCount < 1) {
       setRetryCount(1);
       setIsLoading(true);
       return;
     }
-
     setImageError(true);
     setIsLoading(false);
   };
 
-  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = event.currentTarget;
-    setImageDimensions({
-      width: img.naturalWidth,
-      height: img.naturalHeight,
-    });
-    setIsLoading(false);
-    setImageError(false);
-  };
-
   const handleRetry = () => {
-    if (retryCount < 3) {
-      setImageError(false);
-      setIsLoading(true);
-      setRetryCount((prev) => prev + 1);
-
-      // GIF의 경우 직접 URL과 프록시 URL을 번갈아 시도
-      if (isGif) {
-        setUseDirectUrl(!useDirectUrl);
-      }
-    }
+    setImageError(false);
+    setIsLoading(true);
+    setRetryCount((prev) => prev + 1);
+    setVersion((prev) => prev + 1);
   };
 
   // 이미지 비율 계산
@@ -159,24 +138,19 @@ function EnhancedImage({ src, originalSrc, alt, blockId }: EnhancedImageProps) {
           </div>
         </div>
       )}
-      <img
-        id={`img-${blockId}`}
-        src={imageUrl}
-        alt={alt}
-        className="h-auto w-full rounded-lg shadow-sm"
-        loading="lazy"
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-        style={{
-          maxHeight: '600px',
-          objectFit: 'contain',
-        }}
-        // GIF의 경우 추가 속성
-        {...(isGif && {
-          crossOrigin: 'anonymous',
-          referrerPolicy: 'no-referrer',
-        })}
-      />
+      <div className="relative">
+        <BlogImage
+          key={`img-${blockId}-${version}`}
+          src={src}
+          alt={alt}
+          width={1200}
+          height={800}
+          sizes="100vw"
+          className="h-auto w-full rounded-lg object-contain shadow-sm"
+          onLoad={() => setIsLoading(false)}
+          onError={handleImageError}
+        />
+      </div>
     </div>
   );
 }

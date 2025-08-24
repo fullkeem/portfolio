@@ -4,6 +4,7 @@ import { motion, Variants, Transition } from 'framer-motion';
 import { TiltCard } from '@/components/common/MagneticButton';
 import Link from 'next/link';
 import Image from 'next/image';
+import { BlogImage } from '@/components/ui/OptimizedImage';
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils/cn';
 import { optimizeUnsplashUrl, imagePresets } from '@/lib/utils/image';
@@ -102,39 +103,16 @@ export function Card({
                 })
               : image.trim();
 
-            // GIF의 경우 일반 img 태그 사용 (Next.js Image 최적화 우회)
-            if (isGif) {
-              return (
-                <img
-                  src={imageUrl}
-                  alt={imageAlt}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  loading={priority ? 'eager' : 'lazy'}
-                  crossOrigin="anonymous"
-                  referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    // GIF 로딩 실패시 프록시 URL로 재시도
-                    const target = e.target as HTMLImageElement;
-                    if (!target.src.includes('/api/image-proxy')) {
-                      target.src = `/api/image-proxy?url=${encodeURIComponent(imageUrl)}`;
-                    }
-                  }}
-                />
-              );
-            }
-
-            // 일반 이미지는 Next.js Image 컴포넌트 사용
+            // 모든 경우 BlogImage를 사용하여 프록시/최적화 정책 일원화
             return (
-              <Image
+              <BlogImage
                 src={imageUrl}
                 alt={imageAlt}
                 width={400}
                 height={300}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 sizes={imagePresets.blogCard.sizes}
-                quality={imagePresets.blogCard.quality}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 priority={priority}
-                loading={priority ? 'eager' : 'lazy'}
               />
             );
           })()}

@@ -1,6 +1,8 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import { BlogImage } from '@/components/ui/OptimizedImage';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -65,13 +67,17 @@ export function MarkdownRenderer({ markdown }: MarkdownRendererProps) {
             ? `/api/image-proxy?url=${encodeURIComponent(srcStr)}`
             : srcStr;
           return (
-            <img
-              src={proxied}
-              alt={alt}
-              loading="lazy"
-              className="h-auto w-full rounded-lg"
-              {...(rest as Record<string, unknown>)}
-            />
+            <span className="block w-full">
+              <BlogImage
+                src={proxied}
+                alt={alt}
+                width={1200}
+                height={800}
+                sizes="100vw"
+                className="h-auto w-full rounded-lg object-contain"
+                {...(rest as Record<string, unknown>)}
+              />
+            </span>
           );
         },
         a(componentProps) {
@@ -85,17 +91,17 @@ export function MarkdownRenderer({ markdown }: MarkdownRendererProps) {
           } & React.AnchorHTMLAttributes<HTMLAnchorElement>;
           const isExternal = /^https?:\/\//.test(href);
           return (
-            <a
+            <Link
               href={href}
+              className="text-primary underline hover:no-underline"
               {...((isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}) as Record<
                 string,
                 unknown
               >)}
-              className="text-primary underline hover:no-underline"
               {...(rest as Record<string, unknown>)}
             >
               {children}
-            </a>
+            </Link>
           );
         },
       }}
