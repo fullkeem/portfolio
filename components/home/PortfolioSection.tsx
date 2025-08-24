@@ -36,15 +36,12 @@ export function PortfolioSection({ items }: Props) {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <div className="group relative h-full overflow-hidden rounded-lg border bg-background transition-transform hover:scale-[1.02] hover:shadow-lg">
-                {/* 전체 카드 클릭 영역을 오버레이 앵커로 제공 (버튼과 중첩되지 않게 z-index 분리) */}
-                <Link
-                  href={`/portfolio/${portfolio.id}`}
-                  aria-label={`${portfolio.title} 상세 보기`}
-                  className="absolute inset-0 z-0"
-                />
-
-                <div className="relative z-10">
+              <Link
+                href={`/portfolio/${portfolio.id}`}
+                aria-label={`${portfolio.title} 상세 보기`}
+                className="group relative block h-full overflow-hidden rounded-lg border bg-background transition-transform hover:scale-[1.02] hover:shadow-lg"
+              >
+                <div className="relative">
                   <div className="relative aspect-video overflow-hidden bg-muted">
                     <PortfolioImage
                       src={portfolio.thumbnail || '/images/placeholder.jpg'}
@@ -91,6 +88,7 @@ export function PortfolioSection({ items }: Props) {
                         <button
                           type="button"
                           onClick={(e) => {
+                            e.preventDefault();
                             e.stopPropagation();
                             window.open(
                               portfolio.githubUrl as string,
@@ -108,6 +106,7 @@ export function PortfolioSection({ items }: Props) {
                         <button
                           type="button"
                           onClick={(e) => {
+                            e.preventDefault();
                             e.stopPropagation();
                             window.open(
                               portfolio.liveUrl as string,
@@ -124,7 +123,7 @@ export function PortfolioSection({ items }: Props) {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </div>

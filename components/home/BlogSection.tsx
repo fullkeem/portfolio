@@ -43,13 +43,12 @@ export function BlogSection({ posts }: Props) {
         >
           {posts.map((post) => (
             <motion.div key={post.id} variants={itemVariants} initial={false}>
-              <div className="group relative h-full overflow-hidden rounded-lg border bg-background transition-transform hover:scale-[1.02]">
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="absolute inset-0 z-0"
-                  aria-label={`${post.title} 상세 보기`}
-                />
-                <div className="relative z-10">
+              <Link
+                href={`/blog/${post.slug}`}
+                aria-label={`${post.title} 상세 보기`}
+                className="group relative block h-full overflow-hidden rounded-lg border bg-background transition-transform hover:scale-[1.02]"
+              >
+                <div className="relative">
                   <div className="relative aspect-video overflow-hidden bg-muted">
                     <BlogImage
                       src={post.coverImage ?? '/images/placeholder.jpg'}
@@ -74,7 +73,7 @@ export function BlogSection({ posts }: Props) {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </motion.div>

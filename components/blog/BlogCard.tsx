@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { BlogImage } from '@/components/ui/OptimizedImage';
 import { Calendar } from 'lucide-react';
 import { BlogPost } from '@/types';
 import { formatDate } from '@/lib/utils';
@@ -26,7 +26,7 @@ export default function BlogCard({ post, index = 0 }: BlogCardProps) {
         {/* 이미지 */}
         {post.coverImage && (
           <div className="relative aspect-video overflow-hidden bg-muted">
-            <Image
+            <BlogImage
               src={post.coverImage}
               alt={post.title}
               width={400}

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import { BlogImage } from '@/components/ui/OptimizedImage';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { formatDate } from '@/lib/utils';
@@ -67,7 +67,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         {/* 커버 이미지 */}
         {blogPost.coverImage && (
           <div className="mb-12">
-            <Image
+            <BlogImage
               src={blogPost.coverImage}
               alt={blogPost.title}
               width={1200}
