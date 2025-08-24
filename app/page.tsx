@@ -3,7 +3,6 @@ import { AboutSection } from '@/components/home/AboutSection';
 import { PortfolioSection } from '@/components/home/PortfolioSection';
 import { BlogSection } from '@/components/home/BlogSection';
 import { JsonLd } from '@/components/seo/JsonLd';
-import { ContactInfo } from '@/components/home/ContactInfo';
 import { getTopPortfolios, getTopPosts } from '@/lib/notion/repo';
 
 export const revalidate = 60;
@@ -17,7 +16,6 @@ export default async function HomePage() {
       <JsonLd type="organization" />
       <HeroSection />
       <AboutSection />
-      <ContactInfo />
       <PortfolioSection items={portfolios} />
       <BlogSection posts={posts} />
     </>
