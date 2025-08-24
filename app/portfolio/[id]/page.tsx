@@ -1,22 +1,21 @@
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { GitBranch, ExternalLink, ArrowLeft, Calendar } from 'lucide-react';
-import { getPortfolioById, getPageContent } from '@/lib/notion/client';
+import { getCachedPortfolioById, getCachedPageContent } from '@/lib/notion/client';
 import { NotionBlocks } from '@/lib/notion/blocks';
+import ContentSkeleton from '@/components/common/loading/ContentSkeleton';
 import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { formatDate } from '@/lib/utils';
 
 export default async function PortfolioDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
-  const portfolio = await getPortfolioById(resolvedParams.id);
+  const portfolio = await getCachedPortfolioById(resolvedParams.id);
 
   if (!portfolio) {
     notFound();
   }
-
-  const pageContent = (await getPageContent(resolvedParams.id)) as BlockObjectResponse[];
-
   return (
     <div className="min-h-screen py-20 md:py-32">
       <article className="container mx-auto max-w-4xl px-4">
@@ -93,9 +92,11 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
           </div>
         )}
 
-        {/* Notion 콘텐츠 */}
+        {/* Notion 콘텐츠 - 스트리밍 렌더 */}
         <section className="prose prose-lg max-w-none dark:prose-invert">
-          <NotionBlocks blocks={pageContent} />
+          <Suspense fallback={<ContentSkeleton />}>
+            <ContentSection id={resolvedParams.id} />
+          </Suspense>
         </section>
 
         {/* 하단 네비게이션 */}
@@ -113,6 +114,12 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
   );
 }
 
+// 본문 블록을 비동기로 가져와 스트리밍
+async function ContentSection({ id }: { id: string }) {
+  const pageContent = (await getCachedPageContent(id)) as BlockObjectResponse[];
+  return <NotionBlocks blocks={pageContent} />;
+}
+
 // 정적 경로 생성
 export async function generateStaticParams() {
   const { getPortfolios } = await import('@/lib/notion/client');
@@ -126,7 +133,7 @@ export async function generateStaticParams() {
 // 메타데이터 생성
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
-  const portfolio = await getPortfolioById(resolvedParams.id);
+  const portfolio = await getCachedPortfolioById(resolvedParams.id);
 
   if (!portfolio) {
     return {

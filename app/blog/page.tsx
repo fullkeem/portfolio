@@ -21,7 +21,8 @@ async function getBlogPostsData(): Promise<BlogPost[]> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/blog`,
       {
-        cache: 'force-cache',
+        // Notion S3 pre-signed URL 만료(≈1h) 전에 갱신되도록 주기적 재검증
+        next: { revalidate: 900 }, // 15분
       }
     );
     if (!response.ok) throw new Error('Failed to fetch blog posts');

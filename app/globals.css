@@ -426,6 +426,26 @@ html {
   margin-bottom: 2rem;
 }
 
+/* Skeleton: 반응형 컬럼 가시성 제어 (PortfolioSkeleton 전용) */
+.masonry-col-2 {
+  display: none;
+}
+.masonry-col-3 {
+  display: none;
+}
+
+@media (min-width: 700px) {
+  .masonry-col-2 {
+    display: block;
+  }
+}
+
+@media (min-width: 1100px) {
+  .masonry-col-3 {
+    display: block;
+  }
+}
+
 .image-card {
   transition: all 0.3s ease;
 }

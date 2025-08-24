@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Portfolio } from '@/types';
 import { useState } from 'react';
+import { TiltCard } from '@/components/common/MagneticButton';
 
 interface PortfolioCardProps {
   portfolio: Portfolio;
@@ -36,8 +37,8 @@ export function PortfolioCard({ portfolio, index = 0 }: PortfolioCardProps) {
   };
 
   return (
-    <Link href={`/portfolio/${portfolio.id}`} className="image-card group">
-      <div className="relative overflow-hidden rounded-lg border-2 border-gray-200 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400 hover:shadow-xl">
+    <Link href={`/portfolio/${portfolio.id}`} prefetch className="image-card group">
+      <TiltCard className="relative overflow-hidden rounded-lg border-2 border-gray-200 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400 hover:shadow-xl">
         {portfolio.thumbnail && !imageError ? (
           <div className="relative overflow-hidden bg-muted">
             {/* 로딩 스켈레톤 */}
@@ -149,7 +150,7 @@ export function PortfolioCard({ portfolio, index = 0 }: PortfolioCardProps) {
             </div>
           </div>
         )}
-      </div>
+      </TiltCard>
     </Link>
   );
 }

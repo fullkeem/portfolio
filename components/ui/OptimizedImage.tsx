@@ -1,7 +1,7 @@
 'use client';
 
 import Image, { ImageProps } from 'next/image';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { getOptimizedBlurDataURL } from '@/lib/blur-placeholder';
 
@@ -46,11 +46,11 @@ export function OptimizedImage({
   src,
   alt,
   imageType = 'default',
-  fallbackSrc = '/images/placeholder.jpg',
+  fallbackSrc = '/images/default.webp',
   containerClassName,
   showLoadingSpinner = false,
   useProxy = true,
-  maxRetries = 2,
+  maxRetries = 1,
   className,
   onLoad,
   onError,
@@ -64,7 +64,7 @@ export function OptimizedImage({
   const [retryCount, setRetryCount] = useState(0);
 
   // GIF 애니메이션 이미지인지 확인
-  const isGifImage = isAnimatedGif(src as string);
+  const isGifImage = useMemo(() => isAnimatedGif(src as string), [src]);
 
   const handleLoad = useCallback(
     (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -79,23 +79,18 @@ export function OptimizedImage({
     (event: React.SyntheticEvent<HTMLImageElement>) => {
       console.warn(`Image load error for: ${currentSrc}`, { retryCount, maxRetries });
 
-      // 재시도 로직
+      // 현재 소스가 프록시인 경우에는 1회만 원본으로 재시도하고, 그 외에는 즉시 폴백으로 전환
+      const isCurrentProxy =
+        typeof currentSrc === 'string' && (currentSrc as string).startsWith('/api/image-proxy');
+      const isOriginalDifferent = src !== currentSrc;
+
       if (retryCount < maxRetries && currentSrc !== fallbackSrc) {
         setRetryCount((prev) => prev + 1);
 
-        // 첫 번째 재시도: 프록시 없이 원본 URL 시도
-        if (retryCount === 0 && useProxy && src !== currentSrc) {
+        if (isCurrentProxy && useProxy && isOriginalDifferent) {
+          // 프록시 실패 → 원본으로 1회만 시도
           setCurrentSrc(src as string);
           setIsLoading(true);
-          return;
-        }
-
-        // 두 번째 재시도: 프록시로 다시 시도 (딜레이 추가)
-        if (retryCount === 1) {
-          setTimeout(() => {
-            setCurrentSrc(useProxy ? getProxiedImageUrl(src as string) : (src as string));
-            setIsLoading(true);
-          }, 1000);
           return;
         }
       }
@@ -122,7 +117,11 @@ export function OptimizedImage({
         alt={alt}
         placeholder={isGifImage ? 'empty' : 'blur'}
         blurDataURL={isGifImage ? undefined : getOptimizedBlurDataURL(imageType)}
-        unoptimized={isGifImage}
+        // 프록시 URL일 때는 Next/Image 최적화를 우회하여 재시도 루프를 차단
+        unoptimized={
+          isGifImage ||
+          (typeof currentSrc === 'string' && (currentSrc as string).startsWith('/api/image-proxy'))
+        }
         onLoad={handleLoad}
         onError={handleError}
         className={cn(
