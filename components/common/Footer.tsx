@@ -1,43 +1,35 @@
-import Link from 'next/link';
-import { footerNavigation } from '@/config/navigation';
+'use client';
 
-const footerLinks = footerNavigation;
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { commonCopy, localeFromPath, navigationByLocale, stripLocale } from '@/config/i18n';
+import { profile } from '@/config/profile';
 
 export function Footer() {
+  const pathname = usePathname();
+  const locale = localeFromPath(pathname);
+  const copy = commonCopy[locale];
+
+  if (stripLocale(pathname) === '/') return null;
+
   return (
-    <footer className="border-t">
-      <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <div className="flex flex-col items-center gap-4 md:flex-row md:gap-8">
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Fullkeem. All rights reserved.
-            </p>
-            <nav className="flex gap-6">
-              {footerLinks.main.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
-          </div>
-          <div className="flex gap-6">
-            {footerLinks.social.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
-        </div>
+    <footer className="site-footer">
+      <div className="site-footer__lead">
+        <p className="eyebrow">{copy.availableFor}</p>
+        <p>{copy.availableValue}</p>
+      </div>
+      <div className="site-footer__grid">
+        <p>© {new Date().getFullYear()} {locale === 'ko' ? profile.name : 'Kim Choongman'} · {profile.brandName}</p>
+        <nav aria-label={copy.footerLabel}>
+          {navigationByLocale[locale].filter((link) => stripLocale(link.href) !== '/').map((link) => (
+            <Link key={link.href} href={link.href}>{link.name}</Link>
+          ))}
+        </nav>
+        <nav aria-label={copy.externalLabel}>
+          <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
+          <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href={`mailto:${profile.email}`}>Email</a>
+        </nav>
       </div>
     </footer>
   );
