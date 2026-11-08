@@ -70,7 +70,7 @@ Work의 category는 `types/content.ts`의 `workCategories`, accent는 `cobalt`·
 
 ## 하지 말 것
 
-- `README.md`와 `docs/`의 옛 문서(`design.md`, `checklist.md`, `demo-scenario.md`, `performance-optimization.md`, `portfolio-masonry-wireframe.*`)는 예전 Notion·Supabase 구조 기록이다. 현재 구조의 근거로 쓰지 않는다.
+- `docs/`의 옛 문서(`design.md`, `checklist.md`, `demo-scenario.md`, `performance-optimization.md`, `portfolio-masonry-wireframe.*`)는 예전 Notion·Supabase 구조 기록이다. 현재 구조의 근거로 쓰지 않는다.
 - 커밋되지 않았거나 git에 없는 파일을 불필요하다고 판단해 지우거나 되돌리지 않는다.
 - `output/`과 `.playwright-mcp/`는 git에서 제외된 로컬 산출물이다.
 - ZEN SERIF 폰트 파일은 라이선스상 수정·재배포가 금지되어 있다. `public/`이나 저장소에 다시 넣지 않는다.

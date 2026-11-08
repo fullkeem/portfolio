@@ -12,7 +12,7 @@
 - 기본/야간 테마, 전체 영문화, 외주 사례 이미지 갤러리가 구현되어 있다.
 - 현재 브랜치는 **`develop`**이다. 마지막으로 푸시된 커밋은 **`f3d799c`** (`feat: rebuild portfolio as bilingual slide deck`, 2026-08-27)이고, 이후의 테마·콘텐츠·이미지 작업과 2026-11-06~08 정리 작업은 2026-11-08에 **로컬 커밋했다(푸시·배포 전)**.
 - 로컬의 `origin/develop` 참조도 같은 커밋이다. 이번 정리에서는 fetch나 원격 배포 상태 확인을 하지 않았으므로 원격의 최신 상태를 보증하지 않는다.
-- 기존 README와 일부 docs는 **폐기된 Notion·Supabase 기반 구조**를 설명한다. 현재 구현 판단은 소스와 이 문서, 최근 계획서를 우선한다.
+- 일부 docs는 **폐기된 Notion·Supabase 기반 구조**를 설명한다. README는 2026-11-08에 현재 구조로 다시 썼다. 현재 구현 판단은 소스와 이 문서, 최근 계획서를 우선한다.
 
 전체 대화별 진행 기록과 결정 변화는 [프로젝트 작업 이력](docs/project-history.md)에 정리했다.
 
@@ -157,7 +157,7 @@ pnpm start
 
 `build:analyze`도 정의되어 있다. 별도 `test` 스크립트나 프로젝트 테스트 파일은 이번 조사에서 발견하지 못했다. 기존 검증 방식은 lint·타입 검사·빌드·브라우저 확인이다.
 
-설정 덮어쓰기가 필요하면 `config/site.ts`, `config/profile.ts`의 `NEXT_PUBLIC_*` 이름을 확인한다. 주요 항목은 사이트 URL·이름·설명·이메일·GitHub·LinkedIn이며 기본값이 있다. 현재 앱에 옛 README의 Notion·Supabase 비밀키 설정을 그대로 적용할 필요는 없다. 비밀값 자체는 이 문서에 기록하지 않는다.
+설정 덮어쓰기가 필요하면 `config/site.ts`, `config/profile.ts`의 `NEXT_PUBLIC_*` 이름을 확인한다. 주요 항목은 사이트 URL·이름·설명·이메일·GitHub·LinkedIn이며 기본값이 있다. 예전 README에 있던 Notion·Supabase 비밀키 설정은 현재 앱에 필요 없다. 비밀값 자체는 이 문서에 기록하지 않는다.
 
 **개발 서버와 빌드는 같은 `.next`를 동시에 사용하지 않도록 실행한다.** 과거 청크 누락 오류(`./503.js`, `./717.js`)는 동시 실행에 따른 캐시 충돌 가능성으로 설명되었다. 문제가 재발하면 관련 프로세스와 생성 파일 상태부터 확인하며 소스를 되돌리지 않는다.
 
@@ -186,7 +186,7 @@ pnpm start
 | `output/client-projects-20261020/` | 외주 사례 추가 전후와 브라우저 검증 화면 |
 | `output/client-projects-20261022/` | 교체 사진 캡처와 데스크톱·모바일 갤러리 검증 화면 |
 | `.playwright-mcp/` | 과거 브라우저 도구 로그·스냅샷·임시 캡처. 공개 사이트 자산 아님 |
-| `README.md`, `docs/design.md`, `docs/checklist.md`, `docs/demo-scenario.md`, `docs/performance-optimization.md` | 이전 구조의 설계·작업 기록. 현재 기능·완료율·설치법으로 사용하지 않음 |
+| `docs/design.md`, `docs/checklist.md`, `docs/demo-scenario.md`, `docs/performance-optimization.md` | 이전 구조의 설계·작업 기록. 현재 기능·완료율·설치법으로 사용하지 않음 |
 | `docs/portfolio-masonry-wireframe.md`, 같은 이름의 SVG | 예전 Masonry 갤러리 시안. 현재 슬라이드/Work 설계 기준 아님 |
 
 ## 10. 작업 반영 상태와 다음 단계
@@ -216,7 +216,7 @@ lib/content.ts, lib/utils/seo.ts, types/content.ts
 | 1 | 실제 기업교육·멘토링 사례 2~3건 확보 | 기관/익명명·기간·대상·역할·막힌 문제·조언·팀 구현·결과·공개 허용 범위 확보 |
 | 1 | Resume 경력 데이터 보강 | 실제 활동 이력·기간·담당 역할을 확인 가능한 사실로 구성 |
 | 2 | 영문 PDF 갱신 | 새 외주 사례 및 현재 소개와 일치하는 제출용 PDF 재생성·렌더 확인 |
-| 2 | README·구문서 정리 | 현재 MDX·한영·테마·명령에 맞는 시작 문서와 과거 기록 구분 |
+| 2 | 구문서 정리 | README는 2026-11-08에 현재 구조로 다시 씀. 옛 docs(`design.md` 등)의 보관 위치나 삭제 여부 결정 |
 | 2 | 콘텐츠 중복·번역 관리 개선 | 프로필 공통화, 홈 문구 분리, 번역 누락 처리·수동 등록 방식 개선 |
 | 3 | 기존 프로젝트 선별·Writing 확충 | 지금 맡으려는 일과 기여 근거에 따라 선별. 단순히 오래되었다는 이유로 삭제하지 않음 |
 | 3 | 폰트·도구 유지보수 | 폰트 최적화는 2026-11-06 반영(Pretendard 다이나믹 서브셋, 전송량 실측). 필요 시 lint 실행 방식 정비 |
