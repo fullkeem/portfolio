@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const alt = 'FULLKEEM · AX, Frontend, Education';
+export const alt = 'FULLKEEM · Developer, AX Tutor/Mentor';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -23,7 +23,7 @@ export default function OpenGraphImage() {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span style={{ fontSize: 164, lineHeight: .76, letterSpacing: -12, fontWeight: 900, textShadow: '8px 8px 0 #11110f' }}>FULLKEEM</span>
             <span style={{ alignSelf: 'flex-start', marginTop: 40, padding: '12px 18px', background: '#11110f', color: '#f0efe9', fontSize: 29, fontWeight: 700, letterSpacing: 4 }}>
-              AX · FRONTEND · EDUCATION
+              Developer, AX Tutor/Mentor
             </span>
           </div>
         </div>

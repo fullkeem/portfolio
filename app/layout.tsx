@@ -4,26 +4,18 @@ import { Header } from '@/components/common/Header';
 import { Footer } from '@/components/common/Footer';
 import { SkipLink } from '@/components/common/SkipLink';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { localeInitScript } from '@/config/i18n';
 import { siteConfig } from '@/config/site';
+import { themeInitScript } from '@/config/theme';
+// Pretendard dynamic subset: each page downloads only the unicode-range chunks it renders (next/font/local can't split by range).
+import '../public/fonts/pretendard/pretendardvariable-dynamic-subset.css';
 import './globals.css';
-
-const pretendard = localFont({
-  src: '../public/fonts/PretendardVariable.woff2',
-  variable: '--font-pretendard',
-  display: 'swap',
-});
+import './deck.css';
+import './content-theme.css';
 
 const jetbrainsMono = localFont({
   src: '../public/fonts/JetBrainsMono-Regular.woff2',
   variable: '--font-mono',
-  display: 'swap',
-});
-
-const zenSerif = localFont({
-  src: '../public/fonts/ZEN-SERIF-Regular.woff2',
-  variable: '--font-zen-serif',
-  weight: '400',
-  style: 'normal',
   display: 'swap',
 });
 
@@ -38,19 +30,15 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.creator, url: siteConfig.url }],
   creator: siteConfig.creator,
   icons: { icon: '/favicon.ico' },
+  // No title/description/url here: child pages inherit this object whole, so each page's own title/description must flow in and a shared url would point every page at home.
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
-    url: siteConfig.url,
     siteName: siteConfig.name,
-    title: siteConfig.name,
-    description: siteConfig.description,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: siteConfig.name }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: siteConfig.name,
-    description: siteConfig.description,
     images: [siteConfig.ogImage],
   },
   robots: { index: true, follow: true },
@@ -62,12 +50,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ko" data-scroll-behavior="smooth">
+    <html lang="ko" data-scroll-behavior="smooth" data-theme="light" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: localeInitScript }} />
         <JsonLd type="website" />
         <JsonLd type="person" />
       </head>
-      <body className={`${pretendard.variable} ${jetbrainsMono.variable} ${zenSerif.variable}`}>
+      <body className={jetbrainsMono.variable}>
         <SkipLink />
         <Header />
         <main id="main-content">{children}</main>

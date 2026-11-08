@@ -3,6 +3,19 @@ import type { ComponentType } from 'react';
 export const workCategories = ['AX', 'Product', 'Frontend', 'Education'] as const;
 export type WorkCategory = (typeof workCategories)[number];
 
+export interface LocalizedText {
+  ko: string;
+  en: string;
+}
+
+export interface WorkMedia {
+  src: string;
+  width: number;
+  height: number;
+  alt: LocalizedText;
+  caption: LocalizedText;
+}
+
 export interface WorkMeta {
   slug: string;
   title: string;
@@ -15,6 +28,10 @@ export interface WorkMeta {
   technologies: string[];
   liveUrl?: string;
   githubUrl?: string;
+  clientWork?: boolean;
+  duration?: LocalizedText;
+  liveLabel?: LocalizedText;
+  media?: WorkMedia[];
   accent: 'cobalt' | 'lime' | 'orange' | 'ink';
 }
 

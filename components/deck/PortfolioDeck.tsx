@@ -19,52 +19,53 @@ const deckCopy = {
     intro: {
       kicker: 'KIM CHOONGMAN PRESENTS',
       serif: '아이디어를',
-      block: '작동하게',
-      outline: '만드는 사람',
-      note: 'BUILD / GUIDE / SHIP',
+      block: '구현하다.',
+      summaryLabel: 'BUILD PRODUCTS. TEACH WHAT YOU PRACTICE.',
+      summaryNote: '웹사이트·CMS 개발 · AI 교육·멘토링',
+      note: 'BUILD / MANAGE / GUIDE',
       work: '작업 보기',
       resume: '이력서 보기',
     },
     position: {
       eyebrow: 'WHAT I ACTUALLY DO',
-      title: '대신 만들지 않습니다.',
-      accent: '끝까지 만들 수 있게 돕습니다.',
-      body: '프리랜서 개발자로 제품을 직접 만들고, 프로젝트 실행 멘토로 팀이 문제 정의부터 배포까지 완주하도록 판단의 기준을 함께 세웁니다.',
-      statement: 'ROUGH IDEA → WORKING PRODUCT',
+      title: '고객의 웹을 만들고,',
+      accent: 'AI 활용을 가르칩니다.',
+      body: '상담이 접수되는 웹사이트부터 직접 내용을 수정하는 CMS까지, 고객이 쓰고 관리할 수 있는 결과물을 만듭니다. 요구사항 정리, 화면·서버 개발과 배포, 공개 이후의 개선을 연결합니다. 교육에서는 AI 업무 적용과 프로젝트 구현을 지도합니다.',
+      statement: 'DEVELOPMENT × EDUCATION',
     },
     practice: {
       eyebrow: 'THREE WAYS I WORK',
-      title: '만들고, 구조화하고, 함께 완성합니다.',
+      title: '제품 개발, AI 적용, 교육과 멘토링.',
     },
     method: {
       eyebrow: 'PROJECT EXECUTION FLOW',
-      title: '막막함을 다음 행동으로 바꾸는 순서.',
-      body: '교육과 멘토링에서는 정답을 전달하기보다, 팀이 스스로 다음 결정을 내릴 수 있도록 이 흐름을 함께 점검합니다.',
+      title: '문제 정의부터 배포까지.',
+      body: '각 단계에서 결정할 내용과 남길 결과물을 정리합니다. 교육과 멘토링에서도 같은 기준으로 프로젝트를 점검합니다.',
       steps: [
-        ['01', 'PROBLEM', '실무의 고민을 한 문장의 문제로 좁힙니다.'],
-        ['02', 'USER', '누가 언제 왜 사용하는지 분명히 합니다.'],
-        ['03', 'FLOW', '반드시 작동해야 할 핵심 흐름을 고릅니다.'],
-        ['04', 'DATA', '화면보다 먼저 필요한 데이터와 관계를 정리합니다.'],
-        ['05', 'BUILD', '기간과 경험에 맞게 구현 순서를 나눕니다.'],
-        ['06', 'SHIP', '배포하고 시연할 수 있는 상태까지 확인합니다.'],
+        ['01', 'PROBLEM', '해결할 문제와 목표를 한 문장으로 정리합니다.'],
+        ['02', 'USER', '대상 사용자와 실제 사용 상황을 정리합니다.'],
+        ['03', 'FLOW', '핵심 사용자 흐름과 필요한 기능을 고릅니다.'],
+        ['04', 'DATA', '필요한 데이터와 관계를 구조로 남깁니다.'],
+        ['05', 'BUILD', '기능의 우선순위와 구현 순서를 정합니다.'],
+        ['06', 'SHIP', '배포 주소와 시연 흐름으로 동작을 확인합니다.'],
       ],
     },
     explore: {
       eyebrow: 'OPEN THE APPENDIX',
-      title: '더 자세히 보고 싶다면.',
+      title: '작업으로 확인하기.',
       items: [
-        ['WORK ARCHIVE', '직접 구현한 웹 제품과 프론트엔드 프로젝트', 'work'],
-        ['WEB RESUME', '역할, 역량, 활동을 한 번에 확인하는 이력서', 'resume'],
-        ['WRITING', '웹과 AI를 만들며 다시 정리한 생각과 기준', 'writing'],
+        ['WORK ARCHIVE', '꼼꼼환경의 견적 접수 웹사이트와 강사 프로필·CMS. 실제 화면과 개발·운영 범위를 확인하세요.', 'work'],
+        ['WEB RESUME', '개발 역량과 기업교육·PBL·해커톤의 지도 범위를 정리했습니다.', 'resume'],
+        ['WRITING', 'SEO·AEO·GEO: 웹 콘텐츠의 발견과 이해를 위한 기준을 기록합니다.', 'writing'],
       ],
       action: '열기',
     },
     contact: {
       eyebrow: 'LET’S MAKE IT REAL',
-      title: '함께 만들거나,',
-      accent: '함께 배우거나.',
-      body: '프로젝트 목적과 현재 막혀 있는 지점을 알려주세요. 필요한 역할과 현실적인 다음 단계를 함께 정리하겠습니다.',
-      links: ['채용 · 협업 문의', '외주 · 프로젝트 문의', '교육 · 멘토링 문의'],
+      title: '함께할 프로젝트,',
+      accent: '필요한 교육.',
+      body: '개발은 목적·일정·필요한 기능을, 교육은 대상·주제·요청 역할을 알려주세요. 함께할 수 있는 범위를 확인하겠습니다.',
+      links: ['개발 프로젝트 문의', '교육 · 멘토링 문의', '채용 · 기타 협업 문의'],
       direct: 'DIRECT EMAIL',
     },
   },
@@ -76,53 +77,54 @@ const deckCopy = {
     keyboard: 'Use wheel · swipe · arrow keys',
     intro: {
       kicker: 'KIM CHOONGMAN PRESENTS',
-      serif: 'Turn ideas',
-      block: 'into working',
-      outline: 'products',
-      note: 'BUILD / GUIDE / SHIP',
+      serif: 'Ideas,',
+      block: 'implemented.',
+      summaryLabel: 'BUILD PRODUCTS. TEACH WHAT YOU PRACTICE.',
+      summaryNote: 'Websites & CMS · AI training & mentoring',
+      note: 'BUILD / MANAGE / GUIDE',
       work: 'See selected work',
       resume: 'Review my resume',
     },
     position: {
       eyebrow: 'WHAT I ACTUALLY DO',
-      title: 'I build products.',
-      accent: 'I help teams ship theirs.',
-      body: 'As a freelance frontend developer, I build and deploy web products. As a project execution mentor, I help teams decide what to build, how to structure the data, and what it will take to reach a working demo.',
-      statement: 'FUZZY BRIEF → WORKING PRODUCT',
+      title: 'I build for clients.',
+      accent: 'I teach AI in practice.',
+      body: 'I connect websites to real work: a quote request that reaches the business, or a profile the client can update through a CMS. My scope spans requirements, frontend and backend development, deployment, and improvements after launch. I also teach AI use and mentor project implementation.',
+      statement: 'DEVELOPMENT × EDUCATION',
     },
     practice: {
       eyebrow: 'THREE WAYS I WORK',
-      title: 'Build. Structure. Ship together.',
+      title: 'Development. AI practice. Mentoring.',
     },
     method: {
       eyebrow: 'PROJECT EXECUTION FLOW',
-      title: 'A practical path from “stuck” to shipped.',
-      body: 'In training and mentoring, I use this sequence to help each team make its own next decision instead of handing over a fixed answer.',
+      title: 'From problem to deployment.',
+      body: 'Each step has a decision to make and an output to review. I use the same checkpoints in training and mentoring.',
       steps: [
-        ['01', 'PROBLEM', 'Reduce a broad workplace issue to one clear problem.'],
-        ['02', 'USER', 'Clarify who uses it, when, and why.'],
-        ['03', 'FLOW', 'Choose the one journey that must work first.'],
-        ['04', 'DATA', 'Define the data and relationships before polishing screens.'],
-        ['05', 'BUILD', 'Sequence the work around the team’s time and experience.'],
-        ['06', 'SHIP', 'Reach a deployable, demonstrable result.'],
+        ['01', 'PROBLEM', 'Write down the problem and goal in one sentence.'],
+        ['02', 'USER', 'Describe the intended user and their situation.'],
+        ['03', 'FLOW', 'Map the core user journey and required features.'],
+        ['04', 'DATA', 'Document the data structure and relationships.'],
+        ['05', 'BUILD', 'Set feature priorities and the order of implementation.'],
+        ['06', 'SHIP', 'Verify the deployed product with a working demo.'],
       ],
     },
     explore: {
       eyebrow: 'OPEN THE APPENDIX',
-      title: 'Need the details?',
+      title: 'See the work.',
       items: [
-        ['WORK ARCHIVE', 'Frontend products and web projects I built', 'work'],
-        ['WEB RESUME', 'Roles, capabilities, and mentoring practice in one view', 'resume'],
-        ['WRITING', 'Notes shaped while building web and AI products', 'writing'],
+        ['WORK ARCHIVE', 'Ggomggom’s quote request website and an instructor profile with a CMS. See the screens, implementation, and work after launch.', 'work'],
+        ['WEB RESUME', 'Development skills and my scope in corporate training, PBL, and hackathons.', 'resume'],
+        ['WRITING', 'SEO, AEO, and GEO: notes on helping people and search systems discover web content.', 'writing'],
       ],
       action: 'Open',
     },
     contact: {
       eyebrow: 'LET’S MAKE IT REAL',
-      title: 'Building something?',
-      accent: 'Let’s make it work.',
-      body: 'Tell me what you’re building and where it’s stuck. I’ll help you clarify the role, scope, and next practical step.',
-      links: ['Discuss a role', 'Discuss a freelance project', 'Plan a training program'],
+      title: 'Your next project.',
+      accent: 'Your next workshop.',
+      body: 'For development, share the goal, timeline, and features. For training, share the audience, topic, and role you need. We can then define the scope.',
+      links: ['Discuss a development project', 'Plan training or mentoring', 'Discuss a role or collaboration'],
       direct: 'DIRECT EMAIL',
     },
   },
@@ -132,6 +134,7 @@ export function PortfolioDeck({ locale }: { locale: Locale }) {
   const copy = deckCopy[locale];
   const localizedProfile = profileCopy[locale];
   const [current, setCurrent] = useState(0);
+  const [isGreeting, setIsGreeting] = useState(false);
   const wheelLocked = useRef(false);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
 
@@ -162,6 +165,7 @@ export function PortfolioDeck({ locale }: { locale: Locale }) {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.target instanceof HTMLElement && event.target.closest('a, button, input, textarea, select, [contenteditable]')) return;
       if (event.key === 'ArrowRight' || event.key === 'PageDown') {
         event.preventDefault();
         goTo(current + 1);
@@ -179,6 +183,8 @@ export function PortfolioDeck({ locale }: { locale: Locale }) {
 
   const onWheel = (event: WheelEvent<HTMLDivElement>) => {
     const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+    const slide = event.currentTarget.querySelector<HTMLElement>('.deck-slide[aria-hidden="false"]');
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX) && slide && slide.scrollHeight > slide.clientHeight + 1) return;
     if (Math.abs(delta) < 24 || wheelLocked.current) return;
     wheelLocked.current = true;
     goTo(current + (delta > 0 ? 1 : -1));
@@ -187,6 +193,7 @@ export function PortfolioDeck({ locale }: { locale: Locale }) {
 
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
+    if (event.target instanceof Element && event.target.closest('a, button')) return;
     pointerStart.current = { x: event.clientX, y: event.clientY };
   };
 
@@ -216,14 +223,28 @@ export function PortfolioDeck({ locale }: { locale: Locale }) {
               <div className={`deck-intro__stage deck-intro__stage--${locale}`}>
                 <p className="deck-kicker">{copy.intro.kicker}</p>
                 <h1 id="deck-intro-title" className={locale === 'en' ? 'deck-intro__title deck-intro__title--en' : 'deck-intro__title'}>
-                  <span>{copy.intro.serif}</span><strong>{copy.intro.block}</strong><em>{copy.intro.outline}</em>
+                  <span>{copy.intro.serif}</span><strong className="deck-accent">{copy.intro.block}</strong>
                 </h1>
-                <div className="deck-intro__lens" aria-hidden="true"><span>AX</span></div>
-                <div className="deck-intro__portrait">
-                  <Image src="/images/default.webp" alt={locale === 'ko' ? 'Fullkeem 캐릭터 프로필' : 'Fullkeem character portrait'} width={160} height={160} priority />
+                <button
+                  type="button"
+                  className={`deck-intro__portrait${isGreeting ? ' deck-intro__portrait--greeting' : ''}`}
+                  aria-label={locale === 'ko' ? 'Fullkeem에게 인사하기' : 'Say hello to Fullkeem'}
+                  aria-pressed={isGreeting}
+                  onClick={() => setIsGreeting((greeting) => !greeting)}
+                  onMouseLeave={() => setIsGreeting(false)}
+                  onBlur={() => setIsGreeting(false)}
+                >
+                  <span className="deck-intro__portrait-images" aria-hidden="true">
+                    <Image className="deck-intro__portrait-image deck-intro__portrait-image--default" src="/images/default.webp" alt="" fill sizes="(max-width: 900px) 92px, 128px" priority />
+                    <Image className="deck-intro__portrait-image deck-intro__portrait-image--hello" src="/images/hello.webp" alt="" fill sizes="(max-width: 900px) 92px, 128px" priority />
+                  </span>
                   <span>FULLKEEM / PROFILE</span>
+                </button>
+                <div className="deck-intro__summary">
+                  <p className="deck-intro__summary-label">{copy.intro.summaryLabel}</p>
+                  <p className="deck-intro__body">{localizedProfile.introduction}</p>
+                  <p className="deck-intro__summary-note">{copy.intro.summaryNote}</p>
                 </div>
-                <p className="deck-intro__body">{localizedProfile.introduction}</p>
                 <div className="deck-intro__roles" aria-label={locale === 'ko' ? '주요 역할' : 'Primary roles'}>
                   {localizedProfile.roles.map((role) => <span key={role}>{role}</span>)}
                 </div>
@@ -239,8 +260,8 @@ export function PortfolioDeck({ locale }: { locale: Locale }) {
             <div className={`deck-position deck-position--${locale}`}>
               <p className="deck-kicker">02 · {copy.position.eyebrow}</p>
               <h2 id="deck-position-title">
-                <span>{locale === 'ko' ? <>대신 만들지<br className="deck-mobile-break" /> 않습니다.</> : copy.position.title}</span>
-                <strong>{copy.position.accent}</strong>
+                <span>{copy.position.title}</span>
+                <strong className="deck-accent">{copy.position.accent}</strong>
               </h2>
               <div className="deck-position__footer">
                 <p>{copy.position.body}</p>
@@ -287,7 +308,7 @@ export function PortfolioDeck({ locale }: { locale: Locale }) {
             <div className="deck-explore">
               <div>
                 <p className="deck-kicker">05 · {copy.explore.eyebrow}</p>
-                <h2 id="deck-explore-title">{copy.explore.title}</h2>
+                <h2 id="deck-explore-title" className="deck-accent">{copy.explore.title}</h2>
               </div>
               <div className="deck-explore__list">
                 {copy.explore.items.map(([title, description, href], index) => (
@@ -304,13 +325,13 @@ export function PortfolioDeck({ locale }: { locale: Locale }) {
           <section className="deck-slide deck-slide--contact" aria-labelledby="deck-contact-title" aria-hidden={current !== 5} inert={current !== 5}>
             <div className="deck-contact">
               <p className="deck-kicker">06 · {copy.contact.eyebrow}</p>
-              <h2 id="deck-contact-title"><span>{copy.contact.title}</span><strong>{copy.contact.accent}</strong></h2>
+              <h2 id="deck-contact-title"><span>{copy.contact.title}</span><strong className="deck-accent">{copy.contact.accent}</strong></h2>
               <div className="deck-contact__bottom">
                 <p>{copy.contact.body}</p>
                 <div className="deck-contact__links">
-                  <a href={buildMailto('career', locale)}>{copy.contact.links[0]} ↗</a>
-                  <a href={buildMailto('project', locale)}>{copy.contact.links[1]} ↗</a>
-                  <a href={buildMailto('education', locale)}>{copy.contact.links[2]} ↗</a>
+                  <a href={buildMailto('project', locale)}>{copy.contact.links[0]} ↗</a>
+                  <a href={buildMailto('education', locale)}>{copy.contact.links[1]} ↗</a>
+                  <a className="deck-contact__secondary" href={buildMailto('career', locale)}>{copy.contact.links[2]} ↗</a>
                 </div>
                 <a className="deck-contact__email" href={`mailto:${profile.email}`}><span>{copy.contact.direct}</span>{profile.email}</a>
               </div>

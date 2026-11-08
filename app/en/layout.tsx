@@ -5,8 +5,9 @@ export const metadata: Metadata = {
     default: 'Kim Choongman · Fullkeem',
     template: '%s · Kim Choongman · Fullkeem',
   },
-  description: 'Freelance frontend development and project execution mentoring by Kim Choongman.',
+  description: 'Product development, AX training, and project mentoring by Kim Choongman.',
   openGraph: {
+    type: 'website',
     locale: 'en_US',
     siteName: 'Kim Choongman · Fullkeem',
   },

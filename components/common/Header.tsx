@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { commonCopy, localeFromPath, localizedPath, navigationByLocale, stripLocale } from '@/config/i18n';
+import { ThemeToggle } from '@/components/common/ThemeToggle';
 
 export function Header() {
   const pathname = usePathname();
@@ -22,7 +23,7 @@ export function Header() {
   const currentPath = stripLocale(pathname);
 
   return (
-    <header className="site-header">
+    <header className="site-header site-header--themed">
       <div className="site-header__inner">
         <Link href={localizedPath('/', locale)} className="wordmark" aria-label={copy.homeLabel}>
           <span className="wordmark__mark" aria-hidden="true">FK</span>
@@ -43,6 +44,7 @@ export function Header() {
             <Link href={`${localizedPath(pathname, 'ko')}${hash}`} hrefLang="ko" aria-current={locale === 'ko' ? 'true' : undefined}>KR</Link>
             <Link href={`${localizedPath(pathname, 'en')}${hash}`} hrefLang="en" aria-current={locale === 'en' ? 'true' : undefined}>EN</Link>
           </nav>
+          <ThemeToggle locale={locale} />
         </div>
       </div>
     </header>

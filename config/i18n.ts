@@ -6,6 +6,9 @@ export function localeFromPath(pathname: string): Locale {
   return pathname === '/en' || pathname.startsWith('/en/') ? 'en' : 'ko';
 }
 
+// The single root layout always renders lang="ko"; correct it before the first paint (same rule as localeFromPath).
+export const localeInitScript = `document.documentElement.lang=location.pathname==='/en'||location.pathname.startsWith('/en/')?'en':'ko'`;
+
 export function stripLocale(pathname: string) {
   if (pathname === '/en') return '/';
   return pathname.replace(/^\/en(?=\/)/, '') || '/';

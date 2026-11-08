@@ -3,7 +3,7 @@ import { WorkArchivePage } from '@/components/pages/WorkArchivePage';
 
 export const metadata: Metadata = {
   title: 'Work',
-  description: 'Selected frontend products and web projects built by Fullkeem.',
+  description: 'Selected products and web projects built by Fullkeem.',
   alternates: { canonical: '/en/work', languages: { ko: '/work', en: '/en/work' } },
 };
 

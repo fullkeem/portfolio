@@ -3,25 +3,25 @@ import type { WorkMeta, WritingMeta } from '@/types/content';
 
 export const profileCopy = {
   ko: {
-    headline: '기술을 만들고, 이해시키고, 함께 완성합니다.',
+    headline: '아이디어를 구현하다.',
     introduction:
-      '프론트엔드와 AX 구현 경험을 바탕으로 제품을 만들고, 기업교육·PBL·해커톤 현장에서 팀이 아이디어를 배포 가능한 프로젝트로 완성하도록 돕습니다.',
-    roles: ['Freelance Frontend Developer', 'Project Execution Mentor', 'AX · PBL · Hackathon Tutor'],
+      '고객에게 필요한 웹사이트와 업무 도구를 만듭니다. 화면과 서버 기능, 콘텐츠 관리와 배포를 연결하고, 공개 이후의 개선까지 함께합니다. AI를 업무에 적용하는 교육과 프로젝트 멘토링도 진행합니다.',
+    roles: ['Developer,', 'AX Tutor/Mentor'],
     focus: [
       {
-        label: 'FREELANCE DEVELOPMENT',
-        title: '아이디어를 빠르고 선명한 웹 경험으로 구현합니다.',
-        description: 'React와 Next.js를 중심으로 서비스, 웹앱, 랜딩페이지를 기획 의도부터 배포까지 연결합니다.',
+        label: 'PRODUCT DEVELOPMENT',
+        title: '고객이 쓰고 관리할 수 있는 웹을 만듭니다.',
+        description: '요구사항 정리부터 화면·서버 개발, 콘텐츠 관리(CMS), 배포와 유지보수까지 연결합니다.',
       },
       {
-        label: 'PROJECT EXECUTION',
-        title: '막연한 고민을 구현 가능한 프로젝트로 구체화합니다.',
-        description: '문제와 사용자를 정의하고 핵심 흐름, 기능 범위, 데이터 관계와 개발 순서를 함께 결정합니다.',
+        label: 'AI IN PRACTICE',
+        title: '업무에 맞는 AI 활용을 설계합니다.',
+        description: '반복 업무와 정보 탐색의 흐름을 살펴보고, AI를 적용할 지점과 검증할 프로토타입을 정리합니다.',
       },
       {
         label: 'MENTORING & TUTORING',
-        title: '대신 만들기보다 스스로 끝까지 만들 수 있게 돕습니다.',
-        description: '기업교육, PBL, 해커톤에서 팀의 막힘을 발견하고 현실적인 다음 행동과 배포 방법을 제안합니다.',
+        title: '실습과 프로젝트의 막힘을 짚습니다.',
+        description: '기업교육·PBL·해커톤에서 보조강사와 멘토로 참여해 구현 문제를 점검하고 배포·시연을 지도합니다.',
       },
     ],
     activities: [
@@ -31,25 +31,25 @@ export const profileCopy = {
     ],
   },
   en: {
-    headline: 'I build digital products—and help teams ship theirs.',
+    headline: 'Ideas, implemented.',
     introduction:
-      'I’m a freelance frontend developer based in Seoul. I also mentor teams in corporate training, project-based learning, and hackathons—turning real workplace problems into working projects they can deploy and demonstrate.',
-    roles: ['Freelance Frontend Developer', 'Project Execution Mentor', 'AI · PBL · Hackathon Tutor'],
+      'I build websites and tools around what clients need. I connect the interface, backend, content management, and deployment, then help improve the product after launch. I also teach teams to apply AI to their work and mentor project implementation.',
+    roles: ['Developer,', 'AX Tutor/Mentor'],
     focus: [
       {
-        label: 'FREELANCE DEVELOPMENT',
-        title: 'From a rough brief to a deployed web experience.',
-        description: 'I use React and Next.js to connect product intent, interface decisions, implementation, and deployment.',
+        label: 'PRODUCT DEVELOPMENT',
+        title: 'Build a website the client can use and manage.',
+        description: 'I connect requirements, frontend and backend development, a content management system (CMS), deployment, and ongoing maintenance.',
       },
       {
-        label: 'PROJECT EXECUTION',
-        title: 'Turn an ambiguous workplace problem into a buildable plan.',
-        description: 'Together, we define the user, core flow, scope, data relationships, and a realistic build order.',
+        label: 'AI IN PRACTICE',
+        title: 'Plan AI use around the actual workflow.',
+        description: 'I review repetitive tasks and information workflows to identify where AI fits and what a prototype should validate.',
       },
       {
         label: 'MENTORING & TUTORING',
-        title: 'Unblock the team without taking over the keyboard.',
-        description: 'In corporate training, project-based learning, and hackathons, I turn technical and product questions into clear next actions.',
+        title: 'Work through practical project blockers.',
+        description: 'As a teaching assistant and mentor in corporate training, PBL, and hackathons, I guide implementation, deployment, and demos.',
       },
     ],
     activities: [
@@ -60,7 +60,61 @@ export const profileCopy = {
   },
 } as const;
 
-const workEnglish: Record<string, { summary: string; role: string; sections: Array<{ title: string; paragraphs?: string[]; items?: string[] }> }> = {
+const workEnglish: Record<string, { title?: string; summary: string; role: string; sections: Array<{ title: string; paragraphs?: string[]; items?: string[] }> }> = {
+  ggomggom: {
+    title: 'Ggomggom',
+    summary: 'A service website connecting clear-out and waste-disposal information with quote requests and staff notifications.',
+    role: 'Planning · Design · Full-stack · Deployment (solo)',
+    sections: [
+      {
+        title: 'From service information to a consultation',
+        paragraphs: ['Ggomggom connects an estate clear-out and waste-disposal business with people requesting a quote. Visitors can review estimated costs and before-and-after examples, then leave their site details and contact information. The business receives the request by email to prepare for the next consultation.'],
+      },
+      {
+        title: 'A request flow that reaches the business',
+        paragraphs: ['The form separates service type and volume, site conditions and address, and scheduling and contact details into three steps. Address search and validation messages guide each step. The server checks the input and Turnstile token before sending the request through Resend. If sending fails, the interface offers a retry and phone or Kakao consultation. Site photos are sent through the Kakao channel after submission rather than uploaded in the form.'],
+      },
+      {
+        title: 'Adapt the interface to the customer',
+        paragraphs: ['Before-and-after examples changed from a draggable comparison to fixed side-by-side images so visitors can compare the work without operating a control. On mobile, visitors can swipe through the examples. The form supports an undecided date, formats contact numbers, and locks input during submission to reduce repeated interaction. Address search and security scripts load when the relevant step needs them.'],
+      },
+      {
+        title: 'Improve the site after launch',
+        paragraphs: ['Conversion tracking distinguishes a contact-button click from a successful request. The completion page consumes a submission-success flag once before calling the conversion event. After launch, client feedback informed CTA and mobile layout changes, Safari date input fixes, search metadata, structured data, favicon updates, and email recipient settings. Images were converted to WebP and resized for display before deployment.'],
+      },
+      {
+        title: 'Scope and collaboration',
+        paragraphs: ['I handled planning, UI/UX design, frontend development, the submission API, email integration, and deployment in a solo, two-week build. I organized the service information and site materials supplied by the business into pages and form fields, incorporated review feedback, and launched the site. Receipt of the basic request email was confirmed. Improvements after the initial build continued as separate maintenance work.'],
+      },
+    ],
+  },
+  'instructor-profile-cms': {
+    title: 'Instructor Profile + CMS',
+    summary: 'A profile website and CMS for editing teaching, research, and activity records, then previewing and publishing them.',
+    role: 'Full-stack Development · CMS',
+    sections: [
+      {
+        title: 'Give the client a way to maintain their profile',
+        paragraphs: ['I built a public profile and an administrator CMS so the client can update their own profile and activity records. The CMS manages introduction text, photos, Research, Publication, Awards, and News, along with menu labels and section titles. Administrators can add academic profile links and activities, reorder entries, and choose what to show.'],
+      },
+      {
+        title: 'Review a draft before publishing',
+        paragraphs: ['Draft saving and publishing are separate so unfinished edits do not appear to visitors. Administrators save a draft, preview it in the public layout, and then publish. The CMS warns before leaving with unsaved changes and detects a newer save in another window to prevent overwriting it. The published version remains separate, and republishing unchanged content does not create an unnecessary history entry.'],
+      },
+      {
+        title: 'Manage text and images together',
+        paragraphs: ['React powers the administrator interface, while Hono renders the public profile. HTML generated at publication is stored in Cloudflare D1 and served to visitors. Profile and News images are kept in private R2 storage; only images included in the current published version are public. Before upload, images are resized and converted to WebP. Replacing a photo does not remove the image from the existing published version. Administrator authentication and protected preview access are part of the same editing flow.'],
+      },
+      {
+        title: 'Turn client feedback into editing controls',
+        paragraphs: ['Requests about photos and captions became image, date, title, and description fields for each News card. Home supports adding email and academic profile links. Long Research and Publication lists initially show three entries, with a control to expand the rest and a collapse button at the end. News cards grow with caption length, align their heights within each desktop row, and use a single column on mobile.'],
+      },
+      {
+        title: 'Verification and public demo',
+        paragraphs: ['The recorded checks passed lint, type checking, the build, 43 unit tests, and three desktop and mobile browser tests. Saving, previewing, publishing, image display, and layouts at 1440px and 390px were checked before deployment. The public link and screenshots use sample content to demonstrate the CMS. The displayed person’s career is not an outcome of this project.'],
+      },
+    ],
+  },
   magplus: {
     summary: 'An editorial web magazine designed to help readers discover new places, experiences, and tastes.',
     role: 'Frontend Development',
@@ -109,7 +163,7 @@ const workEnglish: Record<string, { summary: string; role: string; sections: Arr
 export function localizeWorkMeta(metadata: WorkMeta, locale: Locale): WorkMeta {
   if (locale === 'ko') return metadata;
   const translation = workEnglish[metadata.slug];
-  return translation ? { ...metadata, summary: translation.summary, role: translation.role } : metadata;
+  return translation ? { ...metadata, title: translation.title ?? metadata.title, summary: translation.summary, role: translation.role } : metadata;
 }
 
 export function getEnglishWorkSections(slug: string) {

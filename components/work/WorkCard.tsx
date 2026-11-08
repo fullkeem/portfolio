@@ -8,17 +8,17 @@ export function WorkCard({ work, index, locale = 'ko' }: { work: WorkMeta; index
   const localizedWork = localizeWorkMeta(work, locale);
 
   return (
-    <article className={`work-card work-card--${localizedWork.accent}`}>
+    <article className={`work-card work-card--${localizedWork.accent}${localizedWork.clientWork ? ' work-card--client' : ''}`}>
       <Link href={localizedPath(`/work/${localizedWork.slug}`, locale)} className="work-card__link">
         <div className="work-card__visual" aria-hidden="true">
           <span className="work-card__number">{String(index + 1).padStart(2, '0')}</span>
-          <span className="work-card__category">{localizedWork.category}</span>
+          <span className="work-card__category">{localizedWork.clientWork && `${locale === 'ko' ? '외주' : 'CLIENT'} · `}{localizedWork.category}</span>
           <strong>{localizedWork.title}</strong>
           <span className="work-card__orb" />
         </div>
         <div className="work-card__body">
           <div>
-            <p className="eyebrow">{localizedWork.role} · {localizedWork.period}</p>
+            <p className="eyebrow">{localizedWork.clientWork && <span className="sr-only">{locale === 'ko' ? '외주 프로젝트. ' : 'Client project. '}</span>}{localizedWork.role} · {localizedWork.period}</p>
             <h3>{localizedWork.title}</h3>
           </div>
           <p>{localizedWork.summary}</p>
