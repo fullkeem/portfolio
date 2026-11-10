@@ -1,0 +1,66 @@
+export const metadata = {
+  slug: 'ggomggom',
+  title: '꼼꼼환경',
+  summary: '서비스 안내부터 견적 접수와 담당자 알림까지 연결한 생활환경 서비스 웹사이트',
+  category: 'Product',
+  role: '기획·디자인·풀스택 개발·배포 (1인)',
+  period: '2026',
+  featured: true,
+  order: 0,
+  technologies: ['Astro', 'TypeScript', 'Cloudflare Pages', 'Resend', 'Tailwind CSS'],
+  liveUrl: 'https://gomgom2.kr/',
+  accent: 'lime',
+  clientWork: true,
+  duration: {
+    ko: '제작 2주 · 이후 유지보수',
+    en: '2-week build · ongoing maintenance',
+  },
+  media: [
+    {
+      src: '/images/work/ggomggom/home.webp',
+      width: 1440,
+      height: 1000,
+      alt: {
+        ko: '꼼꼼환경의 서비스 소개와 견적 신청·상담 버튼이 보이는 메인 화면',
+        en: 'Ggomggom homepage with service information, quote requests, and contact options',
+      },
+      caption: {
+        ko: '서비스와 현장 사례를 확인하고 견적 신청이나 상담으로 이동하는 메인 화면입니다.',
+        en: 'The homepage introduces the services and site work, with paths to a quote request or consultation.',
+      },
+    },
+    {
+      src: '/images/work/ggomggom/estimate.webp',
+      width: 1440,
+      height: 1000,
+      alt: {
+        ko: '처리 유형과 예상 폐기물양을 선택하는 꼼꼼환경 3단계 견적 신청 폼',
+        en: 'The three-step quote form, starting with service type and estimated waste volume',
+      },
+      caption: {
+        ko: '처리 유형·물량, 현장 조건, 일정·연락처를 나누어 입력하는 견적 신청 흐름입니다.',
+        en: 'The quote flow separates service and volume, site conditions, and scheduling and contact details.',
+      },
+    },
+  ],
+}
+
+## 서비스 안내에서 실제 상담까지
+
+꼼꼼환경은 유품정리·폐기물처리 업체의 서비스 소개와 온라인 견적 접수를 연결한 웹사이트입니다. 고객은 예상 비용과 작업 전후 사례를 살펴보고, 현장 정보와 연락처를 남길 수 있습니다. 담당자는 접수 내용을 이메일로 확인하고 다음 상담을 준비합니다.
+
+## 접수 뒤까지 이어지는 신청 흐름
+
+견적 폼은 처리 유형·물량, 현장 조건·주소, 일정·연락처의 3단계로 구성했습니다. 주소 검색과 단계별 오류 안내를 연결하고, 서버에서 입력값과 Turnstile 보안 토큰을 확인한 뒤 Resend로 접수 메일을 보냅니다. 발송에 실패하면 재시도와 전화·카카오 상담을 안내합니다. 현장 사진은 폼에서 받지 않고, 접수 완료 후 카카오 채널로 이어서 전달하도록 했습니다.
+
+## 고객에게 맞춘 화면과 입력 방식
+
+현장 사례는 처음 구현한 드래그 비교 방식에서 좌우 고정 Before/After로 바꿨습니다. 조작 없이도 작업 전후를 확인하도록 하고, 모바일에서는 사례를 옆으로 넘겨볼 수 있게 했습니다. 견적 폼에는 희망일 미정 선택과 연락처 자동 형식을 적용하고, 제출 중에는 입력을 잠가 반복 조작을 줄였습니다. 주소 검색과 보안 스크립트도 필요한 단계에서 불러옵니다.
+
+## 공개 이후의 개선
+
+문의 버튼 클릭과 접수 성공을 구분해 전환 추적을 연결했습니다. 완료 페이지에서는 제출 성공 표시를 한 번 확인한 뒤 전환을 호출합니다. 공개 이후에도 고객 피드백에 따라 CTA와 모바일 배치를 조정하고, Safari 일정 입력, 검색용 메타데이터·구조화 데이터·파비콘, 메일 수신 설정을 보완했습니다. 사진은 WebP로 전환하고 표시 크기에 맞게 줄여 배포했습니다.
+
+## 맡은 범위와 협업
+
+기획, UI/UX 디자인, 프론트엔드, 제출 API, 메일 연동, 배포를 1인으로 맡아 2주 동안 제작했습니다. 업체가 제공한 서비스 정보와 현장 자료를 화면과 신청 항목으로 정리하고, 검토 의견을 반영해 공개했습니다. 기본 접수 메일은 실제 수신을 확인했으며, 제작 이후의 운영 개선은 별도 유지보수로 이어갔습니다.

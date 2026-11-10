@@ -1,0 +1,63 @@
+export const metadata = {
+  slug: 'instructor-profile-cms',
+  title: '강사 프로필 + CMS',
+  summary: '강의·연구·활동 이력을 직접 수정하고 미리보기·게시할 수 있는 프로필 사이트와 CMS',
+  category: 'Product',
+  role: 'Full-stack Development · CMS',
+  period: '2026',
+  featured: true,
+  order: 1,
+  technologies: ['React', 'TypeScript', 'Hono', 'Cloudflare D1', 'Cloudflare R2', 'Tailwind CSS'],
+  liveUrl: 'https://profile.kentoas.workers.dev/',
+  liveLabel: { ko: '공개 데모', en: 'Public demo' },
+  accent: 'cobalt',
+  clientWork: true,
+  media: [
+    {
+      src: '/images/work/instructor-profile-cms/home-kim-gaebal.webp',
+      width: 1440,
+      height: 1000,
+      alt: {
+        ko: '샘플 인물의 사진과 소개, 학술 프로필 링크가 표시된 공개 데모 홈 화면',
+        en: 'Public demo home showing a sample profile, introduction, and academic links',
+      },
+      caption: {
+        ko: '샘플 콘텐츠로 구성한 공개 데모 프로필 화면',
+        en: 'Public demo profile with sample content',
+      },
+    },
+    {
+      src: '/images/work/instructor-profile-cms/research.webp',
+      width: 1440,
+      height: 1000,
+      alt: {
+        ko: '샘플 연구·활동 이력과 더보기 기능을 보여주는 공개 데모 Research 화면',
+        en: 'Public demo Research section with sample activities and a show-more control',
+      },
+      caption: {
+        ko: '샘플 연구·활동 이력을 표시한 공개 데모 화면',
+        en: 'Public demo showing sample research and activity records',
+      },
+    },
+  ],
+}
+
+## 소개 페이지에 운영 도구를 더하다
+
+클라이언트가 프로필과 활동 이력을 직접 갱신할 수 있도록 공개 사이트와 관리자 CMS를 함께 구현했습니다. 소개 문구와 사진뿐 아니라 Research, Publication, Awards, News를 각각 관리하고, 메뉴명과 섹션 제목도 바꿀 수 있게 구성했습니다. 학술 프로필 링크나 새 활동을 추가할 때도 관리자가 항목을 생성하고 순서와 공개 여부를 정할 수 있습니다.
+
+## 초안에서 공개까지 확인하며 진행하기
+
+편집 중인 내용이 바로 방문자에게 보이지 않도록 임시저장과 게시를 분리했습니다. 관리자는 초안을 저장하고 실제 공개 화면과 같은 구성으로 미리본 뒤 게시합니다. 저장하지 않은 채 이동하면 경고하고, 다른 창에서 먼저 저장한 경우에는 충돌을 알려 기존 내용을 덮어쓰지 않게 했습니다. 게시된 내용은 별도로 유지하며 같은 내용을 다시 게시해도 불필요한 이력을 만들지 않습니다.
+
+## 글과 이미지를 함께 관리하는 구조
+
+React는 관리자 화면에 사용하고 공개 프로필은 Hono로 렌더링했습니다. 게시할 때 만든 HTML을 Cloudflare D1에 저장해 방문 요청에는 저장된 화면을 제공합니다. 프로필과 News 이미지는 비공개 R2에 보관하고 현재 게시본에 포함된 이미지만 공개합니다. 업로드 전 크기를 줄여 WebP로 변환하며, 사진 교체 중에도 기존 게시 이미지가 사라지지 않도록 처리했습니다. 관리자 인증과 미리보기 접근 보호도 이 편집 흐름에 함께 적용했습니다.
+
+## 고객 피드백을 편집 기능과 화면 규칙으로
+
+클라이언트의 사진·캡션 요청을 News 카드별 이미지, 날짜, 제목, 설명 입력으로 구체화했습니다. Home에는 이메일과 학술 프로필 링크를 자유롭게 추가하도록 했습니다. 긴 Research와 Publication 목록은 처음 세 개를 보여주고 나머지를 펼치며, 접기 버튼은 목록 끝에 배치했습니다. News는 캡션 길이에 맞춰 늘어나면서 데스크톱에서 같은 행의 카드 높이를 맞추고, 모바일에서는 한 열로 읽도록 조정했습니다.
+
+## 검증 기록과 공개 데모
+
+당시 작업 기록에서 린트·타입 검사·빌드, 단위 테스트 43개와 데스크톱·모바일 브라우저 테스트 3개 통과를 확인했습니다. 저장·미리보기·게시와 이미지 표시, 1440px·390px 화면을 검증한 뒤 배포했습니다. 링크와 이미지는 CMS 사용 예시를 위한 샘플 콘텐츠이며, 표시된 인물의 경력은 이 프로젝트의 성과를 뜻하지 않습니다.
