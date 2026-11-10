@@ -2,7 +2,7 @@
 
 김충만(Fullkeem)의 한·영 포트폴리오 사이트입니다. 외주 제품 개발과 AI 활용(AX) 교육·멘토링을 실제 사례 중심으로 소개합니다.
 
-사이트: <https://portfolio-fullkeems-projects.vercel.app> (영문은 `/en`)
+사이트: <https://fullkeem.kr> (영문은 `/en`)
 
 ## 화면 구성
 
