@@ -5,7 +5,7 @@ export const profile = {
   github: process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/fullkeem',
   linkedin:
     process.env.NEXT_PUBLIC_LINKEDIN_URL ||
-    'https://www.linkedin.com/in/%EC%B6%A9%EB%A7%8C-%EA%B9%80-11b378305/',
+    'https://www.linkedin.com/in/fullkeem/',
   capabilities: [
     'AI-assisted workflow design',
     'Rapid prototyping',
