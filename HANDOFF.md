@@ -1,6 +1,6 @@
 # Fullkeem 포트폴리오 인수인계
 
-작성일: 2026-11-06 · 갱신: 2026-11-08 · 시간대: Asia/Seoul  
+작성일: 2026-11-06 · 갱신: 2026-11-13 · 시간대: Asia/Seoul  
 작업 폴더: `/Users/fullkeem/fullkeem_portfolio`  
 목적: 다음 작업자가 기존 대화를 다시 읽지 않고도 현재 상태, 결정 이유, 남은 일을 이어받을 수 있도록 정리한다.
 
@@ -10,9 +10,9 @@
 - 포지셔닝은 **`Developer, AX Tutor/Mentor`**. 외주 제품 개발과 AI 활용 교육·멘토링을 함께 소개한다. 직접 개발한 범위와 멘티에게 조언한 범위를 구분한다.
 - Work는 **7건**, 공개 Writing은 **1건**이다. 꼼꼼환경과 강사 프로필 + CMS를 기존 5개 프로젝트 앞에 추가했다.
 - 기본/야간 테마, 전체 영문화, 외주 사례 이미지 갤러리가 구현되어 있다.
-- 현재 브랜치는 **`develop`**이다. 2026-08-27 개편(`f3d799c`) 이후의 테마·콘텐츠·이미지 작업과 2026-11-06~08 정리 작업을 2026-11-08에 커밋해 `develop`에 푸시하고 `main`으로 PR을 열었다(**머지·배포 전**).
+- 현재 브랜치는 **`develop`**이다. 2026-08-27 개편(`f3d799c`) 이후의 테마·콘텐츠·이미지 작업과 2026-11-06~08 정리 작업을 2026-11-08에 커밋해 `develop`에 푸시하고 `main`으로 PR을 열었다. 이 PR(#16)은 2026-11-10에 `main`에 스쿼시 머지되어 운영에 배포됐다.
 - `main`에만 있던 스쿼시 커밋(`e40239d`, #15)은 내용이 develop의 `bba94eb`과 같아서, develop 파일을 유지하는 병합으로 충돌을 정리했다.
-- 운영 사이트(Vercel 기본 주소)는 2026-11-08 기준 예전 Notion 기반 사이트를 보여 준다. `main`에 머지하면 새 사이트로 바뀌는 것으로 보인다(Vercel 운영 브랜치는 확인 필요).
+- 운영 사이트는 `https://fullkeem.kr`이고 현재 사이트를 보여 준다. Vercel 운영 브랜치는 `main`이며, `main`에 커밋이 들어가면 자동으로 운영 배포된다(2026-11-12 확인).
 - 일부 docs는 **폐기된 Notion·Supabase 기반 구조**를 설명한다. README는 2026-11-08에 현재 구조로 다시 썼다. 현재 구현 판단은 소스와 이 문서, 최근 계획서를 우선한다.
 
 전체 대화별 진행 기록과 결정 변화는 [프로젝트 작업 이력](docs/project-history.md)에 정리했다.
@@ -191,6 +191,17 @@ pnpm start
 | `docs/portfolio-masonry-wireframe.md`, 같은 이름의 SVG | 예전 Masonry 갤러리 시안. 현재 슬라이드/Work 설계 기준 아님 |
 
 ## 10. 작업 반영 상태와 다음 단계
+
+### 2026-11-12 LinkedIn 링크 변경과 Vercel 환경 변수
+
+- `config/profile.ts`의 LinkedIn 기본 주소를 `https://www.linkedin.com/in/fullkeem/`으로 바꿔 `main`에 머지했다(#17, `d009939`).
+- 머지 후 운영 배포는 성공했지만 운영 사이트에는 예전 주소가 그대로 나왔다. Vercel에 2025-06-13에 넣은 `NEXT_PUBLIC_LINKEDIN_URL`(모든 환경)이 코드 기본값을 덮어썼기 때문이다. 이 변수를 2026-11-12에 삭제했다.
+- `NEXT_PUBLIC_*` 값은 빌드할 때 들어가므로 변수를 지운 뒤 새로 배포해야 반영된다. Vercel 대시보드의 Redeploy는 이메일 인증 코드를 요구한다. `main`에 커밋을 머지하면 인증 없이 배포된다. 삭제 후 첫 배포는 이 기록을 담은 커밋이며, 반영 여부는 `https://fullkeem.kr/resume`의 LinkedIn 링크로 확인한다.
+- Vercel에는 코드가 지금도 읽는 변수가 4개 더 있다: `NEXT_PUBLIC_EMAIL`, `NEXT_PUBLIC_GITHUB_URL`, `NEXT_PUBLIC_SITE_NAME`, `NEXT_PUBLIC_SITE_DESCRIPTION`. 모두 코드 기본값보다 우선한다. 값은 확인하지 않았다(값 보기에도 이메일 인증이 필요하다). 이 값들의 기본값을 코드에서 바꿀 때는 Vercel 쪽 변수도 함께 확인한다.
+- 나머지 Vercel 변수(Notion, Supabase, Giscus, EmailJS, GA 등)는 예전 구조의 것으로 현재 코드가 읽지 않는다. 정리하지 않고 그대로 뒀다.
+- `main`에는 스쿼시로 머지하므로 `develop`과 이력이 갈라진다. #17에서는 `config/profile.ts`가 양쪽에서 추가된 파일로 잡혀 충돌했고, `main`을 `develop`에 병합하면서 `develop` 쪽 파일을 유지해 풀었다(`123c7ff`).
+
+### 2026-11-08 반영 상태
 
 2026-11-08에 아래 변경과 이후 정리 작업을 모두 `develop`에 커밋·푸시하고 `main`으로 PR을 열었다. 로컬 미리보기 설정 `.claude/launch.json`만 커밋하지 않았다.
 
